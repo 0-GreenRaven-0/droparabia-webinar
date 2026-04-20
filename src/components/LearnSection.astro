@@ -1,0 +1,89 @@
+---
+const steps = [
+  { num: "01", text: "Pick a profitable niche and choose your winning products",  grad: "linear-gradient(135deg, #1a4a7a, #1e6fa8)" },
+  { num: "02", text: "Set up a Shopify store and integrate it into Droparabia",   grad: "linear-gradient(135deg, #163d6e, #2B9FD9)" },
+  { num: "03", text: "Set up social media and create content for advertising",    grad: "linear-gradient(135deg, #0e2d5c, #1a5da0)" },
+  { num: "04", text: "Set up Meta Ads and understand the returned data",          grad: "linear-gradient(135deg, #1a2d6e, #3a4fc4)" },
+  { num: "05", text: "Collect your profit through your Wish account",             grad: "linear-gradient(135deg, #231a6e, #4040B2)" },
+  { num: "06", text: "Scale slowly towards your first $1k+ in revenue",           grad: "linear-gradient(135deg, #2a1a6e, #5B5BC8)" },
+];
+
+const badges = [
+  { text: "Founder of Droparabia",                   color: "#2B9FD9" },
+  { text: "Achieved 6 Figures in online sales",       color: "#5B5BC8" },
+  { text: "5 Years Digital Marketing", color: "#4040B2" },
+];
+---
+
+<!-- Part 1: About Majd -->
+<section
+  id="learn-section"
+  class="relative overflow-hidden droparabia-bg bg-[#0d2244]"
+>
+
+  <div class="section py-20 sm:py-28 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0 items-center">
+
+      <!-- Left: Text -->
+      <div class="flex flex-col gap-6 lg:pr-16">
+        <div class="flex items-center gap-2">
+          <img src="/Droparabia.png" alt="Droparabia" class="w-20 sm:w-28 shrink-0 object-contain" />
+          <h2 class="text-3xl sm:text-5xl xl:text-6xl font-extrabold leading-tight text-white">
+            Brought to you by<br />
+            <span style="background: linear-gradient(90deg, #7dd6ff, #a0a0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+              Majd Abdulsalam
+            </span>
+          </h2>
+        </div>
+  
+          <p class="text-lg leading-relaxed" style="color: rgba(255,255,255,0.75)">
+            A 22-year-old Lebanese entrepreneur who generated over $30k from dropshipping over the past 5 years. Instead of bundling his knowledge into a course like the other gurus, he invested his revenue and built a system that allowed over 500 Lebanese to start their own online selling businesses without needing huge budgets or learning everything from scratch.
+        </p>
+          <p class="text-lg leading-relaxed" style="color: rgba(255,255,255,0.75)">
+            In this free workshop, he'll walk you through how to use this one-of-a-kind platform to start your own profitable online store in Lebanon, so you walk out ready to build your business and reach your first $1k per month.
+        </p>
+
+        <div class="grid grid-cols-3 gap-2 -mx-6 sm:mx-0">
+          {badges.map(({ text, color }) => (
+            <div
+              class="aspect-square w-full flex items-center justify-center p-6 text-white text-xs font-bold text-center leading-tight"
+              style={`background: ${color}; -webkit-mask-image: url('/mask.png'); mask-image: url('/mask.png'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;`}
+            >
+              {text}
+            </div>
+          ))}
+        </div>
+
+      </div>
+
+      <!-- Right: Majd image -->
+      <div class="relative flex items-end justify-center">
+        <img
+          src="/mj.jpeg"
+          alt="Majd Abdulsalam"
+          class="w-full max-w-md max-h-140 object-cover object-top rounded-2xl"
+        />
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Part 2: What You'll Learn -->
+<section class="section-alt">
+  <div class="section py-16 sm:py-24">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl sm:text-4xl font-extrabold">
+        What You'll Learn in This <span class="gradient-text">Live Workshop</span>
+      </h2>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+      {steps.map(({ num, text, grad }) => (
+        <div class="flex flex-col gap-4 rounded-2xl p-8 border border-white/10 transition-colors" style={`background: ${grad};`}>
+          <span class="text-4xl font-extrabold leading-none text-white">{num}</span>
+          <p class="text-white text-base leading-relaxed font-medium">{text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

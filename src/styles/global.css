@@ -1,0 +1,352 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'IBrand';
+  src: url('/ibrand-font/ibrand.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Design Tokens ─────────────────────────────────────────────────────── */
+@theme {
+  /* Brand */
+  --color-primary:        #2B9FD9;
+  --color-primary-hover:  #1E8AC4;
+  --color-secondary:      #4040B2;
+  --color-accent:         #5B5BC8;
+
+  /* Backgrounds */
+  --color-bg-dark:        #E0E0E0;
+  --color-bg-section:     #E0E0E0;
+  --color-bg-card:        #E0E0E0;
+  --color-bg-light:       #E0E0E0;
+
+  /* Text */
+  --color-text-base:      #0D0D2B;
+  --color-text-muted:     #64748B;
+  --color-text-dark:      #0D0D2B;
+
+  /* Border */
+  --color-border:         #2B9FD940;
+
+  /* Gradients */
+  --bg-gradient-brand:    linear-gradient(135deg, #2B9FD9 0%, #4040B2 100%);
+  --bg-gradient-soft:     linear-gradient(135deg, #2B9FD926 0%, #4040B226 100%);
+
+  /* Custom Animations */
+  --animate-float:        float 4s ease-in-out infinite;
+  --animate-pulse-live:   pulse-live 1.5s ease-in-out infinite;
+  --animate-fade-in:      fade-in 0.6s ease forwards;
+}
+
+@keyframes gradient-shift {
+  0%   { background-position: 0% center; }
+  100% { background-position: 300% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(1.6); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    @apply bg-bg-dark text-text-base scroll-smooth;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+    font-family: 'IBrand', sans-serif;
+  }
+
+  a {
+    @apply text-primary transition-colors hover:text-primary-hover;
+  }
+
+  ::selection {
+    @apply bg-primary/30 text-white;
+  }
+}
+
+/* ─── Components ─────────────────────────────────────────────────────────── */
+@layer components {
+
+  /* — Buttons — */
+  .btn-primary {
+    @apply text-text-dark font-semibold text-lg px-6 py-3 rounded-full cursor-pointer inline-flex items-center gap-2;
+    background: linear-gradient(#e0e0e0, #e0e0e0) padding-box,
+                linear-gradient(135deg, #2B9FD9, #5B5BC8, #4040B2) border-box;
+    border: 4px solid transparent;
+    transition: background 0.25s ease;
+  }
+  .btn-primary:hover {
+    background: linear-gradient(#e0e0e0, #e0e0e0) padding-box,
+                linear-gradient(135deg, #7DD6FF, #9898FF, #7070E8) border-box;
+  }
+
+  .btn-outline {
+    @apply text-text-dark font-semibold text-lg px-6 py-3 rounded-full cursor-pointer inline-flex items-center gap-2;
+    background: linear-gradient(#e0e0e0, #e0e0e0) padding-box,
+                linear-gradient(135deg, #2B9FD9, #5B5BC8, #4040B2) border-box;
+    border: 4px solid transparent;
+    transition: background 0.25s ease;
+  }
+  .btn-outline:hover {
+    background: linear-gradient(#e0e0e0, #e0e0e0) padding-box,
+                linear-gradient(135deg, #7DD6FF, #9898FF, #7070E8) border-box;
+  }
+
+  .btn-cta {
+    @apply text-text-dark font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full text-lg sm:text-xl cursor-pointer w-full text-center block;
+    background: linear-gradient(#e0e0e0, #e0e0e0) padding-box,
+                linear-gradient(135deg, #2B9FD9, #5B5BC8, #4040B2) border-box;
+    border: 4px solid transparent;
+    transition: background 0.25s ease;
+  }
+  .btn-cta:hover {
+    background: linear-gradient(#e0e0e0, #e0e0e0) padding-box,
+                linear-gradient(135deg, #7DD6FF, #9898FF, #7070E8) border-box;
+  }
+
+  /* — Layout — */
+  .card {
+    @apply bg-bg-card border border-border rounded-2xl p-6;
+  }
+
+  .section {
+    @apply py-10 sm:py-16 px-4 sm:px-6 max-w-6xl mx-auto;
+  }
+
+  .section-alt {
+    @apply bg-bg-section;
+  }
+
+  .section-label {
+    @apply inline-block text-xs font-bold tracking-[0.25em] uppercase text-primary mb-4;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* — Text Effects — */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--bg-gradient-brand);
+  }
+
+  .gradient-text-anim {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, #2B9FD9, #4040B2, #2B9FD9, #5B5BC8, #2B9FD9);
+    background-size: 300% auto;
+    animation: gradient-shift 20s linear infinite;
+  }
+
+  .gradient-bg {
+    background-image: var(--bg-gradient-brand);
+  }
+
+  /* — Urgency Bar — */
+  .urgency-bar {
+    @apply flex flex-wrap items-center justify-center gap-4 sm:gap-10 py-2.5 px-6 text-white text-sm font-medium;
+    background: linear-gradient(90deg, #1a3a52 0%, #1e2d6b 35%, #2a2080 60%, #1a3a52 100%);
+    border-bottom: 1px solid rgba(43,159,217,0.3);
+    box-shadow: 0 2px 24px rgba(43,159,217,0.2), 0 1px 0 rgba(91,91,200,0.2);
+  }
+
+  /* — Hero — */
+  .hero-label {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-primary border border-primary/30 bg-primary/10 w-fit;
+  }
+
+  /* — Form — */
+  .form-card {
+    @apply bg-bg-card rounded-2xl p-7;
+    border: 1px solid rgba(43, 159, 217, 0.25);
+    box-shadow: 0 0 80px rgba(43, 159, 217, 0.1), 0 0 160px rgba(64, 64, 178, 0.06);
+  }
+
+  .form-input {
+    @apply w-full bg-bg-dark border border-border rounded-xl px-4 py-3 text-text-base placeholder:text-text-muted/50 focus:outline-none focus:border-primary/70 focus:ring-2 focus:ring-primary/20 transition-all;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-text-muted mb-2;
+  }
+
+  /* — Stat Badges — */
+  .stat-badge {
+    @apply flex-1 flex flex-col items-center gap-0.5 px-3 py-3 rounded-xl bg-bg-dark border border-border text-center min-w-0;
+  }
+
+  /* — Countdown — */
+  .countdown-block {
+    @apply flex flex-col items-center;
+    min-width: 2.75rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem 0.4rem;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  .countdown-num {
+    @apply text-xl font-extrabold font-mono leading-none text-white;
+    letter-spacing: 0.02em;
+  }
+
+  .countdown-label {
+    @apply text-[9px] uppercase tracking-wider mt-1;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .form-countdown-wrap .countdown-num {
+    @apply text-text-dark;
+  }
+
+  .form-countdown-wrap .countdown-label {
+    color: rgba(13,13,43,0.5);
+  }
+
+  /* — Lists — */
+  .numbered-list-item {
+    @apply flex items-start gap-5 py-5 border-b border-border last:border-0;
+  }
+
+  .learn-item {
+    @apply flex items-start gap-4 py-4 border-b border-border last:border-0;
+  }
+
+  /* — Founder Card — */
+  .founder-card {
+    @apply bg-bg-card rounded-2xl p-8 flex flex-col items-center text-center gap-5;
+    border: 1px solid rgba(43, 159, 217, 0.2);
+    box-shadow: 0 0 80px rgba(43, 159, 217, 0.12), 0 0 0 1px rgba(43, 159, 217, 0.15);
+  }
+
+  .founder-avatar {
+    @apply w-32 h-32 rounded-2xl flex items-center justify-center text-4xl font-extrabold text-white;
+    background-image: var(--bg-gradient-brand);
+    box-shadow: 0 0 40px rgba(43, 159, 217, 0.5);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .founder-stat {
+    @apply flex items-center gap-2 text-sm text-text-muted;
+  }
+
+  /* — Testimonials — */
+  .testimonial-card {
+    @apply bg-bg-card border border-border rounded-2xl p-6 flex flex-col gap-4;
+  }
+
+  .star-row {
+    @apply flex gap-0.5 text-amber-400 text-sm;
+  }
+
+  /* — VS Table — */
+  .vs-row {
+    @apply grid border-b border-border last:border-0;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .vs-cell {
+    @apply py-4 flex items-center justify-center text-sm font-medium;
+  }
+
+  .vs-cell-label {
+    @apply py-4 flex items-center text-text-muted text-sm font-medium;
+  }
+
+  .vs-cell-yes {
+    @apply text-emerald-400;
+  }
+
+  .vs-cell-no {
+    @apply text-red-400/60;
+  }
+
+  /* — FAQ — */
+  .faq-item {
+    @apply border-b border-border;
+  }
+
+  .faq-btn {
+    @apply w-full flex items-center justify-between gap-4 py-5 text-left font-semibold text-text-base cursor-pointer hover:text-primary transition-colors;
+    font-family: 'IBrand', sans-serif;
+  }
+
+  .faq-answer {
+    @apply text-text-muted leading-relaxed text-sm overflow-hidden;
+    max-height: 0;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+  }
+
+  .faq-answer.open {
+    max-height: 600px;
+    @apply pb-6;
+  }
+
+  /* — Glow divider — */
+  .glow-divider {
+    @apply h-px w-full;
+    background: linear-gradient(90deg, transparent, rgba(43,159,217,0.4), rgba(64,64,178,0.4), transparent);
+  }
+}
+
+/* ─── Utilities ──────────────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .border-brand {
+    @apply border border-border;
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 40px rgba(43, 159, 217, 0.25);
+  }
+
+  .glow-secondary {
+    box-shadow: 0 0 40px rgba(64, 64, 178, 0.25);
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(43, 159, 217, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(43, 159, 217, 0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .orb-blue {
+    @apply absolute rounded-full pointer-events-none select-none;
+    background: radial-gradient(circle, rgba(43, 159, 217, 0.22) 0%, rgba(43, 159, 217, 0.06) 50%, transparent 70%);
+    will-change: transform;
+  }
+
+  .orb-purple {
+    @apply absolute rounded-full pointer-events-none select-none;
+    background: radial-gradient(circle, rgba(64, 64, 178, 0.22) 0%, rgba(64, 64, 178, 0.06) 50%, transparent 70%);
+    will-change: transform;
+  }
+
+  .noise-overlay {
+    @apply absolute inset-0 pointer-events-none opacity-[0.03];
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+}
+

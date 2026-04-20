@@ -1,0 +1,43 @@
+---
+interface Props {
+  prefix: string;
+}
+const { prefix } = Astro.props;
+---
+
+<div class="flex items-center gap-2">
+  <div class="countdown-block">
+    <span class="countdown-num" id={`${prefix}-d`}>03</span>
+    <span class="countdown-label">Days</span>
+  </div>
+  <div class="countdown-block">
+    <span class="countdown-num" id={`${prefix}-h`}>00</span>
+    <span class="countdown-label">Hours</span>
+  </div>
+  <div class="countdown-block">
+    <span class="countdown-num" id={`${prefix}-m`}>00</span>
+    <span class="countdown-label">Minutes</span>
+  </div>
+  <div class="countdown-block">
+    <span class="countdown-num" id={`${prefix}-s`}>00</span>
+    <span class="countdown-label">Seconds</span>
+  </div>
+</div>
+
+<script is:inline define:vars={{ prefix }}>
+  const TARGET = new Date('2026-04-21T20:00:00').getTime();
+  const pad = (n) => String(n).padStart(2, '0');
+  const el = (id) => document.getElementById(id);
+
+  function tick() {
+    const diff = TARGET - Date.now();
+    if (diff <= 0) return;
+    el(`${prefix}-d`).textContent = pad(Math.floor(diff / 86400000));
+    el(`${prefix}-h`).textContent = pad(Math.floor((diff % 86400000) / 3600000));
+    el(`${prefix}-m`).textContent = pad(Math.floor((diff % 3600000) / 60000));
+    el(`${prefix}-s`).textContent = pad(Math.floor((diff % 60000) / 1000));
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>

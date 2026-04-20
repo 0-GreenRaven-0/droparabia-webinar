@@ -1,0 +1,108 @@
+---
+---
+
+<div class="lb-wrap">
+  <canvas id="lb-canvas"></canvas>
+</div>
+
+<style>
+  .lb-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 30px rgba(43, 159, 217, 0.25));
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById('lb-canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+
+  const isMobile = window.innerWidth < 1024;
+  const H   = isMobile ? Math.round(window.innerWidth * 0.65) : Math.round(window.innerHeight * 0.95);
+  const W   = Math.round(H * 0.78);
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width  = W * DPR;
+  canvas.height = H * DPR;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(DPR, DPR);
+
+  const SPACING = Math.round(H / 58);
+  const BASE_R  = SPACING * 0.33;
+  const lerp    = (a: number, b: number, t: number) => a + (b - a) * t;
+
+  interface Dot {
+    x: number; y: number; size: number;
+    cr: number; cg: number; cb: number;
+    phase: number; freq: number; amp: number;
+  }
+
+  let rafId = 0;
+  let visible = true;
+
+  const img = new Image();
+  img.src = '/Lebanon_Rivers_Map.jpg';
+  img.onload = () => {
+    const off = document.createElement('canvas');
+    off.width  = img.naturalWidth;
+    off.height = img.naturalHeight;
+    const offCtx = off.getContext('2d')!;
+    offCtx.drawImage(img, 0, 0);
+    const { data } = offCtx.getImageData(0, 0, off.width, off.height);
+
+    const sx = img.naturalWidth  / W;
+    const sy = img.naturalHeight / H;
+
+    const dots: Dot[] = [];
+
+    for (let y = SPACING / 2; y < H; y += SPACING) {
+      for (let x = SPACING / 2; x < W; x += SPACING) {
+        const px = Math.min(Math.floor(x * sx), off.width  - 1);
+        const py = Math.min(Math.floor(y * sy), off.height - 1);
+        const i  = (py * off.width + px) * 4;
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+
+        if (g > r + 22 && g > b + 22) {
+          const nt = y / H;
+          dots.push({
+            x, y,
+            size:  BASE_R * (0.7 + Math.random() * 0.6),
+            cr:    Math.round(lerp(43,  91,  nt)),
+            cg:    Math.round(lerp(159, 91,  nt)),
+            cb:    Math.round(lerp(217, 200, nt)),
+            phase: Math.random() * Math.PI * 2,
+            freq:  1.0 + Math.random() * 3.0,
+            amp:   0.25 + Math.random() * 0.45,
+          });
+        }
+      }
+    }
+
+    function draw(ts: number) {
+      if (!visible) { rafId = 0; return; }
+      const t = ts / 1000;
+      ctx.clearRect(0, 0, W, H);
+
+      for (const d of dots) {
+        const alpha = (1 - d.amp) + d.amp * Math.abs(Math.sin(t * d.freq + d.phase));
+        ctx.fillStyle = `rgba(${d.cr},${d.cg},${d.cb},${alpha.toFixed(2)})`;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      rafId = requestAnimationFrame(draw);
+    }
+
+    // Pause the loop when the canvas scrolls out of view
+    const observer = new IntersectionObserver((entries) => {
+      visible = entries[0].isIntersecting;
+      if (visible && rafId === 0) rafId = requestAnimationFrame(draw);
+    }, { threshold: 0 });
+
+    observer.observe(canvas);
+    rafId = requestAnimationFrame(draw);
+  };
+</script>

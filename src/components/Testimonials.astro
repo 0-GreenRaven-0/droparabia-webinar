@@ -1,0 +1,191 @@
+---
+---
+
+<section>
+  <div class="section">
+
+    <!-- Header -->
+    <div class="text-center mb-14 gs-test-header">
+      <h2 class="text-4xl sm:text-5xl font-extrabold mb-4">
+        Trusted by <span class="gradient-text">500+ Lebanese</span>
+      </h2>
+
+      <!-- Trustpilot Rating -->
+      <div class="inline-flex flex-wrap items-center justify-center gap-2 mt-4">
+        <div class="flex items-center gap-1">
+          <span class="tp-star-box">★</span>
+          <span class="tp-star-box">★</span>
+          <span class="tp-star-box">★</span>
+          <span class="tp-star-box">★</span>
+          <span class="tp-star-box tp-star-empty">★</span>
+        </div>
+        <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="h-6 w-auto" />
+        <span class="font-semibold text-text-base text-base">Rated 4/5</span>
+      </div>
+    </div>
+
+    <!-- Embla Carousel -->
+    <div class="relative max-w-4xl mx-auto gs-community">
+
+        <!-- Viewport -->
+        <div id="testo-embla" class="overflow-hidden">
+          <div class="embla__container flex gap-4">
+            {[
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(2)%20(1)%20(1).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(3).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(4)%20(1).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(5).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(6).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(7)%20(1)%20(1).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(8).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(9)%20(2).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(10).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(11).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(12).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(13).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(14).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(15).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(16).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(17).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(18).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
+            ].map((src) => (
+              <div class="embla__slide shrink-0 w-full md:w-[calc(33.333%-11px)] rounded-2xl overflow-hidden border-2 border-border">
+                <img src={src} alt="Testimonial" class="w-full h-auto block" loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Nav -->
+        <div class="flex items-center justify-center gap-4 mt-6">
+          <button id="testo-prev" aria-label="Previous" class="testo-nav-btn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div id="testo-dots" class="flex items-center gap-1.5"></div>
+
+          <button id="testo-next" aria-label="Next" class="testo-nav-btn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+
+  </div>
+</section>
+
+<style>
+  .testo-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 2px solid #2B9FD9;
+    color: #2B9FD9;
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+  .testo-nav-btn:hover {
+    background: #2B9FD9;
+    color: white;
+  }
+  .testo-dot {
+    height: 8px;
+    border-radius: 9999px;
+    background: rgba(43,159,217,0.35);
+    transition: width 0.3s, background 0.3s;
+    width: 8px;
+  }
+  .testo-dot.active {
+    width: 28px;
+    background: #2B9FD9;
+  }
+  .tp-star-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: #84cc16;
+    color: white;
+    font-size: 1rem;
+    line-height: 1;
+  }
+  @media (min-width: 640px) {
+    .tp-star-box {
+      width: 2rem;
+      height: 2rem;
+      font-size: 1.4rem;
+    }
+  }
+  .tp-star-empty {
+    background: #84cc1650;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import EmblaCarousel from 'embla-carousel';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const def = { ease: 'power2.out', overwrite: 'auto' as const };
+
+  gsap.from('.gs-test-header', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-test-header', start: 'top 88%', once: true },
+    y: 24, opacity: 0, duration: 0.8,
+  });
+  gsap.from('.gs-community', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-community', start: 'top 88%', once: true },
+    y: 20, opacity: 0, duration: 0.8,
+  });
+
+  const viewport = document.getElementById('testo-embla')!;
+  const dotsEl  = document.getElementById('testo-dots')!;
+
+  const perView = () => window.innerWidth >= 768 ? 3 : 1;
+
+  const embla = EmblaCarousel(viewport, { loop: true, align: 'start', slidesToScroll: perView() });
+
+  function buildDots() {
+    dotsEl.innerHTML = '';
+    const snaps = embla.scrollSnapList();
+    snaps.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'testo-dot' + (i === embla.selectedScrollSnap() ? ' active' : '');
+      d.addEventListener('click', () => embla.scrollTo(i));
+      dotsEl.appendChild(d);
+    });
+  }
+
+  function updateDots() {
+    const idx = embla.selectedScrollSnap();
+    dotsEl.querySelectorAll('.testo-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === idx);
+    });
+  }
+
+  embla.on('init', buildDots);
+  embla.on('select', updateDots);
+  embla.on('reInit', buildDots);
+
+  document.getElementById('testo-prev')!.addEventListener('click', () => embla.scrollPrev());
+  document.getElementById('testo-next')!.addEventListener('click', () => embla.scrollNext());
+
+  window.addEventListener('resize', () => {
+    embla.reInit({ slidesToScroll: perView() });
+  });
+</script>

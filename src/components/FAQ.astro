@@ -1,0 +1,143 @@
+---
+const faqs = [
+  {
+    q: 'How can I attend the workshop?',
+    a: 'Details on how to attend will be confirmed soon. Register your spot now and we will send you everything you need — including the link and instructions — directly to your email.',
+  },
+  {
+    q: "What if I couldn't attend the workshop?",
+    a: "We're working on options for those who can't attend live. Register now and we'll keep you updated on replay access and future sessions.",
+  },
+  {
+    q: 'Why should I consider starting a local dropshipping store while the war is still going?',
+    a: "Droparabia's unique and safe infrastructure was built not only to allow Lebanese to start selling online with the lowest upfront cost possible, but to provide a safety net for their businesses that will keep them going and earning without the interruption of the ongoing war and any other difficult circumstances.",
+  },
+  {
+    q: 'I keep hearing "Dropshipping or Ecommerce is Dead" — is that true?',
+    a: "They're referring to the old models where you had to spend hours on Alibaba finding products, invest thousands in inventory that might not sell, rent warehouses, and pay huge fees. With Droparabia, you don't deal with any of that. The platform handles logistics, order fulfillment, product research and sourcing — so you stop wasting time and money \"testing\" and focus on building and scaling your business instead.",
+  },
+  {
+    q: 'Can I get a refund if I can no longer attend the workshop?',
+    a: 'Our refund policy is being finalized. Please reach out directly after registering and we will do our best to accommodate your situation.',
+  },
+  {
+    q: "I don't have marketing experience or technical skills — can I still succeed?",
+    a: "That's exactly what this live workshop covers! You don't need to be a marketing or technical expert. Majd will teach you everything from A to Z, so that by the end of the workshop you're fully equipped and motivated to build your own profitable online store like a pro.",
+  },
+  {
+    q: 'Can I sell outside of Lebanon with Droparabia?',
+    a: "For now, Droparabia covers the Lebanese market. But very soon you'll be able to expand your business to cover the entire MENA market and scale your revenue even further. This workshop is your first step toward that journey.",
+  },
+];
+---
+
+<section class="section-alt">
+  <div class="section">
+
+    <div class="text-center mb-12 gs-faq-header">
+      <h2 class="text-4xl sm:text-5xl font-extrabold">
+        Frequently Asked <span class="gradient-text">Questions</span>
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start gs-faq-list">
+      {faqs.map((faq, i) => (
+        <div class="faq-card" id={`faq-card-${i}`}>
+          <button class="faq-btn w-full flex items-start justify-between gap-4 text-left" data-faq={i} aria-expanded="false">
+            <span class="font-medium text-text-base text-base leading-snug pt-0.5">{faq.q}</span>
+            <svg class="faq-icon shrink-0 text-primary mt-0.5" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="faq-answer" id={`faq-answer-${i}`}>
+            <p class="text-text-base text-base leading-relaxed pt-3">{faq.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .faq-card {
+    background: var(--color-bg-card);
+    border: 2px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+  .faq-card:hover {
+    border-color: rgba(43, 159, 217, 0.5);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45), 0 0 0 4px rgba(43, 159, 217, 0.08);
+  }
+  .faq-card.open {
+    border-color: rgba(43, 159, 217, 0.65);
+    background: rgba(43, 159, 217, 0.07);
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(43, 159, 217, 0.1);
+  }
+  .faq-answer {
+    overflow: hidden;
+    height: 0;
+    transition: height 0.35s ease;
+  }
+  .faq-icon {
+    transition: transform 0.3s ease;
+  }
+  .faq-icon.open {
+    transform: rotate(180deg);
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const def = { ease: 'power2.out', overwrite: 'auto' as const };
+
+  gsap.from('.gs-faq-header', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-faq-header', start: 'top 88%', once: true },
+    y: 24, opacity: 0, duration: 0.8,
+  });
+  gsap.from('.gs-faq-list', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-faq-list', start: 'top 88%', once: true },
+    y: 20, opacity: 0, duration: 0.7,
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.faq-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const idx = btn.dataset.faq!;
+      const answer = document.getElementById(`faq-answer-${idx}`) as HTMLElement;
+      const card   = document.getElementById(`faq-card-${idx}`)!;
+      const icon   = btn.querySelector('.faq-icon')!;
+      const isOpen = answer.classList.contains('open');
+
+      // Animate close all open answers
+      document.querySelectorAll<HTMLElement>('.faq-answer.open').forEach((a) => {
+        a.style.height = a.scrollHeight + 'px';
+        requestAnimationFrame(() => { a.style.height = '0'; });
+        a.classList.remove('open');
+      });
+      document.querySelectorAll('.faq-card').forEach((c) => c.classList.remove('open'));
+      document.querySelectorAll('.faq-icon').forEach((ic) => ic.classList.remove('open'));
+      document.querySelectorAll('.faq-btn').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+
+      if (!isOpen) {
+        answer.classList.add('open');
+        answer.style.height = '0';
+        requestAnimationFrame(() => { answer.style.height = answer.scrollHeight + 'px'; });
+        answer.addEventListener('transitionend', () => {
+          if (answer.classList.contains('open')) answer.style.height = 'auto';
+        }, { once: true });
+        card.classList.add('open');
+        icon.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>

@@ -1,0 +1,192 @@
+---
+const rows = [
+  {
+    feature: "Startup Cost",
+    ecom:  { text: "$3,000–$10,000+",                                              bad: true  },
+    drop:  { text: "$500–$2,000",                                                  bad: false },
+    fba:   { text: "$3,000–$10,000+",                                              bad: true  },
+    da:    "From $500",
+  },
+  {
+    feature: "Product Research",
+    ecom:  { text: "Manual, hours of research",                                    bad: true  },
+    drop:  { text: "Hours on AliExpress, hit or miss",                             bad: true  },
+    fba:   { text: "Manual + paid tools required",                                 bad: true  },
+    da:    "Done for you — weekly curated winning products with profit margins",
+  },
+  {
+    feature: "Inventory Risk",
+    ecom:  { text: "High — unsold stock = dead money",                             bad: true  },
+    drop:  { text: "None",                                                         bad: false },
+    fba:   { text: "High — bulk shipments + FBA storage fees if unsold",           bad: true  },
+    da:    "None — pay only for what you sell",
+  },
+  {
+    feature: "Storage & Warehousing",
+    ecom:  { text: "You manage it — rent + logistics",                             bad: true  },
+    drop:  { text: "Not required",                                                 bad: false },
+    fba:   { text: "Amazon handles it but you pay storage fees",                   bad: false },
+    da:    "Free product housing — stored until sold",
+  },
+  {
+    feature: "Supplier Management",
+    ecom:  { text: "Direct relationships, MOQs, contracts",                        bad: true  },
+    drop:  { text: "Deal directly with AliExpress — unreliable",                   bad: true  },
+    fba:   { text: "Source suppliers yourself, quality control on you",            bad: true  },
+    da:    "Fully handled — request unavailable products, no supplier contact",
+  },
+  {
+    feature: "Order Fulfillment",
+    ecom:  { text: "Manual — pack and ship yourself",                              bad: true  },
+    drop:  { text: "Supplier ships directly — long delivery, quality issues",      bad: true  },
+    fba:   { text: "Amazon handles it but limited to Amazon platform",             bad: false },
+    da:    "Fully automated on your own branded store",
+  },
+  {
+    feature: "Experience Required",
+    ecom:  { text: "High",                                                         bad: true  },
+    drop:  { text: "Medium",                                                       bad: false },
+    fba:   { text: "High",                                                         bad: true  },
+    da:    "None — tutorials, e-books, AI assistant + human advisors",
+  },
+  {
+    feature: "Local Market Fit",
+    ecom:  { text: "Figure it out alone",                                          bad: true  },
+    drop:  { text: "Chinese suppliers, months of shipping — not built for MENA",   bad: true  },
+    fba:   { text: "Not available in Lebanon",                                     bad: true  },
+    da:    "Built specifically for Lebanon & MENA — local fulfillment, war-zone safe logistics",
+  },
+  {
+    feature: "Support & Guidance",
+    ecom:  { text: "None",                                                         bad: true  },
+    drop:  { text: "Communities at best",                                          bad: false },
+    fba:   { text: "Generic Amazon seller support",                                bad: false },
+    da:    "Dedicated human advisors + AI assistant that monitors your progress",
+  },
+  {
+    feature: "Time to Launch",
+    ecom:  { text: "Months",                                                       bad: true  },
+    drop:  { text: "2–4 weeks",                                                    bad: false },
+    fba:   { text: "1–3 months",                                                   bad: true  },
+    da:    "15–30 days",
+  },
+];
+---
+
+<section class="bg-bg-dark py-16 sm:py-24">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 xl:px-8">
+
+    <div class="text-center mb-10 sm:mb-12 gs-vs-header">
+      <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold mt-3 mb-4 text-text-base">
+        Why <span class="gradient-text">Droparabia</span> beats every model
+      </h2>
+    </div>
+
+    <p class="sm:hidden text-center text-xs text-text-muted mb-3 opacity-60">← Scroll to compare →</p>
+
+    <div class="overflow-x-auto gs-vs-table rounded-xl border border-border">
+      <table class="w-full border-separate border-spacing-0 text-xs" style="min-width: 640px">
+
+        <thead>
+          <tr>
+            <th class="sticky left-0 z-20 bg-bg-dark w-32 sm:w-40 px-3 pb-2 align-bottom border-b border-border"></th>
+
+            <th class="pb-0 text-center align-bottom min-w-36 border-b border-border">
+              <div class="bg-red-500 text-white font-extrabold px-3 py-3  text-xs sm:text-sm leading-tight flex items-center justify-center min-h-16">
+                Traditional Ecommerce
+              </div>
+            </th>
+
+            <th class="pb-0 text-center align-bottom min-w-36 border-b border-border">
+              <div class="bg-cyan-600 text-white font-extrabold px-3 py-3 text-xs sm:text-sm leading-tight flex items-center justify-center min-h-16">
+                Traditional Dropshipping
+              </div>
+            </th>
+
+            <th class="pb-0 text-center align-bottom min-w-36 border-b border-border">
+              <div class="bg-amber-500 text-white font-extrabold px-3 py-3 text-xs sm:text-sm leading-tight flex items-center justify-center min-h-16">
+                Amazon FBA
+              </div>
+            </th>
+
+            <th class="pb-0 text-center align-bottom min-w-40 border-b-2 border-b-secondary">
+              <div class="bg-white px-3 py-3 rounded-tr-xl flex items-center justify-center gap-1.5 border-l-2 border-r-2 border-t-2 border-secondary min-h-16">
+                <img src="/Droparabia.png" alt="Droparabia" class="h-7 w-7 object-contain shrink-0" />
+                <span class="da-header-title">Droparabia</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {rows.map((row, i) => {
+            const isLast = i === rows.length - 1;
+            return (
+              <tr>
+                <td class={`sticky left-0 z-10 bg-bg-dark px-3 py-3 font-semibold text-text-base text-xs sm:text-sm border-r border-border ${isLast ? '' : 'border-b border-border'}`}>
+                  {row.feature}
+                </td>
+
+                <td class={`px-2 py-3 text-center bg-red-500/10 border-l border-r border-red-400/40 ${isLast ? 'rounded-bl-xl border-b border-b-red-400/40' : 'border-b border-border'}`}>
+                  <span class={`leading-snug ${row.ecom.bad ? 'text-red-600/80' : 'text-text-muted'}`}>
+                    {row.ecom.bad ? '✗ ' : ''}{row.ecom.text}
+                  </span>
+                </td>
+
+                <td class={`px-2 py-3 text-center bg-cyan-600/10 ${isLast ? 'border-b border-border' : 'border-b border-border'}`}>
+                  <span class={`leading-snug ${row.drop.bad ? 'text-cyan-800/70' : 'text-text-muted'}`}>
+                    {row.drop.bad ? '✗ ' : '✓ '}{row.drop.text}
+                  </span>
+                </td>
+
+                <td class={`px-2 py-3 text-center bg-amber-500/10 border-l border-r border-amber-400/40 ${isLast ? 'border-b border-b-amber-400/40' : 'border-b border-border'}`}>
+                  <span class={`leading-snug ${row.fba.bad ? 'text-amber-700/80' : 'text-text-muted'}`}>
+                    {row.fba.bad ? '✗ ' : ''}{row.fba.text}
+                  </span>
+                </td>
+
+                <td class={`px-3 py-3 text-center bg-white border-l-2 border-r-2 border-secondary ${isLast ? 'rounded-br-xl border-b-2 border-b-secondary' : 'border-b border-b-blue-100'}`}>
+                  <span class="da-cell-text text-xs sm:text-sm leading-snug font-semibold">✓ {row.da}</span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .da-header-title {
+    font-family: 'IBrand', sans-serif;
+    color: #0D0D2B;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+  }
+  .da-cell-text {
+    font-family: 'IBrand', sans-serif;
+    color: #2B9FD9;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const def = { ease: 'power2.out', overwrite: 'auto' as const };
+
+  gsap.from('.gs-vs-header', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-vs-header', start: 'top 88%', once: true },
+    y: 20, opacity: 0, duration: 0.8,
+  });
+  gsap.from('.gs-vs-table', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-vs-table', start: 'top 88%', once: true },
+    y: 24, opacity: 0, duration: 0.85,
+  });
+</script>

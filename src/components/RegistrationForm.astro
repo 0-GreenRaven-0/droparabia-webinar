@@ -1,0 +1,113 @@
+---
+import CountdownTimer from './CountdownTimer.astro';
+
+interface Props {
+  id?: string;
+  prefix?: string;
+}
+const { id = 'register', prefix = 'rf1' } = Astro.props;
+---
+
+<div class="form-card" id={id}>
+
+  <!-- Success / Error messages -->
+  <div id={`${prefix}-success`} class="hidden mb-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm text-center">
+    You're registered! See you at the workshop.
+  </div>
+  <div id={`${prefix}-error`} class="hidden mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm text-center">
+    Something went wrong. Please try again.
+  </div>
+
+  <!-- Form -->
+  <form
+    id={`${prefix}-form`}
+    method="POST"
+    action="https://1c3c2cfb.sibforms.com/serve/MUIFADWIOVckcKT3znys6u_aHk6gJZfcZy_nY2NzLvjJDckeQSwn_Y8kOlzs5d72EowmQ0Lhwcu_C_YRoFJzD7nmt4dyysPTehU-x_mOjMgA_AhAcKHgKCQrUPm6CVAnmLWKPT1TxmLZQ0IaDuTrmKLtxwjhC8Xk5S4xGrOKmNbY4gjL20esMForI0D0QdAftD89YMFW2tp8-dVOow=="
+    data-type="subscription"
+    class="flex flex-col gap-4"
+    novalidate
+  >
+    <div>
+      <label class="form-label" for={`${prefix}-name`}>Full Name</label>
+      <input
+        class="form-input"
+        type="text"
+        id={`${prefix}-name`}
+        name="FIRSTNAME"
+        placeholder="Your full name"
+        required
+      />
+    </div>
+
+    <div>
+      <label class="form-label" for={`${prefix}-email`}>Email Address</label>
+      <input
+        class="form-input"
+        type="email"
+        id={`${prefix}-email`}
+        name="EMAIL"
+        placeholder="you@example.com"
+        required
+      />
+    </div>
+
+    <div>
+      <label class="form-label" for={`${prefix}-phone`}>Phone Number</label>
+      <div class="flex gap-2">
+        <select name="SMS__COUNTRY_CODE" class="form-input w-28 shrink-0">
+          <option value="+961">+961 LB</option>
+        </select>
+        <input
+          class="form-input flex-1"
+          type="tel"
+          id={`${prefix}-phone`}
+          name="SMS"
+          placeholder="70 000 000"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- Brevo required hidden fields -->
+    <input type="text" name="email_address_check" value="" class="hidden" />
+    <input type="hidden" name="locale" value="en" />
+
+    <!-- Scarcity + Countdown -->
+    <div class="flex flex-col items-center gap-2 text-center form-countdown-wrap">
+      <p class="font-bold text-sm">Only <span class="text-primary">47</span> spots remaining</p>
+      <CountdownTimer prefix={prefix} />
+    </div>
+
+    <button type="submit" class="btn-cta">
+      Secure Your Spot in the Workshop
+    </button>
+
+    <p class="text-center text-xs text-text-muted/70">
+      🔒 Your info is private. Zero spam, ever.
+    </p>
+  </form>
+</div>
+
+<script is:inline define:vars={{ prefix }}>
+  const form = document.getElementById(`${prefix}-form`);
+  const successEl = document.getElementById(`${prefix}-success`);
+  const errorEl = document.getElementById(`${prefix}-error`);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type="submit"]');
+    btn.textContent = 'Registering…';
+    btn.disabled = true;
+
+    try {
+      const data = new FormData(form);
+      await fetch(form.action, { method: 'POST', body: data, mode: 'no-cors' });
+      form.classList.add('hidden');
+      successEl.classList.remove('hidden');
+    } catch {
+      errorEl.classList.remove('hidden');
+      btn.textContent = 'Secure Your Spot in the Workshop';
+      btn.disabled = false;
+    }
+  });
+</script>

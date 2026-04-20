@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:book.droparabia.com)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Read(//c/Users/USER/.claude/**)",
+      "Read(//c/Users/USER/Downloads/**)",
+      "Bash(unzip -o \"d:/Projects/droparabia-webinar/skill.zip\" -d \"d:/Projects/droparabia-webinar/.claude/skills/threejs/\")",
+      "Bash(npm uninstall *)",
+      "Bash(npx astro *)",
+      "Bash(node -e \"require\\('motion/react'\\)\")",
+      "Bash(npm i *)",
+      "Bash(grep -o '\"text\":\"---\\\\\\\\\\\\\\\\nconst steps\\\\|LearnSection\\\\.astro[^\"]*' \"C:\\\\Users\\\\USER\\\\.claude\\\\projects\\\\d--Projects-droparabia-webinar\\\\0a211bbf-4fa1-4013-bdb5-55670a9adf35.jsonl\")"
+    ]
+  }
+}

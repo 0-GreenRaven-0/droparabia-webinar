@@ -1,0 +1,22 @@
+---
+import CountdownTimer from './CountdownTimer.astro';
+---
+
+<div class="urgency-bar" role="banner" aria-label="Workshop urgency notice">
+  <div class="flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-red-400 animate-pulse-live shrink-0"></span>
+    <span class="font-bold tracking-wide">Limited spots available!</span>
+  </div>
+
+  <div class="flex items-center gap-2.5 text-white/90">
+    <span class="text-white/60 text-xs uppercase tracking-widest hidden sm:block">Closes in</span>
+    <CountdownTimer prefix="ub" />
+  </div>
+
+  <a
+    href="#register"
+    class="hidden sm:inline-flex items-center gap-1 text-white text-xs font-bold border border-white/30 rounded-lg px-3 py-1.5 hover:bg-white/15 transition-colors"
+  >
+    Register Now
+  </a>
+</div>

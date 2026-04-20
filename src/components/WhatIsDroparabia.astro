@@ -1,0 +1,103 @@
+---
+import RegistrationForm from './RegistrationForm.astro';
+import LebanonDots from './LebanonDots.astro';
+
+const reasons = [
+  'Want to build a legit online business from the comfort of their home',
+  'Have no prior experience or any kind of technical skills',
+  'Can only invest a minimum budget of $500',
+  'Want to retire their parents or spend more time with their kids',
+  'Are sick of internet gurus and their overpriced money-making courses',
+  "Don't want to spend hours learning a complex new business model",
+];
+---
+
+<section class="section-alt overflow-x-clip">
+
+  <!-- Full-width grid: globe left-edge, content right -->
+  <div class="grid grid-cols-1 lg:grid-cols-[40%_60%] items-start">
+
+    <!-- Right: Content (padded normally) -->
+    <div class="py-12 sm:py-24 px-6 xl:px-16 flex flex-col gap-8 lg:order-2">
+
+      <div class="gs-what-content">
+
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6">
+          What is <span class="gradient-text">Droparabia?</span>
+        </h2>
+
+        <!-- Lebanon map visible only on mobile, between headline and body text -->
+        <div class="flex lg:hidden justify-center mb-6 -mx-6">
+          <LebanonDots />
+        </div>
+        <p class="text-text-muted text-lg leading-relaxed">
+          Droparabia is the <strong class="text-text-base">1st Dropshipping platform</strong> to ever exist in Lebanon
+          that will forever change the ecosystem of how online stores — dropshipping, ecommerce, and beyond —
+          are built and managed. With <strong class="text-text-base">+500 Lebanese users</strong> already on board,
+          we're hosting a live workshop to grant more Lebanese the opportunity to use this one-of-a-kind system
+          and slowly build their way toward a better financial state.
+        </p>
+      </div>
+
+      <div class="gs-what-list">
+        <p class="font-bold text-text-base text-xl mb-6 gs-what-list-header">
+          This is for every person living in Lebanon who:
+        </p>
+        <div class="flex flex-col">
+          {reasons.map((reason) => (
+            <div class="flex items-start gap-3 py-2.5 border-b border-border last:border-0 gs-what-item">
+              <span class="text-primary mt-1 shrink-0">•</span>
+              <p class="text-text-muted text-base leading-relaxed">{reason}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="gs-what-solution text-center">
+        <p class="text-2xl sm:text-3xl font-extrabold text-text-base">
+          Droparabia was built specifically for you!
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Left: Globe flush to left edge -->
+    <div class="gs-globe-wrap hidden lg:flex items-center justify-center sticky top-0 h-screen lg:order-1">
+      <LebanonDots />
+    </div>
+
+  </div>
+
+
+
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const def = { ease: 'power2.out', overwrite: 'auto' as const };
+
+  gsap.from('.gs-what-content', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-what-content', start: 'top 88%', once: true },
+    y: 28, opacity: 0, duration: 0.85,
+  });
+  // Trigger the whole list block from its parent so all items are ready
+  gsap.from('.gs-what-list-header', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-what-list', start: 'top 88%', once: true },
+    y: 16, opacity: 0, duration: 0.7,
+  });
+  gsap.from('.gs-what-item', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-what-list', start: 'top 85%', once: true },
+    y: 14, opacity: 0, duration: 0.45, stagger: 0.07,
+  });
+  gsap.from('.gs-what-solution', {
+    ...def,
+    scrollTrigger: { trigger: '.gs-what-solution', start: 'top 88%', once: true },
+    y: 16, opacity: 0, duration: 0.7,
+  });
+</script>
