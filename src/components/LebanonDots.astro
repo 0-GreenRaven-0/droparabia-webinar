@@ -1,8 +1,9 @@
 ---
+const canvasId = `lb-canvas-${Math.random().toString(36).slice(2, 7)}`;
 ---
 
 <div class="lb-wrap">
-  <canvas id="lb-canvas"></canvas>
+  <canvas id={canvasId}></canvas>
 </div>
 
 <style>
@@ -14,9 +15,9 @@
   }
 </style>
 
-<script>
-  const canvas = document.getElementById('lb-canvas') as HTMLCanvasElement;
-  const ctx = canvas.getContext('2d')!;
+<script is:inline define:vars={{ canvasId }}>
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
 
   const isMobile = window.innerWidth < 1024;
   const H   = isMobile ? Math.round(window.innerWidth * 0.65) : Math.round(window.innerHeight * 0.95);
@@ -31,13 +32,7 @@
 
   const SPACING = Math.round(H / 58);
   const BASE_R  = SPACING * 0.33;
-  const lerp    = (a: number, b: number, t: number) => a + (b - a) * t;
-
-  interface Dot {
-    x: number; y: number; size: number;
-    cr: number; cg: number; cb: number;
-    phase: number; freq: number; amp: number;
-  }
+  const lerp    = (a, b, t) => a + (b - a) * t;
 
   let rafId = 0;
   let visible = true;
@@ -48,14 +43,14 @@
     const off = document.createElement('canvas');
     off.width  = img.naturalWidth;
     off.height = img.naturalHeight;
-    const offCtx = off.getContext('2d')!;
+    const offCtx = off.getContext('2d');
     offCtx.drawImage(img, 0, 0);
     const { data } = offCtx.getImageData(0, 0, off.width, off.height);
 
     const sx = img.naturalWidth  / W;
     const sy = img.naturalHeight / H;
 
-    const dots: Dot[] = [];
+    const dots = [];
 
     for (let y = SPACING / 2; y < H; y += SPACING) {
       for (let x = SPACING / 2; x < W; x += SPACING) {
@@ -80,7 +75,7 @@
       }
     }
 
-    function draw(ts: number) {
+    function draw(ts) {
       if (!visible) { rafId = 0; return; }
       const t = ts / 1000;
       ctx.clearRect(0, 0, W, H);
@@ -96,7 +91,6 @@
       rafId = requestAnimationFrame(draw);
     }
 
-    // Pause the loop when the canvas scrolls out of view
     const observer = new IntersectionObserver((entries) => {
       visible = entries[0].isIntersecting;
       if (visible && rafId === 0) rafId = requestAnimationFrame(draw);
