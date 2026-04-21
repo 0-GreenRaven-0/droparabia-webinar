@@ -29,11 +29,11 @@ import CountdownTimer from './CountdownTimer.astro';
 
   <!-- Header bar -->
   <div class="relative z-20 w-full px-4 sm:px-6 xl:px-16 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4 shrink-0">
-    <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
-      <img src="/Droparabia.png" alt="Droparabia" class="h-8 sm:h-11 w-auto object-contain" />
-      <span class="text-base sm:text-xl hidden sm:block" style="font-family: 'IBrand', sans-serif; letter-spacing: 0.03em;">Droparabia</span>
+    <div class="hidden md:flex items-center gap-2.5 shrink-0">
+      <img src="/Droparabia.png" alt="Droparabia" class="h-11 w-auto object-contain" />
+      <span class="text-xl" style="font-family: 'IBrand', sans-serif; letter-spacing: 0.03em;">Droparabia</span>
     </div>
-    <div class="flex flex-col items-center text-center gap-0.5 [&_.countdown-num]:text-white [&_.countdown-num]:text-sm sm:[&_.countdown-num]:text-base [&_.countdown-block]:border-secondary [&_.countdown-block]:bg-secondary [&_.countdown-label]:text-white/70">
+    <div class="flex flex-col items-center text-center gap-0.5 w-full md:w-auto [&_.countdown-num]:text-white [&_.countdown-num]:text-sm sm:[&_.countdown-num]:text-base [&_.countdown-block]:border-secondary [&_.countdown-block]:bg-secondary [&_.countdown-label]:text-white/70">
       <span class="text-[9px] sm:text-xs font-bold text-primary uppercase tracking-wide leading-none">Hurry Up and Secure your Spot!</span>
       <CountdownTimer prefix="hero" />
     </div>
@@ -46,11 +46,11 @@ import CountdownTimer from './CountdownTimer.astro';
   <!-- Main content: centered single column -->
   <div class="relative z-10 flex-1 min-h-0 flex flex-col items-center justify-center text-center px-5 sm:px-8 pb-10">
     <div class="max-w-3xl flex flex-col items-center gap-5 sm:gap-6">
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-[1.12] text-balance">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.12] text-balance">
         Watch Me Build a
-        <span class="gradient-text-anim">High-Earning</span>
+        <span class="text-primary">High-Earning</span>
         Online Store &amp; Copy Every Step I Take to Scale Towards
-        <span class="gradient-text-anim">Your First $1–2k</span>
+        <span class="text-secondary">Your First $1–2k</span>
       </h1>
       <p class="text-sm sm:text-base text-text-muted font-semibold max-w-xl">
         Using Lebanon's <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/LB.svg" alt="Lebanon" class="inline w-5 h-3.5 align-middle mx-0.5" /> First Dropshipping Platform — Expanding Across MENA
