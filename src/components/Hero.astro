@@ -3,29 +3,6 @@ import CountdownTimer from './CountdownTimer.astro';
 ---
 
 <section class="relative h-screen flex flex-col bg-grid">
-  <div class="absolute inset-0 overflow-hidden pointer-events-none select-none">
-    <!-- Orbs -->
-    <div class="absolute w-[600px] h-[600px] -top-40 -right-40 rounded-full" style="background: radial-gradient(circle, rgba(43,159,217,0.35) 0%, rgba(43,159,217,0.1) 50%, transparent 70%);"></div>
-    <div class="absolute w-[500px] h-[500px] -bottom-20 -left-32 rounded-full" style="background: radial-gradient(circle, rgba(64,64,178,0.3) 0%, rgba(64,64,178,0.08) 50%, transparent 70%);"></div>
-    <!-- Center glow -->
-    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full" style="background: radial-gradient(ellipse, rgba(43,159,217,0.12) 0%, transparent 65%);"></div>
-    <!-- Horizontal beam -->
-    <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[1px]" style="background: linear-gradient(90deg, transparent 0%, rgba(43,159,217,0.5) 30%, rgba(64,64,178,0.5) 70%, transparent 100%);"></div>
-    <!-- Diagonal lines -->
-    <div class="absolute left-[5%] top-0 w-[1px] h-full rotate-[25deg] origin-top" style="background: linear-gradient(180deg, transparent 10%, rgba(43,159,217,0.3) 40%, rgba(64,64,178,0.3) 70%, transparent 90%);"></div>
-    <div class="absolute right-[5%] top-0 w-[1px] h-full -rotate-[25deg] origin-top" style="background: linear-gradient(180deg, transparent 10%, rgba(43,159,217,0.3) 40%, rgba(64,64,178,0.3) 70%, transparent 90%);"></div>
-    <!-- Corner brackets -->
-    <div class="absolute top-6 left-6 w-16 h-16 border-l-2 border-t-2 border-primary/40 rounded-tl-lg"></div>
-    <div class="absolute bottom-6 right-6 w-16 h-16 border-r-2 border-b-2 border-secondary/40 rounded-br-lg"></div>
-    <!-- Floating dots -->
-    <div class="absolute top-[22%] left-[8%] w-2.5 h-2.5 rounded-full bg-primary/50"></div>
-    <div class="absolute top-[65%] left-[6%] w-1.5 h-1.5 rounded-full bg-primary/35"></div>
-    <div class="absolute top-[30%] right-[7%] w-2.5 h-2.5 rounded-full bg-secondary/60"></div>
-    <div class="absolute top-[70%] right-[12%] w-1.5 h-1.5 rounded-full bg-secondary/40"></div>
-    <div class="absolute top-[50%] left-[20%] w-1.5 h-1.5 rounded-full bg-primary/30"></div>
-    <div class="absolute top-[80%] left-[35%] w-2 h-2 rounded-full bg-secondary/30"></div>
-    <div class="noise-overlay"></div>
-  </div>
 
   <!-- Header bar -->
   <div class="relative z-20 w-full px-4 sm:px-6 xl:px-16 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4 shrink-0">
@@ -46,11 +23,8 @@ import CountdownTimer from './CountdownTimer.astro';
   <!-- Main content: centered single column -->
   <div class="relative z-10 flex-1 min-h-0 flex flex-col items-center justify-center text-center px-5 sm:px-8 pb-10">
     <div class="max-w-3xl flex flex-col items-center gap-5 sm:gap-6">
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.12] text-balance">
-        Watch Me Build a
-        <span class="text-primary">High-Earning</span>
-        Online Store &amp; Copy Every Step I Take to Scale Towards
-        <span class="text-secondary">Your First $1–2k</span>
+      <h1 class="text-4xl lg:text-5xl xl:text-6xl font-bold leading-[1.12] text-balance">
+        Watch Me Build a <span class="gradient-text-anim">High-Earning</span> Online Store &amp; Copy Every Step I Take to Scale Towards <span class="gradient-text-anim">Your First $1–2k</span>
       </h1>
       <p class="text-sm sm:text-base text-text-muted font-semibold max-w-xl">
         Using Lebanon's <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/LB.svg" alt="Lebanon" class="inline w-5 h-3.5 align-middle mx-0.5" /> First Dropshipping Platform — Expanding Across MENA
