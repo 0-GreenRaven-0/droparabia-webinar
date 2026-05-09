@@ -1,5 +1,5 @@
 ---
-import CountdownTimer from './CountdownTimer.astro';
+import FlipClock from './FlipClock.astro';
 
 interface Props {
   id?: string;
@@ -75,7 +75,7 @@ const { id = 'register', prefix = 'rf1' } = Astro.props;
     <!-- Scarcity + Countdown -->
     <div class="flex flex-col items-center gap-2 text-center form-countdown-wrap">
       <p class="font-bold text-sm">Only <span class="text-primary">47</span> spots remaining</p>
-      <CountdownTimer prefix={prefix} />
+      <FlipClock targetDate="2026-06-01 20:00:00" />
     </div>
 
     <button type="submit" class="btn-cta">

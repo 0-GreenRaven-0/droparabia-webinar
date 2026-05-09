@@ -2,30 +2,30 @@
 ---
 
 <section>
-  <div class="section">
+  <div class="section" style="padding-top: 40px; padding-bottom: 40px;">
 
     <!-- Header -->
     <div class="text-center mb-14 gs-test-header">
       <h2 class="text-4xl sm:text-5xl font-extrabold mb-4">
-        Trusted by <span class="gradient-text">500+ Lebanese</span>
+        <span class="gradient-text">500+ Lebanese</span> who followed this model
       </h2>
 
-      <!-- Trustpilot Rating -->
-      <div class="inline-flex flex-wrap items-center justify-center gap-2 mt-4">
-        <div class="flex items-center gap-1">
-          <span class="tp-star-box">★</span>
-          <span class="tp-star-box">★</span>
-          <span class="tp-star-box">★</span>
-          <span class="tp-star-box">★</span>
-          <span class="tp-star-box tp-star-empty">★</span>
-        </div>
-        <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="h-6 w-auto" />
-        <span class="font-semibold text-text-base text-base">Rated 4/5</span>
-      </div>
     </div>
 
     <!-- Embla Carousel -->
-    <div class="relative max-w-4xl mx-auto gs-community">
+    <div class="relative max-w-6xl mx-auto gs-community">
+
+        <button id="testo-prev" aria-label="Previous" class="testo-nav-btn testo-nav-prev">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button id="testo-next" aria-label="Next" class="testo-nav-btn testo-nav-next">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
 
         <!-- Viewport -->
         <div id="testo-embla" class="overflow-hidden">
@@ -51,29 +51,14 @@
               "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(17).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
               "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(18).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
             ].map((src) => (
-              <div class="embla__slide shrink-0 w-full md:w-[calc(33.333%-11px)] rounded-2xl overflow-hidden border-2 border-border">
+              <div class="embla__slide shrink-0 w-full md:w-[calc(33.333%-11px)] rounded-2xl overflow-hidden">
                 <img src={src} alt="Testimonial" class="w-full h-auto block" loading="lazy" />
               </div>
             ))}
           </div>
         </div>
 
-        <!-- Nav -->
-        <div class="flex items-center justify-center gap-4 mt-6">
-          <button id="testo-prev" aria-label="Previous" class="testo-nav-btn">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-
-          <div id="testo-dots" class="flex items-center gap-1.5"></div>
-
-          <button id="testo-next" aria-label="Next" class="testo-nav-btn">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
+        <div id="testo-dots" class="flex items-center justify-center gap-1.5 mt-6"></div>
 
       </div>
 
@@ -82,6 +67,9 @@
 
 <style>
   .testo-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,15 +77,17 @@
     height: 2.75rem;
     border-radius: 50%;
     border: 2px solid #2B9FD9;
-    color: #2B9FD9;
-    background: transparent;
+    color: white;
+    background: #2B9FD9;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s, color 0.2s;
-    flex-shrink: 0;
+    z-index: 10;
   }
+  .testo-nav-prev { left: -1.5rem; }
+  .testo-nav-next { right: -1.5rem; }
   .testo-nav-btn:hover {
-    background: #2B9FD9;
-    color: white;
+    background: white;
+    color: #2B9FD9;
   }
   .testo-dot {
     height: 8px;

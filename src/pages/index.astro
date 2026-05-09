@@ -1,9 +1,9 @@
 ---
 import '../styles/global.css';
 import Hero from '../components/Hero.astro';
-import WhatIsDroparabia from '../components/WhatIsDroparabia.astro';
+import WorkshopSection from '../components/WorkshopSection.astro';
+import HostSection from '../components/HostSection.astro';
 import LearnSection from '../components/LearnSection.astro';
-import VSSection from '../components/VSSection.astro';
 import Testimonials from '../components/Testimonials.astro';
 import FAQ from '../components/FAQ.astro';
 import RegistrationForm from '../components/RegistrationForm.astro';
@@ -15,7 +15,7 @@ import RegistrationForm from '../components/RegistrationForm.astro';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
-    <title>Droparabia Live Workshop — Build Your First Online Store in Lebanon</title>
+    <title>Droparabia — Free Live Workshop</title>
     <meta
       name="description"
       content="Join Majd Abdulsalam in a live workshop and learn how to build a profitable dropshipping business in Lebanon using Droparabia — from scratch, step by step."
@@ -32,80 +32,91 @@ import RegistrationForm from '../components/RegistrationForm.astro';
     />
   </head>
 
-  <body class="overflow-x-hidden">
+  <body class="overflow-x-hidden" style="background: #E0E0E0;">
 
     <Hero />
-    <WhatIsDroparabia />
+    <WorkshopSection />
+    <HostSection />
     <LearnSection />
 
-    <!-- CTA break 1 -->
-    <div class="px-6 bg-bg-section text-center">
-      <a href="#register" class="btn-cta inline-flex max-w-xs flex-col items-center gap-1">
-        <span>Secure Your Spot Now</span>
-        <span class="text-xs font-normal opacity-75 flex items-center gap-1.5">
-          <span class="text-red-400">●</span>
-          Only 47 spots available
-        </span>
-      </a>
-    </div>
-
-    <VSSection />
     <Testimonials />
-
-    <!-- CTA break 2 -->
-    <div class=" px-6 text-center">
-      <a href="#register" class="btn-cta inline-flex max-w-xs flex-col items-center gap-1">
-        <span>Secure Your Spot Now</span>
-        <span class="text-xs font-normal opacity-75 flex items-center gap-1.5">
-          <span class="text-red-400">●</span>
-          Only 47 spots available
-        </span>
-      </a>
-    </div>
 
     <FAQ />
 
-    <!-- Final registration form -->
-    <div class="py-16 px-6 bg-bg-section" id="register">
-      <div class="max-w-lg mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-center mb-3">
-          You'll walk out ready to <span class="gradient-text">start building and earning</span> with ease!
+    <!-- Final CTA -->
+    <div class="py-20 px-6 text-center" style="background: #E0E0E0;" id="register">
+      <div class="max-w-2xl mx-auto flex flex-col items-center gap-5">
+        <h2 style="font-family: 'IBrand', sans-serif; font-size: clamp(32px, 4vw, 52px); font-weight: 400; letter-spacing: -0.01em; color: #000; margin: 0; line-height: 1.15;">
+          By the end of the workshop...
         </h2>
-        <p class="text-text-muted text-center text-base leading-relaxed mb-8">
-          Because this is a free workshop, spots are tightly limited — be sure to secure yours to avoid missing out on a huge opportunity.
+        <p style="font-family: 'Outfit', sans-serif; font-size: clamp(16px, 1.5vw, 22px); font-weight: 500; color: rgba(0,0,0,0.75); margin: 0; line-height: 1.55; max-width: 640px;">
+          You're ready to start building your own dropshipping business and make your way towards your first $2,000 – $3,000
         </p>
-        <RegistrationForm id="register-form" prefix="rf1" />
+        <div style="font-family: 'IBrand', sans-serif; font-size: 16px; color: rgba(0,0,0,0.55);">
+          Doors close on <strong style="color: #000;">May 21, 2026</strong>
+        </div>
+        <a href="#register" class="cta-final" onclick="event.preventDefault(); document.getElementById('regModal').classList.add('show')">Secure Your Spot Now!</a>
+        <p style="font-family: 'IBrand', sans-serif; font-size: 12px; color: rgba(0,0,0,0.5); margin: 0;">
+          Replays aren't guaranteed so be sure to not miss out
+        </p>
       </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="border-t border-border bg-bg-dark">
-      <div class="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 gap-10">
+    <!-- Registration modal -->
+    <div id="regModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); z-index:100; align-items:center; justify-content:center; padding:24px;" onclick="if(event.target===this)this.classList.remove('show')">
+      <div style="background:#fff; border-radius:24px; padding:36px; max-width:480px; width:100%; position:relative; box-shadow:0 30px 80px rgba(0,0,0,0.4);">
+        <button onclick="document.getElementById('regModal').classList.remove('show')" style="position:absolute; right:16px; top:16px; background:transparent; border:0; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">✕</button>
+        <RegistrationForm id="register-form" prefix="rf1" />
+      </div>
+    </div>
+    <style>
+      #regModal.show { display: flex; }
+      .cta-final {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgb(20, 173, 0);
+        color: #fff;
+        font-family: 'IBrand', sans-serif;
+        font-size: 20px;
+        letter-spacing: -0.01em;
+        border-radius: 16px;
+        padding: 16px 48px;
+        text-decoration: none;
+        box-shadow: 0 6px 0 rgb(7, 97, 12), 0 14px 28px rgba(0,0,0,0.2);
+        transition: transform .12s ease, box-shadow .12s ease;
+      }
+      .cta-final:hover {
+        transform: translateY(2px);
+        box-shadow: 0 4px 0 rgb(7, 97, 12), 0 10px 22px rgba(0,0,0,0.25);
+        color: #fff;
+      }
+      @media (max-width: 768px) {
+        .cta-final { font-size: 16px; padding: 12px 28px; }
+      }
+    </style>
 
-        <!-- Brand -->
+    <!-- Footer -->
+    <footer style="border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%)">
+      <div class="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 gap-10">
         <div class="flex flex-col gap-4">
           <div class="flex items-center gap-2">
             <img src="/Droparabia.png" alt="Droparabia" class="h-10 w-auto object-contain" />
-            <span style="font-family: 'IBrand', sans-serif;  font-size: 1.5rem; letter-spacing: 0.03em;">Droparabia</span>
+            <span style="font-family: 'IBrand', sans-serif; font-size: 1.5rem; letter-spacing: -0.01em; color:#fff;">Droparabia</span>
           </div>
-          <p class="text-text-muted text-sm leading-relaxed max-w-xs">
+          <p class="text-sm leading-relaxed max-w-xs" style="color: rgba(255,255,255,0.6);">
             Lebanon's first dropshipping platform — built to help you launch, sell, and scale without inventory risk.
           </p>
         </div>
-
-        <!-- Quick links -->
         <div class="flex flex-col gap-3">
-          <p class="text-xs font-bold uppercase tracking-widest text-text-muted mb-1">Quick Links</p>
-          <a href="#register" class="text-sm text-text-muted hover:text-primary transition-colors no-underline">Register for the Workshop</a>
-          <a href="#learn-section" class="text-sm text-text-muted hover:text-primary transition-colors no-underline">What You'll Learn</a>
-          <a href="#faq" class="text-sm text-text-muted hover:text-primary transition-colors no-underline">FAQ</a>
+          <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color: rgba(255,255,255,0.5);">Quick Links</p>
+          <a href="#register" class="text-sm no-underline" style="color: rgba(255,255,255,0.7);">Register for the Workshop</a>
+          <a href="#learn-section" class="text-sm no-underline" style="color: rgba(255,255,255,0.7);">What You'll Learn</a>
+          <a href="#faq" class="text-sm no-underline" style="color: rgba(255,255,255,0.7);">FAQ</a>
         </div>
-
-
       </div>
-
-      <div class="border-t border-border py-5 px-6 text-center">
-        <p class="text-black text-xs">
+      <div style="border-top: 1px solid rgba(255,255,255,0.1); padding: 20px 24px; text-align: center;">
+        <p class="text-xs" style="color: rgba(255,255,255,0.45);">
           © {new Date().getFullYear()} Droparabia. All rights reserved. · Lebanon's #1 Dropshipping Platform
         </p>
       </div>

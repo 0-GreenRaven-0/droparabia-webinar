@@ -1,0 +1,181 @@
+---
+---
+
+<section class="host">
+  <div class="host-text">
+    <div class="eyebrow">Meet your Host:</div>
+    <h2><span class="name-white">Majd </span><span class="name-cyan">Abdulsalam</span></h2>
+    <p>Despite the internet telling you that "Dropshipping is Dead" or that it doesn't work in Lebanon or any arab country</p>
+    <p><strong>Majd, at the age of 17, made over 6-Figures through dropshipping</strong>, helped his parents retire from their dead-end jobs, helped over +500 Lebanese do the same and founded Droparabia, the first Dropshipping platform in Lebanon.</p>
+    <p>And now he's gonna break down step-by-step how to start your own high-earning dropshipping business that works even through the on-going war.</p>
+  </div>
+
+  <div class="host-photo-wrap">
+    <div class="host-photo">
+      <img src="/mj.jpeg" alt="Majd Abdulsalam" />
+    </div>
+    <div class="host-pills">
+      <div class="pill purple">Made over<br>6-Figures</div>
+      <div class="pill blue">Founder of<br>Droparabia</div>
+      <div class="pill black">+5 years<br>Digital Marketing<br>experience</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .host {
+    position: relative;
+    width: 100%;
+    min-height: 592px;
+    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    padding: 60px 96px 80px;
+    gap: 60px;
+  }
+
+  .host-text {
+    flex: 1;
+    color: #fff;
+    max-width: 640px;
+  }
+  .eyebrow {
+    font-family: 'IBrand', sans-serif;
+    font-size: clamp(22px, 2.5vw, 32px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: rgba(255,255,255,0.85);
+  }
+  .host-text h2 {
+    margin: 6px 0 28px;
+    font-family: 'IBrand', sans-serif;
+    font-weight: 400;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  .host-text p {
+    margin: 0 0 16px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: clamp(15px, 1.3vw, 19px);
+    line-height: 1.5;
+    color: rgba(255,255,255,0.92);
+  }
+  .host-text p strong {
+    color: #fff;
+    font-weight: 700;
+  }
+  .name-white { color: #fff; }
+  .name-cyan  { color: #00D4FF; }
+
+  .host-photo-wrap {
+    flex: 0 0 420px;
+    width: 420px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .host-photo {
+    width: 340px;
+    height: 460px;
+    border-radius: 100px;
+    border: 6px solid #fff;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+    transform: rotate(24.6deg);
+    transform-origin: center;
+    flex-shrink: 0;
+  }
+  .host-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 20%;
+    transform: rotate(-24.6deg) scale(1.35);
+    transform-origin: center;
+  }
+
+  .host-pills {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-top: -120px;
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 420px;
+  }
+  .pill {
+    color: #fff;
+    font-family: 'IBrand', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    text-align: center;
+    line-height: 1.25;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    letter-spacing: -0.01em;
+    border-radius: 0;
+    width: 175px;
+    height: 185px;
+    -webkit-mask-image: url('/oval.png');
+    mask-image: url('/oval.png');
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+  .pill.purple {
+    background: rgb(59, 25, 163);
+    margin-right: -35px;
+  }
+  .pill.blue {
+    background: rgb(62, 167, 255);
+    z-index: 2;
+  }
+  .pill.black {
+    background: rgb(5, 5, 5);
+    font-size: 14px;
+    margin-left: -35px;
+  }
+
+  @media (max-width: 1024px) {
+    .host {
+      flex-direction: column;
+      padding: 48px 24px 60px;
+      text-align: center;
+    }
+    .host-text { max-width: 100%; order: 1; }
+    .host-photo-wrap {
+      flex: none;
+      width: 100%;
+      align-items: center;
+      order: 2;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .host-text { order: 1; }
+    .host-photo-wrap { order: 2; }
+    .host-photo {
+      width: 220px;
+      height: 300px;
+    }
+    .pill {
+      width: 130px;
+      height: 135px;
+      font-size: 13px;
+    }
+    .pill.black  { font-size: 12px; margin-left: -10px; }
+    .pill.purple { margin-right: -10px; }
+    .host-pills  { margin-top: -90px; }
+  }
+</style>
