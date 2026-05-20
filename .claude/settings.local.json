@@ -20,7 +20,12 @@
       "Bash(Get-ChildItem -Path \"D:\\\\Projects\\\\droparabia-landing\" -Recurse -Directory)",
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(ls -la \"D:/Projects/droparabia-landing/\" | head -20)",
-      "Read(//d/Projects/droparabia-landing/**)"
+      "Read(//d/Projects/droparabia-landing/**)",
+      "Read(//d/Projects/droparabia-book/**)",
+      "Bash(cp \"D:/Projects/droparabia-book/patch-worker.mjs\" \"D:/Projects/droparabia-webinar/patch-worker.mjs\")"
+    ],
+    "additionalDirectories": [
+      "D:\\Projects\\droparabia-book"
     ]
   }
 }
