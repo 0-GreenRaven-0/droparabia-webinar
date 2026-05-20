@@ -90,7 +90,6 @@ const { id = 'register', prefix = 'rf1' } = Astro.props;
 
 <script is:inline define:vars={{ prefix }}>
   const form = document.getElementById(`${prefix}-form`);
-  const successEl = document.getElementById(`${prefix}-success`);
   const errorEl = document.getElementById(`${prefix}-error`);
 
   form.addEventListener('submit', async (e) => {
@@ -101,9 +100,18 @@ const { id = 'register', prefix = 'rf1' } = Astro.props;
 
     try {
       const data = new FormData(form);
+      const name  = form.querySelector('[name="FIRSTNAME"]').value.trim();
+      const email = form.querySelector('[name="EMAIL"]').value.trim();
+      const phone = form.querySelector('[name="SMS"]').value.trim();
+
+      // Submit to Brevo
       await fetch(form.action, { method: 'POST', body: data, mode: 'no-cors' });
-      form.classList.add('hidden');
-      successEl.classList.remove('hidden');
+
+      // Save user data for survey flow
+      sessionStorage.setItem('userData', JSON.stringify({ name, email, phone }));
+
+      // Redirect to survey
+      window.location.href = '/survey';
     } catch {
       errorEl.classList.remove('hidden');
       btn.textContent = 'Secure Your Spot in the Workshop';

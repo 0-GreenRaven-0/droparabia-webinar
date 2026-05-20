@@ -1,0 +1,172 @@
+---
+
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <title>Your Free Guide — Droparabia</title>
+    <link rel="icon" type="image/png" href="/Droparabia.png" />
+
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+      .flex { display: flex; } .flex-col { flex-direction: column; } .items-center { align-items: center; }
+      .justify-center { justify-content: center; } .p-6 { padding: 1.5rem; } .min-h-screen { min-height: 100vh; }
+      .w-full { width: 100%; } .max-w-4xl { max-width: 56rem; } .space-y-6 > * + * { margin-top: 1.5rem; }
+      .space-y-2 > * + * { margin-top: 0.5rem; } .text-center { text-align: center; }
+      .text-3xl { font-size: 1.875rem; } .font-bold { font-weight: 700; } .text-gray-900 { color: #111827; }
+      .text-gray-500 { color: #6B7280; } .text-gray-800 { color: #1F2937; } .text-gray-700 { color: #374151; }
+      .text-lg { font-size: 1.125rem; } .leading-relaxed { line-height: 1.625; }
+      .gap-8 { gap: 2rem; } .gap-4 { gap: 1rem; } .pt-2 { padding-top: 0.5rem; }
+      .flex-col { flex-direction: column; } .max-w-lg { max-width: 32rem; }
+      @media (min-width: 768px) {
+        .content-row { flex-direction: row !important; align-items: flex-start !important; }
+        .content-row .content-text { text-align: left; }
+      }
+      .input--hidden { display: none !important; }
+
+      .unq-btn {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 20px;
+        border-radius: 14px;
+        border: none;
+        cursor: pointer;
+        background: linear-gradient(135deg, #2563EB, #3B82F6);
+        color: #fff;
+        text-align: left;
+        transition: transform 0.15s, box-shadow 0.15s;
+        box-shadow: 0 4px 14px rgba(37,99,235,0.28);
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        max-width: 360px;
+        text-decoration: none;
+      }
+      .unq-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,235,0.35); }
+
+      /* shine */
+      .unq-btn::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.35), rgba(255,255,255,0));
+        transform: skewX(-20deg);
+        animation: unq-shine 2.5s ease-in-out infinite;
+      }
+      @keyframes unq-shine { 0%{left:-100%} 55%{left:130%} 100%{left:130%} }
+
+      .unq-btn-txt1 { font-size: 1rem; font-weight: 700; margin: 0; }
+      .unq-btn-txt2 { font-size: 0.8rem; opacity: 0.85; margin: 0; }
+    </style>
+  </head>
+
+  <body style="background:#e0e0e0; min-height:100vh;">
+
+    <!-- Shown if no valid token -->
+    <div id="no-access" style="display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem; text-align:center; min-height:100vh;">
+      <h1 style="font-size:1.75rem; font-weight:700; color:#111827;">No cheating allowed! 😏</h1>
+      <p style="font-size:1.1rem; color:#374151;">Please go back and finish the survey first.</p>
+      <button onclick="window.location.href='/survey'" style="margin-top:1rem; padding:0.75rem 2rem; background:linear-gradient(135deg,#2563EB,#3B82F6); color:#fff; font-weight:700; border:none; border-radius:10px; font-size:1rem; cursor:pointer;">
+        Go Back
+      </button>
+    </div>
+
+    <div id="main-content" style="display:none;">
+    <div class="flex items-center justify-center p-6 min-h-screen">
+      <div class="w-full max-w-4xl space-y-6">
+
+        <!-- Header -->
+        <div class="text-center space-y-2">
+          <h1 class="text-3xl font-bold text-gray-900">Not Quite Yet...</h1>
+          <p class="text-gray-500 text-lg">
+            Based on your answers, it looks like now might not be the perfect time for you.
+          </p>
+        </div>
+
+        <!-- Image + Content -->
+        <div class="flex flex-col content-row items-center justify-center gap-8 pt-2">
+
+          <img
+            loading="lazy"
+            src="https://ik.imagekit.io/greenraven/MJ/1761674331.png?updatedAt=1761674791148"
+            alt="Free Guide"
+            style="width:220px; flex-shrink:0;"
+          />
+
+          <div class="flex flex-col gap-4 max-w-lg content-text">
+            <p class="text-center content-text text-gray-800 text-lg leading-relaxed">
+              But here's a <span style="color:#F97316; font-weight:700;">FREE</span> comprehensive guide
+              with everything you need to know about local dropshipping to get you started on the right foot!
+            </p>
+
+            <a
+              href="https://drive.google.com/file/d/1x_8fS2uGkQ_gUJlWQXInbVxuXqLZp-Lt/view"
+              target="_blank"
+              rel="noopener"
+              class="unq-btn"
+            >
+              <!-- File icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="flex-shrink:0;">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 8H13V3.5zM6 20V4h5v6h6v10H6zm2-7h8v1.5H8V13zm0 3h8v1.5H8V16zm0-6h3v1.5H8V10z"/>
+              </svg>
+              <div>
+                <p class="unq-btn-txt1">Check Out the Free Guide</p>
+                <p class="unq-btn-txt2">Get started with local dropshipping!</p>
+              </div>
+            </a>
+
+            <p class="text-gray-700 leading-relaxed">
+              In the meantime, we highly recommend you follow us on Instagram for more engaging content,
+              free knowledge and further announcements!
+            </p>
+
+            <a
+              href="https://www.instagram.com/mjbusinessofficial?igsh=ZG44cXRja2l4dGdk"
+              target="_blank"
+              rel="noopener"
+              class="unq-btn"
+              style="background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); box-shadow: 0 4px 14px rgba(131,58,180,0.3);"
+            >
+              <!-- Instagram icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="flex-shrink:0;">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+              <div>
+                <p class="unq-btn-txt1">Follow our Instagram!</p>
+                <p class="unq-btn-txt2">For more content & announcements!</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    </div> <!-- /main-content -->
+
+    <!-- Token check -->
+    <script is:inline>
+      (function() {
+        try {
+          const tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
+          if (tokens.unqualified) {
+            document.getElementById('main-content').style.display = 'block';
+          } else {
+            document.getElementById('no-access').style.display = 'flex';
+          }
+        } catch(_) {
+          document.getElementById('no-access').style.display = 'flex';
+        }
+      })();
+    </script>
+
+
+
+  </body>
+</html>

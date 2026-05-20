@@ -1,0 +1,256 @@
+---
+---
+
+<html lang="en">
+  <head>
+    <script is:inline>window.dataLayer = window.dataLayer || [];</script>
+    <!-- Google Tag Manager -->
+    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NTGWNM69');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <title>Get Started — Droparabia</title>
+    <link rel="icon" type="image/png" href="/Droparabia.png" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'Inter', sans-serif; background: #F1F5F9; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+      .survey-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.25rem 1rem; min-height: 100svh; }
+      .survey-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 1.75rem; width: 100%; max-width: 680px; }
+      .survey-title { color: #2563EB; font-size: 1.2rem; font-weight: 700; text-align: center; line-height: 1.5; margin-bottom: 1.25rem; }
+      .survey-progress-track { background: #E2E8F0; height: 6px; border-radius: 999px; margin-bottom: 0.5rem; overflow: hidden; }
+      .survey-progress-bar { background: linear-gradient(90deg, #2563EB, #3B82F6); height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+      .survey-page-count { color: #94A3B8; font-size: 0.9rem; margin-bottom: 1rem; }
+      .survey-question { font-size: 1rem; font-weight: 600; color: #111827; margin-bottom: 1rem; line-height: 1.6; }
+      .survey-options { display: flex; flex-direction: column; gap: 0.6rem; }
+      .survey-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 12px; border: 2px solid #E2E8F0; background: #fff; cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s; font-weight: 500; color: #111827; font-size: 1rem; width: 100%; text-align: left; }
+      .survey-option:hover { border-color: #93C5FD; background: #EFF6FF; transform: translateX(3px); }
+      .survey-option.selected { border-color: #2563EB; background: #EFF6FF; box-shadow: 0 2px 8px rgba(37,99,235,0.12); }
+      .survey-error { color: #DC2626; font-size: 0.85rem; background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; padding: 0.5rem 0.75rem; margin-top: 0.75rem; display: none; }
+      .survey-nav { display: flex; gap: 0.75rem; margin-top: 1.75rem; }
+      .survey-btn { padding: 0.75rem 1.75rem; background: linear-gradient(135deg, #2563EB, #3B82F6); color: #fff; font-weight: 700; border-radius: 10px; border: none; cursor: pointer; font-size: 1rem; font-family: 'Inter', sans-serif; box-shadow: 0 4px 12px rgba(37,99,235,0.25); transition: transform 0.15s, box-shadow 0.15s; }
+      .survey-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,99,235,0.3); }
+      .survey-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+      .survey-btn-secondary { background: #fff; color: #2563EB; border: 2px solid #2563EB; box-shadow: none; }
+      .survey-btn-secondary:hover { background: #EFF6FF; }
+      .survey-page { display: none; }
+      .survey-page.active { display: block; }
+      @media (max-width: 768px) {
+        body { background: #fff !important; }
+        .survey-wrap { padding: 1rem 1.25rem; justify-content: flex-start; }
+        .survey-card { background: transparent; box-shadow: none; border-radius: 0; padding: 1.25rem 0; max-width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NTGWNM69"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <!-- Loading overlay while subscribing -->
+    <div id="survey-loader" style="display:flex; position:fixed; inset:0; background:#F1F5F9; z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:1rem;">
+      <div style="width:44px; height:44px; border:4px solid #E2E8F0; border-top-color:#2563EB; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+      <p style="color:#6B7280; font-family:'Inter',sans-serif; font-size:1rem;">Just a moment...</p>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+    <div class="survey-wrap" id="survey-content" style="display:none;">
+      <div class="survey-card">
+
+        <div style="text-align:center; margin-bottom:1.25rem;">
+          <img src="/Droparabia.png" alt="Droparabia" style="height:38px; margin:0 auto 0.75rem;" />
+          <h1 class="survey-title">Before we book you a call, we need to ask you a few questions to make sure we are the right fit for you</h1>
+        </div>
+
+        <div class="survey-progress-track">
+          <div class="survey-progress-bar" id="progress-bar" style="width:16.6%"></div>
+        </div>
+        <p class="survey-page-count" id="page-count">Question 1 of 6</p>
+
+        <!-- Q1 -->
+        <div class="survey-page active" data-field="experience">
+          <h2 class="survey-question">Have you attempted dropshipping or e-commerce before?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="yes_dropshipping">Yes, I have tried dropshipping before</button>
+            <button class="survey-option" data-value="yes_ecommerce">I have tried e-commerce before</button>
+            <button class="survey-option" data-value="no">No, I am completely new to this</button>
+          </div>
+          <div class="survey-error" id="err-0">Please select an option to continue</div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="survey-page" data-field="budget" style="display:none">
+          <h2 class="survey-question">We only work with users who have sufficient startup capital. To start a Local Dropshipping business, costs involve: Software &amp; marketing. Do you have access to a minimum of $600 to get started?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="yes">Yes, I have the funds</button>
+            <button class="survey-option" data-value="partial">I have at least $600</button>
+            <button class="survey-option" data-value="no">No, I don't have the funds right now</button>
+          </div>
+          <div class="survey-error" id="err-1">Please select an option to continue</div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="survey-page" data-field="time" style="display:none">
+          <h2 class="survey-question">Starting a dropshipping business requires a bit of free time to learn and manage your business, do you have some free time?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="yes">Yes, I have free time</button>
+            <button class="survey-option" data-value="makeTime">I can make time for it</button>
+            <button class="survey-option" data-value="no">No, my schedule is full</button>
+          </div>
+          <div class="survey-error" id="err-2">Please select an option to continue</div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="survey-page" data-field="effort" style="display:none">
+          <h2 class="survey-question">This isn't a get-rich-quick scheme — it requires real work and effort to get the same results as our users. Are you willing to put in the work?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="willing">I am willing to put in the effort</button>
+            <button class="survey-option" data-value="whatever">I'll do whatever is required</button>
+          </div>
+          <div class="survey-error" id="err-3">Please select an option to continue</div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="survey-page" data-field="startTime" style="display:none">
+          <h2 class="survey-question">If we're a good fit, how soon could you start?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="today">Today</button>
+            <button class="survey-option" data-value="notReady">Not ready yet</button>
+          </div>
+          <div class="survey-error" id="err-4">Please select an option to continue</div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="survey-page" data-field="commitment" style="display:none">
+          <h2 class="survey-question">Is there any reason that will make you cancel the meeting other than a tsunami or an earthquake 😅?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="yes1">No, don't worry I will attend for sure</button>
+            <button class="survey-option" data-value="yes2">I will attend for sure</button>
+          </div>
+          <div class="survey-error" id="err-5">Please select an option to continue</div>
+        </div>
+
+        <div class="survey-nav">
+          <button class="survey-btn survey-btn-secondary" id="btn-prev" style="display:none" onclick="prevPage()">← Previous</button>
+          <button class="survey-btn" id="btn-next" onclick="nextPage()">Next →</button>
+        </div>
+
+      </div>
+    </div>
+
+    <script is:inline>
+      var page = 0;
+      var total = 6;
+      var answers = {};
+
+      // Await Brevo subscribe then reveal survey
+      (async function() {
+        try {
+          var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: 'survey_started' });
+
+          var userData = JSON.parse(sessionStorage.getItem('userData') || 'null');
+          if (userData && userData.email) {
+            await fetch('/api/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone, list: 'survey' }),
+            });
+          }
+        } catch(_) {}
+
+        document.getElementById('survey-loader').style.display = 'none';
+        document.getElementById('survey-content').style.display = 'flex';
+      })();
+
+      // Option selection
+      document.querySelectorAll('.survey-options').forEach(function(opts) {
+        opts.addEventListener('click', function(e) {
+          var btn = e.target.closest('.survey-option');
+          if (!btn) return;
+          opts.querySelectorAll('.survey-option').forEach(function(b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+          var field = btn.closest('.survey-page').dataset.field;
+          answers[field] = btn.dataset.value;
+          document.getElementById('err-' + page).style.display = 'none';
+        });
+      });
+
+      function updateUI() {
+        var pages = document.querySelectorAll('.survey-page');
+        pages.forEach(function(p, i) { p.style.display = i === page ? 'block' : 'none'; });
+        document.getElementById('progress-bar').style.width = (((page + 1) / total) * 100) + '%';
+        document.getElementById('page-count').textContent = 'Question ' + (page + 1) + ' of ' + total;
+        document.getElementById('btn-prev').style.display = page > 0 ? 'inline-block' : 'none';
+        document.getElementById('btn-next').textContent = page === total - 1 ? 'Complete ✓' : 'Next →';
+      }
+
+      function prevPage() {
+        if (page > 0) { page--; updateUI(); }
+      }
+
+      function nextPage() {
+        var pages = document.querySelectorAll('.survey-page');
+        var field = pages[page].dataset.field;
+        if (!answers[field]) {
+          document.getElementById('err-' + page).style.display = 'block';
+          return;
+        }
+        if (page < total - 1) {
+          page++;
+          updateUI();
+          return;
+        }
+        // Complete
+        var btn = document.getElementById('btn-next');
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
+
+        var qualified =
+          answers.budget !== 'no' &&
+          answers.time !== 'no' &&
+          (answers.effort === 'willing' || answers.effort === 'whatever') &&
+          answers.startTime !== 'notReady';
+
+        var userData = {};
+        try { userData = JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) {}
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: userData.name, user_email: userData.email, user_phone: userData.phone });
+
+        var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
+        var token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        tokens[qualified ? 'qualified' : 'unqualified'] = token;
+        sessionStorage.setItem('userTokens', JSON.stringify(tokens));
+
+        var list = qualified ? 'qualified_no_book' : 'unqualified';
+        var userData = {};
+        try { userData = JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) {}
+
+        if (userData.email) {
+          fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone, list: list }),
+          }).finally(function() {
+            window.location.href = qualified ? '/choose-schedule' : '/get-free-program';
+          });
+        } else {
+          window.location.href = qualified ? '/choose-schedule' : '/get-free-program';
+        }
+      }
+
+      window.addEventListener('beforeunload', function() {
+        if (page < total - 1 || !answers.commitment) {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: 'survey_abandoned' });
+        }
+      });
+    </script>
+  </body>
+</html>

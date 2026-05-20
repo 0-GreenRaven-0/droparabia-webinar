@@ -16,7 +16,11 @@
       "Bash(python -c \"import gzip, shutil; shutil.copyfileobj\\(gzip.open\\('webfetch-1778345239656-x72d86.bin'\\), open\\('design.html', 'wb'\\)\\)\")",
       "Bash(tar -xf webfetch-1778345239656-x72d86.bin)",
       "Bash(npx skills *)",
-      "Bash(claude mcp *)"
+      "Bash(claude mcp *)",
+      "Bash(Get-ChildItem -Path \"D:\\\\Projects\\\\droparabia-landing\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(ls -la \"D:/Projects/droparabia-landing/\" | head -20)",
+      "Read(//d/Projects/droparabia-landing/**)"
     ]
   }
 }
