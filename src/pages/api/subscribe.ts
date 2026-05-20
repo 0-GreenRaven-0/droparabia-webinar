@@ -188,71 +188,9 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 
-export const POST: APIRoute = async ({ request }) => {
-  try {
-    const body = await request.json();
-    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content } = body;
-
-    if (!email || !list) {
-      return json({ success: false, error: 'Missing email or list' }, 400);
-    }
-
-    const listId = getListId(list);
-    if (!listId) {
-      return json({ success: false, error: `Unknown or unconfigured list: ${list}` }, 400);
-    }
-
-    const nameParts = (name || '').trim().split(/\s+/);
-    const firstName = nameParts[0] || '';
-    const lastName  = nameParts.slice(1).join(' ') || '';
-
-    // ── Brevo ──
-    const unlinkListIds = getUnlinkListIds(list);
-    const brevoBody: Record<string, unknown> = {
-      email,
-      attributes: {
-        FIRSTNAME: firstName,
-        LASTNAME:  lastName,
-        SMS: phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '',
-      },
-      listIds: [listId],
-      updateEnabled: true,
-    };
-    if (unlinkListIds.length > 0) brevoBody.unlinkListIds = unlinkListIds;
-
-    const res = await fetch('https://api.brevo.com/v3/contacts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'api-key': import.meta.env.BREVO_API_KEY },
-      body: JSON.stringify(brevoBody),
-    });
-
-    if (res.status !== 201 && res.status !== 204) {
-      const errBody = await res.text();
-      return json({ success: false, error: errBody }, res.status);
-    }
-
-    // ── Google Sheets (fire after Brevo succeeds, silent fail) ──
-    const sheetId   = getSheetId(list);
-    const credsJson = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
-    if (sheetId && credsJson) {
-      const rawPhone     = phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '';
-      const displayPhone = rawPhone ? formatPhoneDisplay(rawPhone) : '';
-      const date         = new Date().toLocaleDateString('en-GB');
-      const trafficSource  = buildTrafficSource(utm_source || '', utm_medium || '');
-      const campaignName   = utm_campaign || '';
-      const adCreative     = (utm_medium || '').toLowerCase() === 'paid' ? (utm_content || '') : '';
-      await (async () => {
-        const token = await getGoogleAccessToken(credsJson);
-        await removeEmailFromAllSheets(email, token);
-        await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, adCreative], token);
-      })().catch(() => {});
-    }
-
-    return json({ success: true }, 200);
-
-  } catch (err) {
-    return json({ success: false, error: String(err) }, 500);
-  }
+export const POST: APIRoute = async () => {
+  // Brevo + Google Sheets integrations disabled for now
+  return json({ success: true }, 200);
 };
 
 function json(data: unknown, status: number) {
