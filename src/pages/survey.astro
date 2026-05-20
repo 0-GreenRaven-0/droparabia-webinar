@@ -63,7 +63,8 @@
 
         <div style="text-align:center; margin-bottom:1.25rem;">
           <img src="/Droparabia.png" alt="Droparabia" style="height:38px; margin:0 auto 0.75rem;" />
-          <h1 class="survey-title">Before we book you a call, we need to ask you a few questions to make sure we are the right fit for you</h1>
+          <h1 class="survey-title">We Need to ask you few questions to see if we are fit to help you</h1>
+          <p style="color:#64748B; font-size:0.9rem; margin-top:0.4rem;">Because we don't want to waste your time</p>
         </div>
 
         <div class="survey-progress-track">
@@ -73,63 +74,64 @@
 
         <!-- Q1 -->
         <div class="survey-page active" data-field="experience">
-          <h2 class="survey-question">Have you attempted dropshipping or e-commerce before?</h2>
+          <h2 class="survey-question">Have you attempted any kind of online selling before? (Ecommerce, Dropshipping, etc...)</h2>
           <div class="survey-options">
-            <button class="survey-option" data-value="yes_dropshipping">Yes, I have tried dropshipping before</button>
-            <button class="survey-option" data-value="yes_ecommerce">I have tried e-commerce before</button>
-            <button class="survey-option" data-value="no">No, I am completely new to this</button>
+            <button class="survey-option" data-value="new">No, I'm Completely New</button>
+            <button class="survey-option" data-value="ecommerce">I Tried Ecommerce Before</button>
+            <button class="survey-option" data-value="dropshipping">I Tried Dropshipping Before</button>
+            <button class="survey-option" data-value="both">I Tried Both</button>
           </div>
           <div class="survey-error" id="err-0">Please select an option to continue</div>
         </div>
 
         <!-- Q2 -->
         <div class="survey-page" data-field="budget" style="display:none">
-          <h2 class="survey-question">We only work with users who have sufficient startup capital. To start a Local Dropshipping business, costs involve: Software &amp; marketing. Do you have access to a minimum of $600 to get started?</h2>
+          <h2 class="survey-question">We recommend that you have sufficient capital in order to start your online store (for products costs, ads...). Do you have access to at least a budget of $700?</h2>
           <div class="survey-options">
             <button class="survey-option" data-value="yes">Yes, I have the funds</button>
-            <button class="survey-option" data-value="partial">I have at least $600</button>
+            <button class="survey-option" data-value="partial">I have at least $700</button>
             <button class="survey-option" data-value="no">No, I don't have the funds right now</button>
           </div>
           <div class="survey-error" id="err-1">Please select an option to continue</div>
         </div>
 
         <!-- Q3 -->
-        <div class="survey-page" data-field="time" style="display:none">
-          <h2 class="survey-question">Starting a dropshipping business requires a bit of free time to learn and manage your business, do you have some free time?</h2>
+        <div class="survey-page" data-field="effort" style="display:none">
+          <h2 class="survey-question">To build a successful and high-earning online store, it will require a lot of effort and dedication. Are you willing to put in the work? (Even if you fail at first)</h2>
           <div class="survey-options">
-            <button class="survey-option" data-value="yes">Yes, I have free time</button>
-            <button class="survey-option" data-value="makeTime">I can make time for it</button>
-            <button class="survey-option" data-value="no">No, my schedule is full</button>
+            <button class="survey-option" data-value="willing">I'm Ready to Learn and Work Hard</button>
+            <button class="survey-option" data-value="whatever">I'll Do My Best</button>
           </div>
           <div class="survey-error" id="err-2">Please select an option to continue</div>
         </div>
 
         <!-- Q4 -->
-        <div class="survey-page" data-field="effort" style="display:none">
-          <h2 class="survey-question">This isn't a get-rich-quick scheme — it requires real work and effort to get the same results as our users. Are you willing to put in the work?</h2>
+        <div class="survey-page" data-field="time" style="display:none">
+          <h2 class="survey-question">You're required to have at least 1 to 2 hours daily to manage your business. Do you have the time?</h2>
           <div class="survey-options">
-            <button class="survey-option" data-value="willing">I am willing to put in the effort</button>
-            <button class="survey-option" data-value="whatever">I'll do whatever is required</button>
+            <button class="survey-option" data-value="yes">Yes, I have free time</button>
+            <button class="survey-option" data-value="makeTime">I can make time for it</button>
+            <button class="survey-option" data-value="no">No, my schedule is full</button>
           </div>
           <div class="survey-error" id="err-3">Please select an option to continue</div>
         </div>
 
         <!-- Q5 -->
         <div class="survey-page" data-field="startTime" style="display:none">
-          <h2 class="survey-question">If we're a good fit, how soon could you start?</h2>
+          <h2 class="survey-question">If we're a good fit to help you build your online business, how soon can you start?</h2>
           <div class="survey-options">
             <button class="survey-option" data-value="today">Today</button>
-            <button class="survey-option" data-value="notReady">Not ready yet</button>
+            <button class="survey-option" data-value="notReady">Not Ready Yet</button>
           </div>
           <div class="survey-error" id="err-4">Please select an option to continue</div>
         </div>
 
         <!-- Q6 -->
         <div class="survey-page" data-field="commitment" style="display:none">
-          <h2 class="survey-question">Is there any reason that will make you cancel the meeting other than a tsunami or an earthquake 😅?</h2>
+          <h2 class="survey-question">Is there any reason that will make you cancel the meeting? (unless you were swallowed by an earthquake 😅)</h2>
           <div class="survey-options">
-            <button class="survey-option" data-value="yes1">No, don't worry I will attend for sure</button>
-            <button class="survey-option" data-value="yes2">I will attend for sure</button>
+            <button class="survey-option" data-value="yes1">No, I will attend for sure</button>
+            <button class="survey-option" data-value="maybe">Maybe...</button>
           </div>
           <div class="survey-error" id="err-5">Please select an option to continue</div>
         </div>
