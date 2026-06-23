@@ -26,7 +26,11 @@
       "Read(//d/Projects/portfolio/**)",
       "Bash(cp \"D:\\\\Projects\\\\droparabia-landing\\\\public\\\\Trustpilot_Logo_\\(2022\\).svg.png\" \"D:\\\\Projects\\\\droparabia-webinar\\\\public\\\\\")",
       "PowerShell(Copy-Item 'D:\\\\Projects\\\\droparabia-landing\\\\public\\\\Trustpilot_Logo_\\(2022\\).svg.png' -Destination 'D:\\\\Projects\\\\droparabia-webinar\\\\public\\\\')",
-      "PowerShell(npm install swiper)"
+      "PowerShell(npm install swiper)",
+      "Bash(git add *)",
+      "Bash(git status *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ],
     "additionalDirectories": [
       "D:\\Projects\\droparabia-book",
