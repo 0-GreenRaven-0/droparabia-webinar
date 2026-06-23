@@ -2,86 +2,45 @@
 import FlipClock from './FlipClock.astro';
 ---
 
-<section class="hero">
-  <p class="attention text-center text-white text-xs sm:text-xl">
-    <span class="attention-brand">
-      <img src="/Droparabia.png" alt="Droparabia" class="attention-img" style="display:inline; object-fit:contain; vertical-align:middle; position:relative; top:-2px;" />
-      <span class="attention-name" style="font-family:'IBrand',sans-serif; vertical-align:middle;">Droparabia</span>
-    </span>
-    <span class="attention-rest"> 2026 FREE Workshop where you will discover</span>
-  </p>
-  <br/>
-  <div class="flex flex-col gap-4 justify-center items-center text-center text-white">
-    <h1 class="text-3xl sm:text-6xl xl:px-20">The best low budget Business model to make your first <span style="background:#fff; color:#000; white-space:nowrap; padding:2px 8px; display:inline-block; transform:rotate(-2deg);">$2,000 – $3,000</span></h1>
-    <h2 class="text-xl sm:text-3xl pb-5 px-4">Followed by +500 Lebanese despite the on-going tensions</h2>
+<section class="hero-section relative">
+  <div class="circle circle-img -left-130 hidden sm:block"/>
+  <div class="circle circle-img-mj -right-130 hidden sm:block"/>
+  <div class="circle circle-img-mj circle-mobile sm:hidden"/>
+
+  <!-- Logo + Brand -->
+  <div class="hero-brand">
+    <img src="/Droparabia.png" alt="Droparabia" class="hero-logo" />
+    <span class="hero-brand-name">Droparabia</span>
   </div>
-  <div class="inner">
-    <div class="clock-wrap">
-      <FlipClock targetDate="2026-06-01 20:00:00" />
+
+  <div class="hero-content">
+    <!-- Attention Line -->
+    <p class="hero-attention">After this <span class="hero-highlight">FREE</span> workshop, you'll walk away knowing exactly how to</p>
+
+    <!-- Headline -->
+    <h1 class="hero-headline">Build a <span class="hero-gradient-text">profitable</span> online store in Lebanon without ever touching Inventory</h1>
+
+    <!-- Subheadline -->
+    <p class="hero-subheadline"><strong>Don't waste your money on courses and mentorships</strong>, <br/> Majd Abdulsalam will teach everything you need to know from A to Z</p>
+
+    <!-- CTA -->
+    <a href="#register" class="hero-cta" onclick="event.preventDefault(); document.getElementById('regModal').classList.add('show')">Secure your spot NOW!!!</a>
+
+    <!-- Counter -->
+    <div class="hero-counter">
+      <FlipClock targetDate="2026-06-23 00:00:00" />
     </div>
-    <a href="#register" class="btn">Secure Your Spot Now!</a>
-    <p class="text-white text-center">Replays aren't guaranteed so make sure you don't miss out!</p>
+  </div>
+
+  <!-- Testimonial heading (mobile only) -->
+  <div class="hero-testo-heading sm:hidden">
+    <h2 class="text-2xl font-normal text-center text-black leading-tight">
+      Yes It's possible<br/>
+      <span class="text-cyan-600">+600 Lebanese</span> already did it
+    </h2>
+    <div class="flex items-center justify-center gap-3 mt-3">
+      <svg width="20" height="28" viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2L10 22M4 16L10 24L16 16" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="20" height="28" viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2L10 22M4 16L10 24L16 16" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
   </div>
 </section>
-
-<style>
-  .hero {
-    width: 100%;
-    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
-    border-bottom-left-radius: 40px;
-    border-bottom-right-radius: 40px;
-    padding: 20px 32px 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-  }
-
-  .btn {
-    display: inline-block;
-    background: rgb(20, 173, 0);
-    color: #fff;
-    font-family: 'IBrand', sans-serif;
-    font-size: 22px;
-    letter-spacing: -0.01em;
-    text-decoration: none;
-    padding: 18px 60px;
-    border-radius: 16px;
-    box-shadow: 0 6px 0 rgb(7, 97, 12), 0 12px 28px rgba(0, 0, 0, 0.3);
-    transition: transform 0.1s, box-shadow 0.1s;
-  }
-  .btn:hover  { transform: translateY(2px); box-shadow: 0 4px 0 rgb(7, 97, 12), 0 8px 20px rgba(0,0,0,0.3); }
-  .btn:active { transform: translateY(6px); box-shadow: none; }
-
-  .attention-img  { width: 2rem; height: 2rem; }
-  .attention-name { font-size: 1.4rem; }
-  .attention-brand { display: inline; }
-  .attention-rest  { display: inline; }
-
-  @media (max-width: 768px) {
-    .hero           { border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; padding: 16px 16px 20px; }
-    .attention      { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-    .attention-brand { display: flex; align-items: center; justify-content: center; gap: 4px; }
-    .attention-rest  { display: block; }
-    .attention-img  { width: 2.4rem; height: 2.4rem; position: static; }
-    .attention-name { font-size: 1.8rem; }
-    .inner        { gap: 16px; width: 100%; }
-    .clock-wrap { width: 100%; text-align: center; }
-    .clock-wrap > :global(.flip-clock) { zoom: 0.75; }
-    .btn          { font-size: 17px; padding: 14px 32px; }
-  }
-
-  .note {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    color: #fff;
-    margin: 0;
-  }
-</style>

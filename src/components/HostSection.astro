@@ -2,12 +2,15 @@
 ---
 
 <section class="host">
-  <div class="host-text">
-    <div class="eyebrow">Meet your Host:</div>
-    <h2><span class="name-white">Majd </span><span class="name-cyan">Abdulsalam</span></h2>
-    <p>Despite the internet telling you that "Dropshipping is Dead" or that it doesn't work in Lebanon or any arab country</p>
-    <p><strong>Majd, at the age of 17, made over 6-Figures through dropshipping</strong>, helped his parents retire and never work a day in their life, helped over +500 Lebanese do the same and founded Droparabia, the first Dropshipping platform in Lebanon.</p>
-    <p>And now he's gonna break down step-by-step how to start your own high-earning dropshipping business that works even through the on-going war.</p>
+  <div class="host-left">
+    <div class="host-heading">
+      <div class="eyebrow">Meet</div>
+      <h2><span class="name-white">Majd </span><span class="name-cyan">Abdulsalam</span></h2>
+    </div>
+    <div class="host-text">
+      <p>A dropshipping and digital marketing expert who made 6-figures over the past few years. Helped over 600 Lebanese start their own online business with success and founded Droparabia, Lebanon's 1st dropshipping platform that will forever reshape how online selling in Lebanon and soon in the MENA regions is done.</p>
+      <p>And now Majd is going to teach you live everything you need from A to Z in order to start your own profitable online store and answer whatever questions you have!</p>
+    </div>
   </div>
 
   <div class="host-photo-wrap">
@@ -36,10 +39,21 @@
     color: #fff;
   }
 
-  .host-text {
+  .host-left {
     flex: 1;
-    color: #fff;
     max-width: 640px;
+  }
+
+  .host-heading {
+    color: #fff;
+  }
+
+  .host-text {
+    color: #fff;
+  }
+
+  .host-photo-wrap {
+    flex: 0 0 420px;
   }
   .eyebrow {
     font-family: 'IBrand', sans-serif;
@@ -48,8 +62,8 @@
     letter-spacing: -0.01em;
     color: rgba(255,255,255,0.85);
   }
-  .host-text h2 {
-    margin: 6px 0 28px;
+  .host-heading h2 {
+    margin: 6px 0 0;
     font-family: 'IBrand', sans-serif;
     font-weight: 400;
     font-size: clamp(40px, 5vw, 64px);
@@ -73,7 +87,6 @@
   .name-cyan  { color: #00D4FF; }
 
   .host-photo-wrap {
-    flex: 0 0 420px;
     width: 420px;
     max-width: 100%;
     display: flex;
@@ -150,22 +163,28 @@
 
   @media (max-width: 1024px) {
     .host {
+      display: flex;
       flex-direction: column;
       padding: 48px 24px 60px;
       text-align: center;
     }
-    .host-text { max-width: 100%; order: 1; }
+    .host-left {
+      display: contents;
+    }
+    .host-heading { max-width: 100%; order: 1; }
     .host-photo-wrap {
-      flex: none;
       width: 100%;
       align-items: center;
       order: 2;
     }
+    .host-text { max-width: 100%; order: 3; }
   }
 
   @media (max-width: 768px) {
-    .host-text { order: 1; }
+    .host-heading { order: 1; }
+    .host-heading h2 { font-size: clamp(28px, 7vw, 40px); }
     .host-photo-wrap { order: 2; }
+    .host-text { order: 3; }
     .host-photo {
       width: 220px;
       height: 300px;

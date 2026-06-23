@@ -22,10 +22,15 @@
       "Bash(ls -la \"D:/Projects/droparabia-landing/\" | head -20)",
       "Read(//d/Projects/droparabia-landing/**)",
       "Read(//d/Projects/droparabia-book/**)",
-      "Bash(cp \"D:/Projects/droparabia-book/patch-worker.mjs\" \"D:/Projects/droparabia-webinar/patch-worker.mjs\")"
+      "Bash(cp \"D:/Projects/droparabia-book/patch-worker.mjs\" \"D:/Projects/droparabia-webinar/patch-worker.mjs\")",
+      "Read(//d/Projects/portfolio/**)",
+      "Bash(cp \"D:\\\\Projects\\\\droparabia-landing\\\\public\\\\Trustpilot_Logo_\\(2022\\).svg.png\" \"D:\\\\Projects\\\\droparabia-webinar\\\\public\\\\\")",
+      "PowerShell(Copy-Item 'D:\\\\Projects\\\\droparabia-landing\\\\public\\\\Trustpilot_Logo_\\(2022\\).svg.png' -Destination 'D:\\\\Projects\\\\droparabia-webinar\\\\public\\\\')",
+      "PowerShell(npm install swiper)"
     ],
     "additionalDirectories": [
-      "D:\\Projects\\droparabia-book"
+      "D:\\Projects\\droparabia-book",
+      "D:\\Projects\\droparabia-landing\\public"
     ]
   }
 }

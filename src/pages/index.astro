@@ -6,7 +6,7 @@ import HostSection from '../components/HostSection.astro';
 import LearnSection from '../components/LearnSection.astro';
 import Testimonials from '../components/Testimonials.astro';
 import FAQ from '../components/FAQ.astro';
-import RegistrationForm from '../components/RegistrationForm.astro';
+
 ---
 
 <html lang="en">
@@ -32,69 +32,93 @@ import RegistrationForm from '../components/RegistrationForm.astro';
     />
   </head>
 
-  <body class="overflow-x-hidden" style="background: #E0E0E0;">
+  <body class="overflow-x-hidden" style="background: #F0F0F0;">
 
     <Hero />
+    <Testimonials />
     <WorkshopSection />
     <HostSection />
     <LearnSection />
 
-    <Testimonials />
-
     <FAQ />
 
-    <!-- Final CTA -->
-    <div class="py-20 px-6 text-center" style="background: #E0E0E0;" id="register">
-      <div class="max-w-2xl mx-auto flex flex-col items-center gap-5">
-        <h2 style="font-family: 'IBrand', sans-serif; font-size: clamp(32px, 4vw, 52px); font-weight: 400; letter-spacing: -0.01em; color: #000; margin: 0; line-height: 1.15;">
-          By the end of the workshop...
+    <!-- Registration Form -->
+    <section id="register" class="py-20 px-6" style="background: #F0F0F0;">
+      <div class="max-w-md mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-normal text-black text-center mb-8" style="font-family: 'IBrand', sans-serif;">
+          Secure your spot now!
         </h2>
-        <p style="font-family: 'Outfit', sans-serif; font-size: clamp(16px, 1.5vw, 22px); font-weight: 500; color: rgba(0,0,0,0.75); margin: 0; line-height: 1.55; max-width: 640px;">
-          You're ready to start building your own dropshipping business and make your way towards your first $2,000 – $3,000
-        </p>
-        <div style="font-family: 'IBrand', sans-serif; font-size: 16px; color: rgba(0,0,0,0.55);">
-          Doors close on <strong style="color: #000;">May 21, 2026</strong>
-        </div>
-        <a href="#register" class="cta-final" onclick="event.preventDefault(); document.getElementById('regModal').classList.add('show')">Secure Your Spot Now!</a>
-        <p style="font-family: 'IBrand', sans-serif; font-size: 12px; color: rgba(0,0,0,0.5); margin: 0;">
-          Replays aren't guaranteed so be sure to not miss out
-        </p>
+        <form id="webinar-form" class="flex flex-col gap-4">
+          <div class="flex gap-4">
+            <div class="flex-1">
+              <label class="block text-sm text-black/60 mb-1" style="font-family: 'Outfit', sans-serif;">First Name</label>
+              <input type="text" name="firstName" required placeholder="First name" class="w-full rounded-xl px-4 py-3 bg-white border border-gray-400 text-black placeholder:text-black/30 focus:outline-none focus:border-gray-400" style="font-family: 'Outfit', sans-serif;" />
+            </div>
+            <div class="flex-1">
+              <label class="block text-sm text-black/60 mb-1" style="font-family: 'Outfit', sans-serif;">Last Name</label>
+              <input type="text" name="lastName" placeholder="Last name" class="w-full rounded-xl px-4 py-3 bg-white border border-gray-400 text-black placeholder:text-black/30 focus:outline-none focus:border-gray-400" style="font-family: 'Outfit', sans-serif;" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm text-black/60 mb-1" style="font-family: 'Outfit', sans-serif;">Phone Number</label>
+            <div class="flex items-center gap-2 rounded-xl px-4 py-3 bg-white border border-gray-400">
+              <span class="text-black/40 text-sm shrink-0">+961</span>
+              <input type="tel" name="phone" required placeholder="XX XXX XXX" maxlength="10" class="flex-1 bg-transparent text-black placeholder:text-black/30 focus:outline-none" style="font-family: 'Outfit', sans-serif;" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm text-black/60 mb-1" style="font-family: 'Outfit', sans-serif;">Email</label>
+            <input type="email" name="email" required placeholder="your@email.com" class="w-full rounded-xl px-4 py-3 bg-white border border-gray-400 text-black placeholder:text-black/30 focus:outline-none focus:border-gray-400" style="font-family: 'Outfit', sans-serif;" />
+          </div>
+          <button type="submit" class="mt-2 w-full rounded-2xl px-8 py-4 text-white text-lg cursor-pointer border-none" style="font-family: 'IBrand', sans-serif; background: rgb(20, 173, 0); box-shadow: 0 6px 0 rgb(7, 97, 12), 0 14px 28px rgba(0,0,0,0.2); transition: transform 0.12s ease, box-shadow 0.12s ease;">
+            Register Now!
+          </button>
+          <p id="form-msg" class="text-center text-sm hidden" style="font-family: 'Outfit', sans-serif;"></p>
+        </form>
       </div>
-    </div>
+    </section>
 
-    <!-- Registration modal -->
-    <div id="regModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); z-index:100; align-items:center; justify-content:center; padding:24px;" onclick="if(event.target===this)this.classList.remove('show')">
-      <div style="background:#fff; border-radius:24px; padding:36px; max-width:480px; width:100%; position:relative; box-shadow:0 30px 80px rgba(0,0,0,0.4);">
-        <button onclick="document.getElementById('regModal').classList.remove('show')" style="position:absolute; right:16px; top:16px; background:transparent; border:0; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">✕</button>
-        <RegistrationForm id="register-form" prefix="rf1" />
-      </div>
-    </div>
-    <style>
-      #regModal.show { display: flex; }
-      .cta-final {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: rgb(20, 173, 0);
-        color: #fff;
-        font-family: 'IBrand', sans-serif;
-        font-size: 20px;
-        letter-spacing: -0.01em;
-        border-radius: 16px;
-        padding: 16px 48px;
-        text-decoration: none;
-        box-shadow: 0 6px 0 rgb(7, 97, 12), 0 14px 28px rgba(0,0,0,0.2);
-        transition: transform .12s ease, box-shadow .12s ease;
-      }
-      .cta-final:hover {
-        transform: translateY(2px);
-        box-shadow: 0 4px 0 rgb(7, 97, 12), 0 10px 22px rgba(0,0,0,0.25);
-        color: #fff;
-      }
-      @media (max-width: 768px) {
-        .cta-final { font-size: 16px; padding: 12px 28px; }
-      }
-    </style>
+    <script is:inline>
+      document.getElementById('webinar-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const btn = form.querySelector('button[type="submit"]');
+        const msg = document.getElementById('form-msg');
+        const data = {
+          firstName: form.firstName.value.trim(),
+          lastName: form.lastName.value.trim(),
+          phone: '+961' + form.phone.value.replace(/\D/g, ''),
+          email: form.email.value.trim(),
+        };
+        btn.disabled = true;
+        btn.textContent = 'Submitting...';
+        msg.classList.add('hidden');
+        try {
+          const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          const result = await res.json();
+          if (result.success) {
+            msg.textContent = 'You\'re registered! See you at the workshop.';
+            msg.classList.remove('hidden');
+            msg.style.color = '#16a34a';
+            form.reset();
+          } else {
+            msg.textContent = result.error || 'Something went wrong. Try again.';
+            msg.classList.remove('hidden');
+            msg.style.color = '#dc2626';
+          }
+        } catch {
+          msg.textContent = 'Network error. Please try again.';
+          msg.classList.remove('hidden');
+          msg.style.color = '#dc2626';
+        }
+        btn.disabled = false;
+        btn.textContent = 'Register Now!';
+      });
+    </script>
 
     <!-- Footer -->
     <footer style="border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%)">

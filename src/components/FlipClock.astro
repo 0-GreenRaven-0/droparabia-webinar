@@ -1,189 +1,42 @@
 ---
 interface Props {
-  targetDate: string; // e.g. "2026-05-21 20:00:00"
+  targetDate: string;
 }
 const { targetDate } = Astro.props;
 ---
 
-<div class="flip-clock">
-  {['days','hours','minutes','seconds'].map((unit) => (
-    <span class="flip-clock__piece" id={`fc-${unit}`}>
-      <span class="flip-card">
-        <b class="flip-card__top">00</b>
-        <b class="flip-card__bottom" data-value="00"></b>
-        <b class="flip-card__back" data-value="00"></b>
-        <b class="flip-card__back-bottom" data-value="00"></b>
-      </span>
-      <span class="flip-clock__slot">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
-    </span>
-  ))}
+<div class="flex items-center gap-1.5 sm:gap-3 font-[IBrand]">
+  <div class="flex flex-col items-center">
+    <span class="text-xl sm:text-3xl text-black" id="cd-days">00</span>
+    <span class="text-xs text-black uppercase">Days</span>
+  </div>
+  <span class="text-lg sm:text-2xl text-black mb-2 sm:mb-3">:</span>
+  <div class="flex flex-col items-center">
+    <span class="text-xl sm:text-3xl text-black" id="cd-hours">00</span>
+    <span class="text-xs text-black uppercase">Hours</span>
+  </div>
+  <span class="text-lg sm:text-2xl text-black mb-2 sm:mb-3">:</span>
+  <div class="flex flex-col items-center">
+    <span class="text-xl sm:text-3xl text-black" id="cd-minutes">00</span>
+    <span class="text-xs text-black uppercase">Minutes</span>
+  </div>
+  <span class="text-lg sm:text-2xl text-black mb-2 sm:mb-3">:</span>
+  <div class="flex flex-col items-center">
+    <span class="text-xl sm:text-3xl text-black" id="cd-seconds">00</span>
+    <span class="text-xs text-black uppercase">Seconds</span>
+  </div>
 </div>
 
-<style>
-  .flip-clock {
-    text-align: center;
-    perspective: 600px;
-    margin: 0 auto;
-    display: inline-flex;
-    gap: 4px;
-    max-width: 100%;
-  }
-
-  @media (max-width: 768px) {
-    .flip-card { font-size: 1.6rem; }
-    .flip-clock__slot { font-size: 0.65rem; }
-    .flip-clock__piece { margin: 0 2px; }
-  }
-
-  .flip-clock__piece {
-    display: inline-block;
-    margin: 0 4px;
-  }
-
-  .flip-clock__slot {
-    font-size: 1rem;
-    line-height: 1.5;
-    display: block;
-    font-family: 'Outfit', sans-serif;
-    color: #fff;
-  }
-
-  .flip-card {
-    display: block;
-    position: relative;
-    padding-bottom: 0.72em;
-    font-size: 3rem;
-    line-height: 0.95;
-    font-family: 'IBrand', sans-serif;
-  }
-
-  .flip-card__top,
-  .flip-card__bottom,
-  .flip-card__back-bottom,
-  .flip-card__back::before,
-  .flip-card__back::after {
-    display: block;
-    height: 0.72em;
-    color: #000;
-    background: #fff;
-    padding: 0.23em 0.25em 0.4em;
-    border-radius: 0.15em 0.15em 0 0;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    width: 1.8em;
-    font-family: 'IBrand', sans-serif;
-  }
-
-  .flip-card__bottom,
-  .flip-card__back-bottom {
-    color: #000;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    border-top: solid 1px #ccc;
-    background: #f0f0f0;
-    border-radius: 0 0 0.15em 0.15em;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 2;
-  }
-
-  .flip-card__back-bottom {
-    z-index: 1;
-  }
-
-  .flip-card__bottom::after,
-  .flip-card__back-bottom::after {
-    display: block;
-    margin-top: -0.72em;
-  }
-
-  .flip-card__back::before,
-  .flip-card__bottom::after,
-  .flip-card__back-bottom::after {
-    content: attr(data-value);
-  }
-
-  .flip-card__back {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    left: 0;
-    pointer-events: none;
-  }
-
-  .flip-card__back::before {
-    position: relative;
-    overflow: hidden;
-    z-index: -1;
-  }
-
-  .flip .flip-card__back::before {
-    z-index: 1;
-    animation: flipTop 0.3s cubic-bezier(.37,.01,.94,.35) both;
-    transform-origin: center bottom;
-  }
-
-  .flip .flip-card__bottom {
-    transform-origin: center top;
-    animation: flipBottom 0.6s cubic-bezier(.15,.45,.28,1) both;
-  }
-
-  @keyframes flipTop {
-    0%   { transform: rotateX(0deg); z-index: 2; opacity: 1; }
-    99%  { opacity: 1; }
-    100% { transform: rotateX(-90deg); opacity: 0; }
-  }
-
-  @keyframes flipBottom {
-    0%, 50% { z-index: -1; transform: rotateX(90deg); opacity: 0; }
-    51%      { opacity: 1; }
-    100%     { opacity: 1; transform: rotateX(0deg); z-index: 5; }
-  }
-</style>
-
-<script is:inline define:vars={{ targetDate }}>
-  const target = new Date(targetDate).getTime();
+<script is:inline>
+  const target = Date.now() + 24 * 60 * 60 * 1000;
   const pad = n => String(Math.max(0, n)).padStart(2, '0');
 
-  function getTime() {
-    const diff = Math.max(0, target - Date.now());
-    return {
-      days:    Math.floor(diff / 86400000),
-      hours:   Math.floor((diff % 86400000) / 3600000),
-      minutes: Math.floor((diff % 3600000) / 60000),
-      seconds: Math.floor((diff % 60000) / 1000),
-    };
-  }
-
-  function setCard(piece, val) {
-    const card = piece.querySelector('.flip-card');
-    const top = piece.querySelector('.flip-card__top');
-    const bottom = piece.querySelector('.flip-card__bottom');
-    const back = piece.querySelector('.flip-card__back');
-    const backBottom = piece.querySelector('.flip-card__back-bottom');
-    const str = pad(val);
-
-    if (top.textContent === str) return;
-
-    back.dataset.value = top.textContent;
-    backBottom.dataset.value = top.textContent;
-    top.textContent = str;
-    bottom.dataset.value = str;
-
-    card.classList.remove('flip');
-    void card.offsetWidth;
-    card.classList.add('flip');
-  }
-
-  const units = ['days', 'hours', 'minutes', 'seconds'];
-
   function tick() {
-    const t = getTime();
-    units.forEach(unit => {
-      const piece = document.getElementById(`fc-${unit}`);
-      if (piece) setCard(piece, t[unit]);
-    });
+    const diff = Math.max(0, target - Date.now());
+    document.getElementById('cd-days').textContent = pad(Math.floor(diff / 86400000));
+    document.getElementById('cd-hours').textContent = pad(Math.floor((diff % 86400000) / 3600000));
+    document.getElementById('cd-minutes').textContent = pad(Math.floor((diff % 3600000) / 60000));
+    document.getElementById('cd-seconds').textContent = pad(Math.floor((diff % 60000) / 1000));
   }
 
   tick();

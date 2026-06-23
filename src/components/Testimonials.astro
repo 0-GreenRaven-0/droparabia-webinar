@@ -1,181 +1,193 @@
 ---
+import 'swiper/css';
 ---
 
-<section>
+<section class="testo-section">
   <div class="section" style="padding-top: 40px; padding-bottom: 40px;">
 
     <!-- Header -->
     <div class="text-center mb-14 gs-test-header">
-      <h2 class="text-4xl sm:text-5xl font-extrabold mb-4">
-        <span class="gradient-text">500+ Lebanese</span> who followed this model
+      <h2 class="text-2xl sm:text-5xl font-normal mb-4 text-white">
+        Yes It's possible<br/>
+        <span class="text-cyan-400">+600 Lebanese</span> already did it
       </h2>
-
     </div>
 
-    <!-- Embla Carousel -->
-    <div class="relative max-w-6xl mx-auto gs-community">
 
-        <button id="testo-prev" aria-label="Previous" class="testo-nav-btn testo-nav-prev">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
-        <button id="testo-next" aria-label="Next" class="testo-nav-btn testo-nav-next">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
-        <!-- Viewport -->
-        <div id="testo-embla" class="overflow-hidden">
-          <div class="embla__container flex gap-4">
-            {[
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(2)%20(1)%20(1).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(3).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(4)%20(1).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(5).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(6).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(7)%20(1)%20(1).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(8).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(9)%20(2).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(10).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(11).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(12).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(13).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(14).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(15).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(16).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(17).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-              "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(18).png?tr=w-700,h-1244,cm-pad_resize,bg-FFFFFF,q-85,f-webp",
-            ].map((src) => (
-              <div class="embla__slide shrink-0 w-full md:w-[calc(33.333%-11px)] rounded-2xl overflow-hidden">
-                <img src={src} alt="Testimonial" class="w-full h-auto block" loading="lazy" />
-              </div>
-            ))}
-          </div>
+    <!-- Swiper Carousel -->
+    <div class="carousel-container">
+      <button class="swiper-button-prev" aria-label="Previous">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <button class="swiper-button-next" aria-label="Next">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+      <div class="swiper testimonials-swiper">
+        <div class="swiper-wrapper">
+          {[
+            "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/4.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/5.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/6.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/1.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/3.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(2)%20(1)%20(1).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(3).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(4)%20(1).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(5).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(6).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(7)%20(1)%20(1).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(8).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(9)%20(2).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(10).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(11).png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(12).png?tr=w-900,q-70,f-webp",
+          ].map((src) => (
+            <div class="swiper-slide">
+              <img src={src} alt="Testimonial" loading="lazy" />
+            </div>
+          ))}
         </div>
-
-        <div id="testo-dots" class="flex items-center justify-center gap-1.5 mt-6"></div>
-
       </div>
+    </div>
 
   </div>
 </section>
 
 <style>
-  .testo-nav-btn {
+  .carousel-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 76px;
+    position: relative;
+  }
+
+  .testimonials-swiper {
+    padding-bottom: 0;
+  }
+
+  .testimonials-swiper .swiper-slide {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  .testimonials-swiper .swiper-slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .carousel-container .swiper-button-prev,
+  .carousel-container .swiper-button-next {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    background: #2B9FD9;
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    outline: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 50%;
-    border: 2px solid #2B9FD9;
-    color: white;
-    background: #2B9FD9;
     cursor: pointer;
-    transition: border-color 0.2s, background 0.2s, color 0.2s;
     z-index: 10;
+    transition: background 0.2s, color 0.2s;
   }
-  .testo-nav-prev { left: -1.5rem; }
-  .testo-nav-next { right: -1.5rem; }
-  .testo-nav-btn:hover {
-    background: white;
-    color: #2B9FD9;
+
+  .carousel-container .swiper-button-prev { left: 4px; }
+  .carousel-container .swiper-button-next { right: 4px; }
+
+  .carousel-container .swiper-button-prev::after,
+  .carousel-container .swiper-button-next::after {
+    display: none;
   }
-  .testo-dot {
-    height: 8px;
-    border-radius: 9999px;
-    background: rgba(43,159,217,0.35);
-    transition: width 0.3s, background 0.3s;
-    width: 8px;
+
+  .carousel-container .swiper-button-prev svg,
+  .carousel-container .swiper-button-next svg {
+    width: 26px;
+    height: 26px;
+    display: block;
   }
-  .testo-dot.active {
-    width: 28px;
+
+  .carousel-container .swiper-button-prev:hover,
+  .carousel-container .swiper-button-next:hover {
     background: #2B9FD9;
+    color: #fff;
   }
-  .tp-star-box {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    background: #84cc16;
-    color: white;
-    font-size: 1rem;
-    line-height: 1;
+
+  .testo-section {
+    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
   }
-  @media (min-width: 640px) {
-    .tp-star-box {
-      width: 2rem;
-      height: 2rem;
-      font-size: 1.4rem;
+
+  @media (max-width: 768px) {
+    .testo-section {
+      background: #F0F0F0;
     }
-  }
-  .tp-star-empty {
-    background: #84cc1650;
+    .carousel-container {
+      padding: 0 32px;
+    }
+    .carousel-container .swiper-button-prev,
+    .carousel-container .swiper-button-next {
+      width: 40px;
+      height: 40px;
+    }
+    .carousel-container .swiper-button-prev svg,
+    .carousel-container .swiper-button-next svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 </style>
 
 <script>
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import EmblaCarousel from 'embla-carousel';
+  async function initSwipers() {
+    const [{ default: Swiper }, { Navigation, Autoplay }] = await Promise.all([
+      import('swiper'),
+      import('swiper/modules'),
+    ]);
 
-  gsap.registerPlugin(ScrollTrigger);
-
-  const def = { ease: 'power2.out', overwrite: 'auto' as const };
-
-  gsap.from('.gs-test-header', {
-    ...def,
-    scrollTrigger: { trigger: '.gs-test-header', start: 'top 88%', once: true },
-    y: 24, opacity: 0, duration: 0.8,
-  });
-  gsap.from('.gs-community', {
-    ...def,
-    scrollTrigger: { trigger: '.gs-community', start: 'top 88%', once: true },
-    y: 20, opacity: 0, duration: 0.8,
-  });
-
-  const viewport = document.getElementById('testo-embla')!;
-  const dotsEl  = document.getElementById('testo-dots')!;
-
-  const perView = () => window.innerWidth >= 768 ? 3 : 1;
-
-  const embla = EmblaCarousel(viewport, { loop: true, align: 'start', slidesToScroll: perView() });
-
-  function buildDots() {
-    dotsEl.innerHTML = '';
-    const snaps = embla.scrollSnapList();
-    snaps.forEach((_, i) => {
-      const d = document.createElement('button');
-      d.className = 'testo-dot' + (i === embla.selectedScrollSnap() ? ' active' : '');
-      d.addEventListener('click', () => embla.scrollTo(i));
-      dotsEl.appendChild(d);
+    document.querySelectorAll('.testimonials-swiper').forEach((swiperEl) => {
+      const container = swiperEl.closest('.carousel-container');
+      if (!container) return;
+      new Swiper(swiperEl as HTMLElement, {
+        modules: [Navigation, Autoplay],
+        slidesPerView: 1,
+        spaceBetween: 16,
+        breakpoints: {
+          600: { slidesPerView: 2, spaceBetween: 20 },
+          1024: { slidesPerView: 3, spaceBetween: 24 },
+        },
+        loop: true,
+        autoplay: {
+          delay: 3500,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        },
+        navigation: {
+          nextEl: container.querySelector('.swiper-button-next') as HTMLElement,
+          prevEl: container.querySelector('.swiper-button-prev') as HTMLElement,
+        },
+        pagination: false,
+      });
     });
   }
 
-  function updateDots() {
-    const idx = embla.selectedScrollSnap();
-    dotsEl.querySelectorAll('.testo-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === idx);
-    });
+  const swiperEls = document.querySelectorAll('.testimonials-swiper');
+  if (swiperEls.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        obs.disconnect();
+        initSwipers();
+      }
+    }, { rootMargin: '200px' });
+    swiperEls.forEach((el) => observer.observe(el));
+  } else {
+    initSwipers();
   }
-
-  embla.on('init', buildDots);
-  embla.on('select', updateDots);
-  embla.on('reInit', buildDots);
-
-  document.getElementById('testo-prev')!.addEventListener('click', () => embla.scrollPrev());
-  document.getElementById('testo-next')!.addEventListener('click', () => embla.scrollNext());
-
-  window.addEventListener('resize', () => {
-    embla.reInit({ slidesToScroll: perView() });
-  });
 </script>

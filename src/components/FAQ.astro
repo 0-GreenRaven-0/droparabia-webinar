@@ -40,7 +40,7 @@ const faqs = [
       </h2>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start gs-faq-list">
+    <div class="flex flex-col gap-4 max-w-2xl mx-auto gs-faq-list">
       {faqs.map((faq, i) => (
         <div class="faq-card" id={`faq-card-${i}`}>
           <button class="faq-btn w-full flex items-start justify-between gap-4 text-left" data-faq={i} aria-expanded="false">
@@ -61,8 +61,8 @@ const faqs = [
 
 <style>
   .faq-card {
-    background: var(--color-bg-card);
-    border: 2px solid var(--color-border);
+    background: #fff;
+    border: 2px solid rgba(0,0,0,0.1);
     border-radius: 1rem;
     padding: 1.25rem 1.5rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
@@ -79,9 +79,16 @@ const faqs = [
     box-shadow: 0 6px 28px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(43, 159, 217, 0.1);
   }
   .faq-answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
     overflow: hidden;
-    height: 0;
-    transition: height 0.35s ease;
+  }
+  .faq-answer.open {
+    grid-template-rows: 1fr;
+  }
+  .faq-answer > p {
+    overflow: hidden;
   }
   .faq-icon {
     transition: transform 0.3s ease;
@@ -92,48 +99,21 @@ const faqs = [
 </style>
 
 <script>
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  gsap.registerPlugin(ScrollTrigger);
-
-  const def = { ease: 'power2.out', overwrite: 'auto' as const };
-
-  gsap.from('.gs-faq-header', {
-    ...def,
-    scrollTrigger: { trigger: '.gs-faq-header', start: 'top 88%', once: true },
-    y: 24, opacity: 0, duration: 0.8,
-  });
-  gsap.from('.gs-faq-list', {
-    ...def,
-    scrollTrigger: { trigger: '.gs-faq-list', start: 'top 88%', once: true },
-    y: 20, opacity: 0, duration: 0.7,
-  });
-
   document.querySelectorAll<HTMLButtonElement>('.faq-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const idx = btn.dataset.faq!;
-      const answer = document.getElementById(`faq-answer-${idx}`) as HTMLElement;
-      const card   = document.getElementById(`faq-card-${idx}`)!;
-      const icon   = btn.querySelector('.faq-icon')!;
-      const isOpen = answer.classList.contains('open');
+      const answer = document.getElementById(`faq-answer-${idx}`)!;
+      const card = document.getElementById(`faq-card-${idx}`)!;
+      const icon = btn.querySelector('.faq-icon')!;
+      const isOpen = card.classList.contains('open');
 
-      // Animate close all open answers
-      document.querySelectorAll<HTMLElement>('.faq-answer.open').forEach((a) => {
-        a.style.height = a.scrollHeight + 'px';
-        requestAnimationFrame(() => { a.style.height = '0'; });
-        a.classList.remove('open');
-      });
+      document.querySelectorAll('.faq-answer').forEach((a) => a.classList.remove('open'));
       document.querySelectorAll('.faq-card').forEach((c) => c.classList.remove('open'));
       document.querySelectorAll('.faq-icon').forEach((ic) => ic.classList.remove('open'));
       document.querySelectorAll('.faq-btn').forEach((b) => b.setAttribute('aria-expanded', 'false'));
 
       if (!isOpen) {
         answer.classList.add('open');
-        answer.style.height = '0';
-        requestAnimationFrame(() => { answer.style.height = answer.scrollHeight + 'px'; });
-        answer.addEventListener('transitionend', () => {
-          if (answer.classList.contains('open')) answer.style.height = 'auto';
-        }, { once: true });
         card.classList.add('open');
         icon.classList.add('open');
         btn.setAttribute('aria-expanded', 'true');

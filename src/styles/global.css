@@ -20,7 +20,7 @@ html, body {
 @theme {
   --color-primary:        #2B9FD9;
   --color-primary-hover:  #1E8AC4;
-  --color-bg-dark:        #E0E0E0;
+  --color-bg-dark:        #F0F0F0;
   --color-text-base:      #0D0D2B;
   --color-text-muted:     #64748B;
   --color-border:         #2B9FD940;
@@ -31,7 +31,7 @@ html, body {
 @layer base {
   html {
     @apply scroll-smooth;
-    background: #E0E0E0;
+    background: #F0F0F0;
   }
 
   body {
@@ -48,8 +48,166 @@ html, body {
   }
 }
 
+/* ─── Hero ───────────────────────────────────────────────────────────────── */
+
+@utility hero-section {
+  @apply relative w-full h-screen overflow-hidden flex flex-col;
+  background: #f0f0f0;
+}
+
+@utility hero-content {
+  @apply relative z-10 flex flex-col items-start text-left justify-start pt-2 px-2 pl-2 flex-1 sm:justify-center sm:pt-0 sm:items-center sm:text-center sm:px-6 sm:max-w-3xl sm:mx-auto;
+}
+
+@utility hero-brand {
+  @apply relative z-10 flex items-center justify-center gap-3 pt-2 pb-2 sm:pt-6 sm:pb-4;
+}
+
+@utility hero-logo {
+  @apply h-14 w-auto object-contain;
+}
+
+@utility hero-brand-name {
+  font-family: 'IBrand', sans-serif;
+  @apply text-3xl tracking-tight text-gray-900;
+}
+
+@utility hero-attention {
+  font-family: 'IBrand', sans-serif;
+  @apply text-black text-[0.65rem] sm:text-lg mb-4 self-center text-center sm:self-auto
+}
+
+@utility hero-highlight {
+  @apply text-gray-900 font-normal;
+}
+
+@utility hero-headline {
+  font-family: 'Outfit', sans-serif;
+  @apply text-gray-900 text-[1.6rem] sm:text-3xl lg:text-5xl tracking-tight mb-4 font-semibold self-start text-left sm:self-auto sm:text-center w-80 sm:w-fit leading-snug sm:leading-tight;
+}
+
+@utility hero-gradient-text {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, #0ea5e9, #2563eb, #7c3aed, #2563eb, #0ea5e9);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+
+@utility hero-subheadline {
+  font-family: 'Outfit', sans-serif;
+  @apply text-black text-xs sm:text-base leading-relaxed mb-4 sm:mb-6 max-w-[65%] sm:max-w-2xl;
+}
+
+@utility hero-cta {
+  font-family: 'IBrand', sans-serif;
+  @apply inline-block text-white text-sm sm:text-lg no-underline rounded-xl sm:rounded-2xl px-6 py-2 sm:px-10 sm:py-3 mb-4 sm:mb-6;
+  background: rgb(20, 173, 0);
+  box-shadow: 0 6px 0 rgb(7, 97, 12), 0 14px 28px rgba(0,0,0,0.2);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  &:hover {
+    transform: translateY(2px);
+    box-shadow: 0 4px 0 rgb(7, 97, 12), 0 10px 22px rgba(0,0,0,0.25);
+    color: #fff;
+  }
+}
+
+@utility hero-counter {
+  @apply flex justify-start sm:justify-center max-w-[65%] sm:max-w-none;
+}
+
+@utility hero-testo-heading {
+  @apply absolute bottom-20 left-0 right-0 z-10 px-4;
+}
+
+/* ─── Who Is This For ────────────────────────────────────────────────────── */
+
+@utility who-section {
+  @apply py-16 px-6;
+  background: #F0F0F0;
+}
+
+@utility who-content {
+  @apply max-w-3xl mx-auto text-center;
+}
+
+@utility who-lead {
+  font-family: 'IBrand', sans-serif;
+  @apply text-black text-2xl sm:text-3xl mb-6;
+}
+
+@utility who-text {
+  font-family: 'Outfit', sans-serif;
+  @apply text-black text-base sm:text-lg mb-4;
+}
+
+@utility who-heading {
+  font-family: 'IBrand', sans-serif;
+  @apply text-black text-xl sm:text-2xl mt-8 mb-6 font-normal;
+}
+
+@utility who-list {
+  font-family: 'Outfit', sans-serif;
+  @apply text-black text-base sm:text-lg text-left max-w-xl mx-auto flex flex-col gap-3 mb-8 list-disc pl-6;
+}
+
+@utility who-cta-text {
+  font-family: 'IBrand', sans-serif;
+  @apply text-black text-xl sm:text-2xl mt-6;
+}
+
 /* ─── Components ─────────────────────────────────────────────────────────── */
 @layer components {
+
+  /* Hero section */
+
+  .circle{
+    @apply absolute top-1/2 -translate-y-1/2 h-200 w-200 rounded-full;
+    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
+    border: 4px solid #2563eb;
+  }
+
+  .circle-reverse{
+    background: linear-gradient(315deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
+  }
+
+  .circle-img{
+    background: url('/mj4.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .circle-img-mj{
+    background: url('/mj2.jpeg');
+    background-position: -40%;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .circle-mobile{
+    right: -17rem;
+    top: 50%;
+    height: 26rem;
+    width: 26rem;
+    border: 2px solid #2563eb;
+  }
+
+  .circle-mobile.circle-img-mj{
+    background: url('/mj4.png');
+    background-position: -50%;
+    background-repeat: no-repeat;
+    background-size: 60%;
+
+  }
+
+
+  /* ------------ */
 
   /* Used by Testimonials */
   .section {
@@ -77,13 +235,13 @@ html, body {
 
   .btn-cta {
     @apply font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full text-lg sm:text-xl cursor-pointer w-full text-center block text-text-base;
-    background: linear-gradient(#e0e0e0, #e0e0e0) padding-box,
+    background: linear-gradient(#f0f0f0, #f0f0f0) padding-box,
                 linear-gradient(135deg, #2B9FD9, #5B5BC8, #4040B2) border-box;
     border: 4px solid transparent;
     transition: background 0.25s ease;
   }
   .btn-cta:hover {
-    background: linear-gradient(#e0e0e0, #e0e0e0) padding-box,
+    background: linear-gradient(#f0f0f0, #f0f0f0) padding-box,
                 linear-gradient(135deg, #7DD6FF, #9898FF, #7070E8) border-box;
   }
 
