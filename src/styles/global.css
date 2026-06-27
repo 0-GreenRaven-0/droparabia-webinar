@@ -111,9 +111,6 @@ html, body {
   @apply text-white sm:text-black text-xs sm:text-sm mb-1 self-center text-center sm:self-auto uppercase tracking-widest font-semibold;
 }
 
-@utility hero-highlight {
-  @apply text-gray-900 font-normal;
-}
 
 @utility hero-headline {
   font-family: 'Outfit', sans-serif;
@@ -160,46 +157,6 @@ html, body {
 
 @utility hero-counter {
   @apply flex justify-center;
-}
-
-@utility hero-testo-heading {
-  @apply absolute bottom-20 left-0 right-0 z-10 px-4;
-}
-
-/* ─── Who Is This For ────────────────────────────────────────────────────── */
-
-@utility who-section {
-  @apply py-16 px-6;
-  background: #F0F0F0;
-}
-
-@utility who-content {
-  @apply max-w-3xl mx-auto text-center;
-}
-
-@utility who-lead {
-  font-family: 'IBrand', sans-serif;
-  @apply text-black text-2xl sm:text-3xl mb-6;
-}
-
-@utility who-text {
-  font-family: 'Outfit', sans-serif;
-  @apply text-black text-base sm:text-lg mb-4;
-}
-
-@utility who-heading {
-  font-family: 'IBrand', sans-serif;
-  @apply text-black text-xl sm:text-2xl mt-8 mb-6 font-normal;
-}
-
-@utility who-list {
-  font-family: 'Outfit', sans-serif;
-  @apply text-black text-base sm:text-lg text-left max-w-xl mx-auto flex flex-col gap-3 mb-8 list-disc pl-6;
-}
-
-@utility who-cta-text {
-  font-family: 'IBrand', sans-serif;
-  @apply text-black text-xl sm:text-2xl mt-6;
 }
 
 /* ─── Components ─────────────────────────────────────────────────────────── */

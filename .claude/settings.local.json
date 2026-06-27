@@ -30,7 +30,8 @@
       "Bash(git add *)",
       "Bash(git status *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Read(//d/Projects/droparabia-landing/src/pages/**)"
     ],
     "additionalDirectories": [
       "D:\\Projects\\droparabia-book",
