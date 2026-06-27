@@ -119,7 +119,7 @@ html, body {
 
 @utility hero-gradient-text {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg, #00fff7, #00e5ff, #00ffaa, #00e5ff, #00fff7);
+  background-image: linear-gradient(135deg, #4d7cff, #6699ff, #4d7cff, #6699ff, #4d7cff);
   background-size: 200% auto;
   animation: shimmer 3s linear infinite;
 }
