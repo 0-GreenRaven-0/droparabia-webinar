@@ -1,18 +1,14 @@
 ---
 ---
 
-<section class="host">
+<!-- Desktop layout -->
+<section class="host-desktop" id="host-section">
   <div class="host-left">
-    <div class="host-heading">
-      <div class="eyebrow">Meet</div>
-      <h2><span class="name-white">Majd </span><span class="name-cyan">Abdulsalam</span></h2>
-    </div>
-    <div class="host-text">
-      <p>A dropshipping and digital marketing expert who made 6-figures over the past few years. Helped over 600 Lebanese start their own online business with success and founded Droparabia, Lebanon's 1st dropshipping platform that will forever reshape how online selling in Lebanon and soon in the MENA regions is done.</p>
-      <p>And now Majd is going to teach you live everything you need from A to Z in order to start your own profitable online store and answer whatever questions you have!</p>
-    </div>
+    <div class="eyebrow">Meet</div>
+    <h2><span class="name-white">Majd </span><span class="name-cyan">Abdulsalam</span></h2>
+    <p>A dropshipping and digital marketing expert who made 6-figures over the past few years. Helped over 600 Lebanese start their own online business with success and founded Droparabia, Lebanon's 1st dropshipping platform that will forever reshape how online selling in Lebanon and soon in the MENA regions is done.</p>
+    <p>And now Majd is going to teach you live everything you need from A to Z in order to start your own profitable online store and answer whatever questions you have!</p>
   </div>
-
   <div class="host-photo-wrap">
     <div class="host-photo">
       <img src="/mj.jpeg" alt="Majd Abdulsalam" />
@@ -25,63 +21,36 @@
   </div>
 </section>
 
+<!-- Mobile layout -->
+<section class="host-mobile" id="host-section-mobile">
+  <div class="eyebrow">Meet</div>
+  <h2><span class="name-white">Majd </span><span class="name-cyan">Abdulsalam</span></h2>
+
+  <div class="host-photo-wrap">
+    <div class="host-photo">
+      <img src="/mj.jpeg" alt="Majd Abdulsalam" />
+    </div>
+    <div class="host-pills">
+      <div class="pill purple">Made over<br>6-Figures</div>
+      <div class="pill blue">Founder of<br>Droparabia</div>
+      <div class="pill black">+5 years<br>Digital Marketing<br>experience</div>
+    </div>
+  </div>
+
+  <div class="host-text-mobile">
+    <p>A dropshipping and digital marketing expert who made 6-figures over the past few years. Helped over 600 Lebanese start their own online business with success and founded Droparabia, Lebanon's 1st dropshipping platform that will forever reshape how online selling in Lebanon and soon in the MENA regions is done.</p>
+    <p>And now Majd is going to teach you live everything you need from A to Z in order to start your own profitable online store and answer whatever questions you have!</p>
+  </div>
+</section>
+
 <style>
-  .host {
-    position: relative;
-    width: 100%;
-    min-height: 592px;
-    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
-    overflow: visible;
-    display: flex;
-    align-items: center;
-    padding: 60px 96px 80px;
-    gap: 60px;
-    color: #fff;
-  }
-
-  .host-left {
-    flex: 1;
-    max-width: 640px;
-  }
-
-  .host-heading {
-    color: #fff;
-  }
-
-  .host-text {
-    color: #fff;
-  }
-
-  .host-photo-wrap {
-    flex: 0 0 420px;
-  }
+  /* ─── Shared ────────────────────────────────────────── */
   .eyebrow {
     font-family: 'IBrand', sans-serif;
     font-size: clamp(22px, 2.5vw, 32px);
     line-height: 1.2;
     letter-spacing: -0.01em;
     color: rgba(255,255,255,0.85);
-  }
-  .host-heading h2 {
-    margin: 6px 0 0;
-    font-family: 'IBrand', sans-serif;
-    font-weight: 400;
-    font-size: clamp(40px, 5vw, 64px);
-    line-height: 1.05;
-    letter-spacing: -0.01em;
-    color: #fff;
-  }
-  .host-text p {
-    margin: 0 0 16px;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 500;
-    font-size: clamp(15px, 1.3vw, 19px);
-    line-height: 1.5;
-    color: rgba(255,255,255,0.92) !important;
-  }
-  .host-text p strong {
-    color: #fff;
-    font-weight: 700;
   }
   .name-white { color: #fff; }
   .name-cyan  { color: #00D4FF; }
@@ -93,7 +62,6 @@
     flex-direction: column;
     align-items: center;
   }
-
   .host-photo {
     width: 340px;
     height: 460px;
@@ -113,7 +81,6 @@
     transform: rotate(-24.6deg) scale(1.35);
     transform-origin: center;
   }
-
   .host-pills {
     display: flex;
     align-items: center;
@@ -127,7 +94,7 @@
   }
   .pill {
     color: #fff;
-    font-family: 'IBrand', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-weight: 400;
     font-size: 16px;
     text-align: center;
@@ -137,7 +104,6 @@
     justify-content: center;
     padding: 0 16px;
     letter-spacing: -0.01em;
-    border-radius: 0;
     width: 175px;
     height: 185px;
     -webkit-mask-image: url('/oval.png');
@@ -147,55 +113,91 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
   }
-  .pill.purple {
-    background: rgb(59, 25, 163);
-    margin-right: -35px;
+  .pill.purple { background: rgb(59, 25, 163); margin-right: -35px; }
+  .pill.blue   { background: rgb(62, 167, 255); z-index: 2; }
+  .pill.black  { background: rgb(5, 5, 5); font-size: 14px; margin-left: -35px; }
+
+  /* ─── Desktop ───────────────────────────────────────── */
+  .host-desktop {
+    position: relative;
+    width: 100%;
+    min-height: 592px;
+    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    padding: 60px 96px 80px;
+    gap: 60px;
+    color: #fff;
   }
-  .pill.blue {
-    background: rgb(62, 167, 255);
-    z-index: 2;
+  .host-left {
+    flex: 1;
+    max-width: 640px;
   }
-  .pill.black {
-    background: rgb(5, 5, 5);
-    font-size: 14px;
-    margin-left: -35px;
+  .host-left h2 {
+    margin: 6px 0 20px;
+    font-family: 'IBrand', sans-serif;
+    font-weight: 400;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  .host-left p {
+    margin: 0 0 16px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: clamp(15px, 1.3vw, 19px);
+    line-height: 1.5;
+    color: rgba(255,255,255,0.92);
   }
 
+  /* ─── Mobile ────────────────────────────────────────── */
+  .host-mobile {
+    display: none;
+    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
+    overflow: visible;
+    padding: 48px 24px 60px;
+    color: #fff;
+    text-align: center;
+  }
+  .host-mobile h2 {
+    margin: 6px 0 24px;
+    font-family: 'IBrand', sans-serif;
+    font-weight: 400;
+    font-size: clamp(28px, 7vw, 40px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  .host-mobile .host-photo-wrap {
+    margin: 0 auto 24px;
+  }
+  .host-mobile .host-photo {
+    width: 220px;
+    height: 300px;
+  }
+  .host-mobile .pill {
+    width: 130px;
+    height: 135px;
+    font-size: 13px;
+  }
+  .host-mobile .pill.black  { font-size: 12px; margin-left: -10px; }
+  .host-mobile .pill.purple { margin-right: -10px; }
+  .host-mobile .host-pills  { margin-top: -90px; }
+  .host-text-mobile p {
+    margin: 0 0 16px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.92);
+    text-align: left;
+  }
+
+  /* ─── Breakpoint switch ─────────────────────────────── */
   @media (max-width: 1024px) {
-    .host {
-      display: flex;
-      flex-direction: column;
-      padding: 48px 24px 60px;
-      text-align: center;
-    }
-    .host-left {
-      display: contents;
-    }
-    .host-heading { max-width: 100%; order: 1; }
-    .host-photo-wrap {
-      width: 100%;
-      align-items: center;
-      order: 2;
-    }
-    .host-text { max-width: 100%; order: 3; }
-  }
-
-  @media (max-width: 768px) {
-    .host-heading { order: 1; }
-    .host-heading h2 { font-size: clamp(28px, 7vw, 40px); }
-    .host-photo-wrap { order: 2; }
-    .host-text { order: 3; }
-    .host-photo {
-      width: 220px;
-      height: 300px;
-    }
-    .pill {
-      width: 130px;
-      height: 135px;
-      font-size: 13px;
-    }
-    .pill.black  { font-size: 12px; margin-left: -10px; }
-    .pill.purple { margin-right: -10px; }
-    .host-pills  { margin-top: -90px; }
+    .host-desktop { display: none; }
+    .host-mobile  { display: block; }
   }
 </style>

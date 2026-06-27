@@ -56,16 +56,45 @@ html, body {
 /* ─── Hero ───────────────────────────────────────────────────────────────── */
 
 @utility hero-section {
-  @apply relative w-full h-screen overflow-hidden flex flex-col;
-  background: #f0f0f0;
+  @apply relative w-full h-[72vh] sm:h-screen overflow-hidden sm:overflow-visible flex flex-col;
+  background: #000 url('/mj3.png') bottom/cover no-repeat;
+  z-index: 50;
+}
+
+@media (min-width: 640px) {
+  .hero-section {
+    background: #f0f0f0 !important;
+    height: 100vh !important;
+  }
 }
 
 @utility hero-content {
-  @apply relative z-10 flex flex-col items-start text-left justify-start pt-2 px-2 pl-2 flex-1 sm:justify-center sm:pt-0 sm:items-center sm:text-center sm:px-6 sm:max-w-3xl sm:mx-auto;
+  @apply relative z-10 flex flex-col items-center text-center pt-6 px-2 flex-1 gap-3 sm:gap-0 sm:pt-0 sm:justify-center sm:px-6 sm:max-w-3xl sm:mx-auto;
 }
 
 @utility hero-brand {
   @apply relative z-10 flex items-center justify-center gap-3 pt-2 pb-2 sm:pt-6 sm:pb-4;
+}
+
+@utility hero-nav {
+  @apply relative z-10 hidden sm:flex items-center justify-center gap-8 pb-2;
+}
+
+@utility hero-nav-link {
+  font-family: 'IBrand', sans-serif;
+  @apply text-black text-sm no-underline relative;
+  &::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 w-0 h-[2px] bg-blue-600;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+  }
+  &:hover::after {
+    @apply w-full;
+  }
+  &:hover {
+    @apply text-black;
+  }
 }
 
 @utility hero-logo {
@@ -74,12 +103,12 @@ html, body {
 
 @utility hero-brand-name {
   font-family: 'IBrand', sans-serif;
-  @apply text-3xl tracking-tight text-gray-900;
+  @apply text-3xl tracking-tight text-black;
 }
 
 @utility hero-attention {
-  font-family: 'IBrand', sans-serif;
-  @apply text-black text-[0.65rem] sm:text-lg mb-4 self-center text-center sm:self-auto
+  font-family: 'Outfit', sans-serif;
+  @apply text-white sm:text-black text-xs sm:text-sm mb-1 self-center text-center sm:self-auto uppercase tracking-widest font-semibold;
 }
 
 @utility hero-highlight {
@@ -88,14 +117,20 @@ html, body {
 
 @utility hero-headline {
   font-family: 'Outfit', sans-serif;
-  @apply text-gray-900 text-[1.6rem] sm:text-3xl lg:text-5xl tracking-tight mb-4 font-semibold self-start text-left sm:self-auto sm:text-center w-80 sm:w-fit leading-snug sm:leading-tight;
+  @apply text-white sm:text-gray-900 text-[1.7rem] sm:text-4xl lg:text-6xl tracking-tight mb-4 font-semibold text-center leading-snug sm:leading-tight;
 }
 
 @utility hero-gradient-text {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg, #0ea5e9, #2563eb, #7c3aed, #2563eb, #0ea5e9);
+  background-image: linear-gradient(135deg, #00fff7, #00e5ff, #00ffaa, #00e5ff, #00fff7);
   background-size: 200% auto;
   animation: shimmer 3s linear infinite;
+}
+
+@media (min-width: 640px) {
+  .hero-gradient-text {
+    background-image: linear-gradient(135deg, #0ea5e9, #2563eb, #7c3aed, #2563eb, #0ea5e9) !important;
+  }
 }
 
 @keyframes shimmer {
@@ -106,24 +141,25 @@ html, body {
 
 @utility hero-subheadline {
   font-family: 'Outfit', sans-serif;
-  @apply text-black text-xs sm:text-base leading-relaxed mb-4 sm:mb-6 max-w-[65%] sm:max-w-2xl;
+  @apply text-white sm:text-black text-[0.8rem] sm:text-base leading-relaxed mb-4 sm:mb-6 w-full sm:max-w-2xl px-2 sm:px-0;
 }
 
 @utility hero-cta {
-  font-family: 'IBrand', sans-serif;
-  @apply inline-block text-white text-sm sm:text-lg no-underline rounded-xl sm:rounded-2xl px-6 py-2 sm:px-10 sm:py-3 mb-4 sm:mb-6;
+  font-family: 'Outfit', sans-serif;
+  @apply inline-block text-white text-sm sm:text-lg no-underline px-8 py-3 sm:px-12 sm:py-4 mb-4 sm:mb-6 font-semibold uppercase tracking-wider;
   background: rgb(20, 173, 0);
-  box-shadow: 0 6px 0 rgb(7, 97, 12), 0 14px 28px rgba(0,0,0,0.2);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  border: none;
+  border-radius: 4px;
+  transition: background 0.2s ease, transform 0.15s ease;
   &:hover {
-    transform: translateY(2px);
-    box-shadow: 0 4px 0 rgb(7, 97, 12), 0 10px 22px rgba(0,0,0,0.25);
+    background: rgb(16, 150, 0);
+    transform: translateY(-1px);
     color: #fff;
   }
 }
 
 @utility hero-counter {
-  @apply flex justify-start sm:justify-center max-w-[65%] sm:max-w-none;
+  @apply flex justify-center;
 }
 
 @utility hero-testo-heading {
@@ -175,6 +211,7 @@ html, body {
     @apply absolute top-1/2 -translate-y-1/2 h-200 w-200 rounded-full;
     background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
     border: 4px solid #2563eb;
+    z-index: 99;
   }
 
   .circle-reverse{
@@ -182,7 +219,7 @@ html, body {
   }
 
   .circle-img{
-    background: url('/mj4.png');
+    background: url('/mj1.png');
     background-position: right;
     background-repeat: no-repeat;
     background-size: contain;
@@ -195,21 +232,6 @@ html, body {
     background-size: contain;
   }
 
-  .circle-mobile{
-    right: -17rem;
-    top: 50%;
-    height: 26rem;
-    width: 26rem;
-    border: 2px solid #2563eb;
-  }
-
-  .circle-mobile.circle-img-mj{
-    background: url('/mj4.png');
-    background-position: -50%;
-    background-repeat: no-repeat;
-    background-size: 60%;
-
-  }
 
 
   /* ------------ */

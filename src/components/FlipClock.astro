@@ -5,40 +5,47 @@ interface Props {
 const { targetDate } = Astro.props;
 ---
 
-<div class="flex items-center gap-1.5 sm:gap-3 font-[IBrand]">
+<div class="countdown-widget flex items-center gap-3 sm:gap-3 font-[IBrand]">
   <div class="flex flex-col items-center">
-    <span class="text-xl sm:text-3xl text-black" id="cd-days">00</span>
-    <span class="text-xs text-black uppercase">Days</span>
+    <span class="text-3xl sm:text-3xl text-white sm:text-black cd-days">00</span>
+    <span class="text-xs text-white sm:text-black uppercase">Days</span>
   </div>
-  <span class="text-lg sm:text-2xl text-black mb-2 sm:mb-3">:</span>
+  <span class="text-2xl sm:text-2xl text-white sm:text-black mb-2 sm:mb-3">:</span>
   <div class="flex flex-col items-center">
-    <span class="text-xl sm:text-3xl text-black" id="cd-hours">00</span>
-    <span class="text-xs text-black uppercase">Hours</span>
+    <span class="text-3xl sm:text-3xl text-white sm:text-black cd-hours">00</span>
+    <span class="text-xs text-white sm:text-black uppercase">Hours</span>
   </div>
-  <span class="text-lg sm:text-2xl text-black mb-2 sm:mb-3">:</span>
+  <span class="text-2xl sm:text-2xl text-white sm:text-black mb-2 sm:mb-3">:</span>
   <div class="flex flex-col items-center">
-    <span class="text-xl sm:text-3xl text-black" id="cd-minutes">00</span>
-    <span class="text-xs text-black uppercase">Minutes</span>
+    <span class="text-3xl sm:text-3xl text-white sm:text-black cd-minutes">00</span>
+    <span class="text-xs text-white sm:text-black uppercase">Minutes</span>
   </div>
-  <span class="text-lg sm:text-2xl text-black mb-2 sm:mb-3">:</span>
+  <span class="text-2xl sm:text-2xl text-white sm:text-black mb-2 sm:mb-3">:</span>
   <div class="flex flex-col items-center">
-    <span class="text-xl sm:text-3xl text-black" id="cd-seconds">00</span>
-    <span class="text-xs text-black uppercase">Seconds</span>
+    <span class="text-3xl sm:text-3xl text-white sm:text-black cd-seconds">00</span>
+    <span class="text-xs text-white sm:text-black uppercase">Seconds</span>
   </div>
 </div>
 
 <script is:inline>
-  const target = Date.now() + 24 * 60 * 60 * 1000;
-  const pad = n => String(Math.max(0, n)).padStart(2, '0');
+  (function() {
+    const target = Date.now() + 24 * 60 * 60 * 1000;
+    const pad = n => String(Math.max(0, n)).padStart(2, '0');
 
-  function tick() {
-    const diff = Math.max(0, target - Date.now());
-    document.getElementById('cd-days').textContent = pad(Math.floor(diff / 86400000));
-    document.getElementById('cd-hours').textContent = pad(Math.floor((diff % 86400000) / 3600000));
-    document.getElementById('cd-minutes').textContent = pad(Math.floor((diff % 3600000) / 60000));
-    document.getElementById('cd-seconds').textContent = pad(Math.floor((diff % 60000) / 1000));
-  }
+    function tick() {
+      const diff = Math.max(0, target - Date.now());
+      const d = pad(Math.floor(diff / 86400000));
+      const h = pad(Math.floor((diff % 86400000) / 3600000));
+      const m = pad(Math.floor((diff % 3600000) / 60000));
+      const s = pad(Math.floor((diff % 60000) / 1000));
 
-  tick();
-  setInterval(tick, 1000);
+      document.querySelectorAll('.cd-days').forEach(el => el.textContent = d);
+      document.querySelectorAll('.cd-hours').forEach(el => el.textContent = h);
+      document.querySelectorAll('.cd-minutes').forEach(el => el.textContent = m);
+      document.querySelectorAll('.cd-seconds').forEach(el => el.textContent = s);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  })();
 </script>

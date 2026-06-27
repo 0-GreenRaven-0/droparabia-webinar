@@ -43,7 +43,7 @@
       </svg>
       <div class="num bonus-num">Bonus Gift!</div>
       <span class="worth">Worth $997</span>
-      <div class="body" style="margin-top:14px; font-size:18px;">Those who stay until the very end of the workshop will receive <strong>+7 guides</strong> that will kickstart your dropshipping journey.</div>
+      <div class="body" style="margin-top:14px; font-size:18px;">Those who stay until the very end of the workshop will receive <strong style="color:#000;">+7 guides</strong> that will kickstart your dropshipping journey.</div>
     </div>
   </div>
 
@@ -82,20 +82,22 @@
   .lesson:nth-child(5)    { grid-column: span 3; }
 
   .lesson {
-    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
-    color: #fff;
+    background: #fff;
+    color: #000;
     border-radius: 28px;
     padding: 26px 28px;
-    box-shadow: 0 14px 30px rgba(0,21,115,0.18);
     position: relative;
     overflow: hidden;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 0 0 0 2px #001575, 0 14px 30px rgba(0,21,115,0.1);
   }
   .num {
     font-family: 'IBrand', sans-serif;
     font-size: 40px;
     line-height: 1;
     letter-spacing: -0.01em;
-    color: #fff;
+    color: #001575;
   }
   .ttl {
     margin-top: 10px;
@@ -103,7 +105,7 @@
     font-size: 22px;
     line-height: 1.15;
     letter-spacing: -0.01em;
-    color: #fff;
+    color: #000;
   }
   .body {
     margin-top: 14px;
@@ -111,25 +113,24 @@
     font-weight: 500;
     font-size: 16px;
     line-height: 1.5;
-    color: rgba(255,255,255,0.92);
+    color: rgba(0,0,0,0.7);
   }
 
   /* Bonus card */
   .bonus {
     grid-column: 1 / span 6;
-    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
     position: relative;
   }
   .bonus::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 90% 20%, rgba(20,173,0,0.25), transparent 45%);
+    background: radial-gradient(circle at 90% 20%, rgba(20,173,0,0.08), transparent 45%);
     border-radius: 28px;
     pointer-events: none;
   }
   .bonus-num {
-    color: #fff;
+    color: #000;
     font-size: 44px;
   }
   .worth {
@@ -149,8 +150,8 @@
     top: 32px;
     width: 96px;
     height: 96px;
-    color: #fff;
-    opacity: 0.85;
+    color: #001575;
+    opacity: 0.3;
     transform: rotate(-10deg);
   }
 
@@ -177,18 +178,19 @@
     justify-content: center;
     background: rgb(20, 173, 0);
     color: #fff;
-    font-family: 'IBrand', sans-serif;
-    font-size: 22px;
-    letter-spacing: -0.01em;
-    border-radius: 18px;
-    padding: 18px 56px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    padding: 16px 48px;
     text-decoration: none;
-    box-shadow: 0 6px 0 rgb(7, 97, 12), 0 14px 28px rgba(0,0,0,0.25);
-    transition: transform .12s ease, box-shadow .12s ease;
+    transition: background 0.2s ease, transform 0.15s ease;
   }
   .cta-btn:hover {
-    transform: translateY(2px);
-    box-shadow: 0 4px 0 rgb(7, 97, 12), 0 10px 22px rgba(0,0,0,0.3);
+    background: rgb(16, 150, 0);
+    transform: translateY(-1px);
   }
   .fineprint {
     font-family: 'IBrand', sans-serif;
