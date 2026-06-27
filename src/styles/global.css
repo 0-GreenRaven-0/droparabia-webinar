@@ -57,7 +57,7 @@ html, body {
 
 @utility hero-section {
   @apply relative w-full h-[72vh] sm:h-screen overflow-hidden sm:overflow-visible flex flex-col;
-  background: #000 url('/mj3.png') bottom/cover no-repeat;
+  background: #000 url('/mj3.webp') bottom/cover no-repeat;
   z-index: 50;
 }
 
