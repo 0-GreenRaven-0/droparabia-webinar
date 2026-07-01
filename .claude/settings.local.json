@@ -31,7 +31,11 @@
       "Bash(git status *)",
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
-      "Read(//d/Projects/droparabia-landing/src/pages/**)"
+      "Read(//d/Projects/droparabia-landing/src/pages/**)",
+      "Bash(git -C \"d:/Projects/droparabia-webinar\" status)",
+      "Bash(git -C \"d:/Projects/droparabia-webinar\" diff --stat)",
+      "Bash(git -C \"d:/Projects/droparabia-webinar\" add src/components/FAQ.astro src/components/FlipClock.astro src/components/Hero.astro src/components/LearnSection.astro src/components/Testimonials.astro src/components/WorkshopSection.astro src/styles/global.css)",
+      "Bash(git -C d:/Projects/droparabia-webinar commit -m ' *)"
     ],
     "additionalDirectories": [
       "D:\\Projects\\droparabia-book",
