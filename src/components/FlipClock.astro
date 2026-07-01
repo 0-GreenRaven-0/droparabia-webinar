@@ -5,31 +5,31 @@ interface Props {
 const { targetDate } = Astro.props;
 ---
 
-<div class="countdown-widget flex items-center gap-3 sm:gap-3 font-[IBrand]">
+<div class="countdown-widget flex items-center gap-3 lg:gap-3 font-[IBrand]">
   <div class="flex flex-col items-center">
-    <span class="text-3xl sm:text-3xl text-white sm:text-black cd-days">00</span>
-    <span class="text-xs text-white sm:text-black uppercase">Days</span>
+    <span class="text-3xl lg:text-3xl text-white lg:text-black cd-days">00</span>
+    <span class="text-xs text-white lg:text-black uppercase">Days</span>
   </div>
-  <span class="text-2xl sm:text-2xl text-white sm:text-black mb-2 sm:mb-3">:</span>
+  <span class="text-2xl lg:text-2xl text-white lg:text-black mb-2 lg:mb-3">:</span>
   <div class="flex flex-col items-center">
-    <span class="text-3xl sm:text-3xl text-white sm:text-black cd-hours">00</span>
-    <span class="text-xs text-white sm:text-black uppercase">Hours</span>
+    <span class="text-3xl lg:text-3xl text-white lg:text-black cd-hours">00</span>
+    <span class="text-xs text-white lg:text-black uppercase">Hours</span>
   </div>
-  <span class="text-2xl sm:text-2xl text-white sm:text-black mb-2 sm:mb-3">:</span>
+  <span class="text-2xl lg:text-2xl text-white lg:text-black mb-2 lg:mb-3">:</span>
   <div class="flex flex-col items-center">
-    <span class="text-3xl sm:text-3xl text-white sm:text-black cd-minutes">00</span>
-    <span class="text-xs text-white sm:text-black uppercase">Minutes</span>
+    <span class="text-3xl lg:text-3xl text-white lg:text-black cd-minutes">00</span>
+    <span class="text-xs text-white lg:text-black uppercase">Minutes</span>
   </div>
-  <span class="text-2xl sm:text-2xl text-white sm:text-black mb-2 sm:mb-3">:</span>
+  <span class="text-2xl lg:text-2xl text-white lg:text-black mb-2 lg:mb-3">:</span>
   <div class="flex flex-col items-center">
-    <span class="text-3xl sm:text-3xl text-white sm:text-black cd-seconds">00</span>
-    <span class="text-xs text-white sm:text-black uppercase">Seconds</span>
+    <span class="text-3xl lg:text-3xl text-white lg:text-black cd-seconds">00</span>
+    <span class="text-xs text-white lg:text-black uppercase">Seconds</span>
   </div>
 </div>
 
-<script is:inline>
+<script is:inline define:vars={{ targetDate }}>
   (function() {
-    const target = Date.now() + 24 * 60 * 60 * 1000;
+    const target = new Date(targetDate).getTime();
     const pad = n => String(Math.max(0, n)).padStart(2, '0');
 
     function tick() {

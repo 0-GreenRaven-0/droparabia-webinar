@@ -56,12 +56,12 @@ html, body {
 /* ─── Hero ───────────────────────────────────────────────────────────────── */
 
 @utility hero-section {
-  @apply relative w-full h-[72vh] sm:h-screen overflow-hidden sm:overflow-visible flex flex-col;
+  @apply relative w-full h-[72vh] lg:h-screen overflow-hidden lg:overflow-visible flex flex-col;
   background: #000 url('/mj3.webp') bottom/cover no-repeat;
   z-index: 50;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 1024px) {
   .hero-section {
     background: #f0f0f0 !important;
     height: 100vh !important;
@@ -69,15 +69,15 @@ html, body {
 }
 
 @utility hero-content {
-  @apply relative z-10 flex flex-col items-center text-center pt-6 px-2 flex-1 gap-3 sm:gap-0 sm:pt-0 sm:justify-center sm:px-6 sm:max-w-3xl sm:mx-auto;
+  @apply relative z-10 flex flex-col items-center text-center pt-6 px-2 flex-1 gap-3 lg:gap-0 lg:pt-0 lg:justify-center lg:px-6 lg:max-w-3xl lg:mx-auto;
 }
 
 @utility hero-brand {
-  @apply relative z-10 flex items-center justify-center gap-3 pt-2 pb-2 sm:pt-6 sm:pb-4;
+  @apply relative z-10 flex items-center justify-center gap-3 pt-2 pb-2 lg:pt-6 lg:pb-4;
 }
 
 @utility hero-nav {
-  @apply relative z-10 hidden sm:flex items-center justify-center gap-8 pb-2;
+  @apply relative z-10 hidden lg:flex items-center justify-center gap-8 pb-2;
 }
 
 @utility hero-nav-link {
@@ -108,25 +108,40 @@ html, body {
 
 @utility hero-attention {
   font-family: 'Outfit', sans-serif;
-  @apply text-white sm:text-black text-xs sm:text-sm mb-1 self-center text-center sm:self-auto uppercase tracking-widest font-semibold;
+  @apply text-white lg:text-black text-xs lg:text-sm mb-1 self-center text-center lg:self-auto uppercase tracking-widest font-semibold;
 }
 
 
 @utility hero-headline {
   font-family: 'Outfit', sans-serif;
-  @apply text-white sm:text-gray-900 text-[1.7rem] sm:text-4xl lg:text-6xl tracking-tight mb-4 font-semibold text-center leading-snug sm:leading-tight;
+  @apply text-[#F0F0F0] lg:text-gray-900 text-[1.7rem] lg:text-6xl tracking-tight mb-4 font-semibold text-center leading-snug lg:leading-tight;
 }
 
 @utility hero-gradient-text {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg, #4d7cff, #6699ff, #4d7cff, #6699ff, #4d7cff);
+  background-image: linear-gradient(135deg, #2563eb, #2563eb);
   background-size: 200% auto;
   animation: shimmer 3s linear infinite;
 }
 
-@media (min-width: 640px) {
+@media (max-width: 1023px) {
+  .hero-gradient-text {
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    color: #ffffff !important;
+    text-shadow:
+      0 0 4px #fff,
+      0 0 10px #0044ff,
+      0 0 24px #0044ff,
+      0 0 50px rgba(0, 68, 255, 0.7);
+  }
+}
+
+@media (min-width: 1024px) {
   .hero-gradient-text {
     background-image: linear-gradient(135deg, #0ea5e9, #2563eb, #7c3aed, #2563eb, #0ea5e9) !important;
+    filter: none;
   }
 }
 
@@ -138,12 +153,12 @@ html, body {
 
 @utility hero-subheadline {
   font-family: 'Outfit', sans-serif;
-  @apply text-white sm:text-black text-[0.8rem] sm:text-base leading-relaxed mb-4 sm:mb-6 w-full sm:max-w-2xl px-2 sm:px-0;
+  @apply text-white lg:text-black text-[0.8rem] lg:text-base leading-relaxed mb-4 lg:mb-6 w-full lg:max-w-2xl px-2 lg:px-0;
 }
 
 @utility hero-cta {
   font-family: 'Outfit', sans-serif;
-  @apply inline-block text-white text-sm sm:text-lg no-underline px-8 py-3 sm:px-12 sm:py-4 mb-4 sm:mb-6 font-semibold uppercase tracking-wider;
+  @apply inline-block text-white text-sm lg:text-lg no-underline px-8 py-3 lg:px-12 lg:py-4 mb-4 lg:mb-6 font-semibold uppercase tracking-wider;
   background: rgb(20, 173, 0);
   border: none;
   border-radius: 4px;

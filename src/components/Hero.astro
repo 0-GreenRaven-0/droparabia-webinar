@@ -37,12 +37,12 @@ import FlipClock from './FlipClock.astro';
 </div>
 
 <section class="hero-section relative" id="hero-section">
-  <div class="hero-overlay sm:hidden"></div>
-  <div class="circle circle-img -left-130 hidden sm:block"/>
-  <div class="circle circle-img-mj -right-130 hidden sm:block"/>
+  <div class="hero-overlay lg:hidden"></div>
+  <div class="circle circle-img -left-130 hidden lg:block"/>
+  <div class="circle circle-img-mj -right-130 hidden lg:block"/>
 
   <!-- Desktop: Logo + Brand + Nav -->
-  <div class="hero-brand hidden sm:flex">
+  <div class="hero-brand hidden lg:flex">
     <img src="/Droparabia.webp" alt="Droparabia" class="hero-logo" />
     <span class="hero-brand-name">Droparabia</span>
     <span class="hero-attention hidden sm:inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>LIVE WORKSHOP</span>
@@ -55,7 +55,7 @@ import FlipClock from './FlipClock.astro';
   </nav>
 
   <!-- Mobile: Header bar -->
-  <div class="hero-mobile-header sm:hidden" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; position:relative; z-index:60;">
+  <div class="hero-mobile-header lg:hidden" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; position:relative; z-index:60;">
     <div style="display:flex; align-items:center; gap:8px;">
       <img src="/Droparabia.webp" alt="Droparabia" style="height:44px; width:auto; object-fit:contain;" />
       <span style="font-family:'IBrand',sans-serif; font-size:1.5rem; letter-spacing:-0.01em; color:#fff;">Droparabia</span>
@@ -68,21 +68,31 @@ import FlipClock from './FlipClock.astro';
   </div>
 
   <div class="hero-content">
-    <p class="hero-attention sm:hidden"><span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2 align-middle"></span>LIVE WORKSHOP</p>
-    <h1 class="hero-headline">How to build a <span class="hero-gradient-text">high-earning</span> online store <span class="underline decoration-[#4d7cff] sm:decoration-blue-600 underline-offset-4 decoration-[3px]">without ever touching inventory</span></h1>
+    <p class="hero-attention lg:hidden"><span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2 align-middle"></span>LIVE WORKSHOP</p>
+    <h1 class="hero-headline">How to build a <span class="hero-gradient-text">high-earning</span> online store <span class="neon-underline lg:underline lg:decoration-blue-600 lg:underline-offset-4 lg:decoration-[3px]">without ever touching inventory</span></h1>
     <p class="hero-subheadline">Learn from A to Z how to launch your own profitable and a successful online store<br/><strong><em class="text-sm sm:text-base">without purchasing courses and mentorships!</em></strong></p>
     <a href="#register" class="hero-cta">Don't miss this out!!!</a>
     <div class="hero-counter">
-      <FlipClock targetDate="2026-06-23 00:00:00" />
+      <FlipClock targetDate="2026-07-13 18:30:00" />
     </div>
   </div>
 </section>
 
 <style>
+  @media (max-width: 1023px) {
+    .neon-underline {
+      text-decoration: underline;
+      text-decoration-color: #389FFE;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 5px;
+      filter: drop-shadow(0 4px 3px rgba(0, 68, 255, 0.5));
+    }
+  }
+
   .hero-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0,0,0,0.55);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     z-index: 1;
@@ -185,7 +195,7 @@ import FlipClock from './FlipClock.astro';
     transition: background 0.2s ease;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 1024px) {
     .hero-mobile-header { display: none !important; }
     .mobile-overlay { display: none !important; }
     .mobile-menu { display: none !important; }
