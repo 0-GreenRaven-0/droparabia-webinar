@@ -71,7 +71,11 @@ import FlipClock from './FlipClock.astro';
     <p class="hero-attention lg:hidden"><span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2 align-middle"></span>LIVE WORKSHOP</p>
     <h1 class="hero-headline">How to build a <span class="hero-gradient-text">high-earning</span> online store <span class="neon-underline lg:underline lg:decoration-blue-600 lg:underline-offset-4 lg:decoration-[3px]">without ever touching inventory</span></h1>
     <p class="hero-subheadline">Learn from A to Z how to launch your own profitable and a successful online store<br/><strong><em class="text-sm sm:text-base">without purchasing courses and mentorships!</em></strong></p>
-    <a href="#register" class="hero-cta">Don't miss this out!!!</a>
+    <a href="#register" class="hero-cta">Secure Your Spot Now</a>
+    <div class="spots-badge">
+      <span class="spots-count">300</span>
+      <span class="spots-label"> remaining!</span>
+    </div>
     <div class="hero-counter">
       <FlipClock targetDate="2026-07-13 18:30:00" />
     </div>
@@ -200,9 +204,40 @@ import FlipClock from './FlipClock.astro';
     .mobile-overlay { display: none !important; }
     .mobile-menu { display: none !important; }
   }
+
+  .spots-badge {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+  .spots-count {
+    color: #ff4444;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-right: 2px;
+  }
+  @media (min-width: 1024px) {
+    .spots-badge { color: #000; }
+  }
 </style>
 
 <script is:inline>
+  fetch('/api/spots')
+    .then(r => r.json())
+    .then(data => {
+      document.querySelectorAll('.spots-count').forEach(el => {
+        el.textContent = String(data.remaining ?? 300);
+      });
+    })
+    .catch(() => {});
+
   const overlay = document.getElementById('mobile-overlay');
   const menu = document.getElementById('mobile-menu');
   const closeBtn = document.getElementById('menu-close-btn');
