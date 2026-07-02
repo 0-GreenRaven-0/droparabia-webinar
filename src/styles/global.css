@@ -130,10 +130,6 @@ html, body {
     -webkit-background-clip: unset !important;
     background-clip: unset !important;
     color: #ffffff !important;
-    text-shadow:
-      0 0 2px #fff,
-      0 0 6px #0044ff,
-      0 0 14px rgba(0, 68, 255, 0.6);
   }
 }
 

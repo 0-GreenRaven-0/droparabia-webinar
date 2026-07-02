@@ -71,11 +71,10 @@ import FlipClock from './FlipClock.astro';
     <p class="hero-attention lg:hidden"><span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2 align-middle"></span>LIVE WORKSHOP</p>
     <h1 class="hero-headline">How to build a <span class="hero-gradient-text">high-earning</span> online store <span class="neon-underline lg:underline lg:decoration-blue-600 lg:underline-offset-4 lg:decoration-[3px]">without ever touching inventory</span></h1>
     <p class="hero-subheadline">Learn from A to Z how to launch your own profitable and a successful online store<br/><strong><em class="text-sm sm:text-base">without purchasing courses and mentorships!</em></strong></p>
-    <a href="#register" class="hero-cta">Secure Your Spot Now</a>
-    <div class="spots-badge">
-      <span class="spots-count">300</span>
-      <span class="spots-label"> remaining!</span>
-    </div>
+    <a href="#register" class="hero-cta">
+      Secure Your Spot Now
+      <span class="cta-spots"><span class="spots-count">300</span> spots remaining!</span>
+    </a>
     <div class="hero-counter">
       <FlipClock targetDate="2026-07-13 18:30:00" />
     </div>
@@ -85,11 +84,7 @@ import FlipClock from './FlipClock.astro';
 <style>
   @media (max-width: 1023px) {
     .neon-underline {
-      text-decoration: underline;
-      text-decoration-color: #389FFE;
-      text-decoration-thickness: 3px;
-      text-underline-offset: 5px;
-      filter: drop-shadow(0 4px 3px rgba(0, 68, 255, 0.5));
+      text-decoration: none;
     }
   }
 
@@ -205,26 +200,22 @@ import FlipClock from './FlipClock.astro';
     .mobile-menu { display: none !important; }
   }
 
-  .spots-badge {
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.85rem;
+  .hero-cta {
+    display: inline-flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .cta-spots {
+    font-size: 0.85em;
     font-weight: 600;
-    color: #fff;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
+    color: #fff;
   }
   .spots-count {
-    color: #ff4444;
-    font-size: 1rem;
     font-weight: 700;
-    margin-right: 2px;
-  }
-  @media (min-width: 1024px) {
-    .spots-badge { color: #000; }
+    color: #ff4444;
   }
 </style>
 
