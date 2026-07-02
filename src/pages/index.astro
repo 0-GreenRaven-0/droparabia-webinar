@@ -103,10 +103,8 @@ import FAQ from '../components/FAQ.astro';
           });
           const result = await res.json();
           if (result.success) {
-            msg.textContent = 'You\'re registered! See you at the workshop.';
-            msg.classList.remove('hidden');
-            msg.style.color = '#16a34a';
-            form.reset();
+            const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ');
+            window.location.href = '/confirm?name=' + encodeURIComponent(fullName);
           } else {
             msg.textContent = result.error || 'Something went wrong. Try again.';
             msg.classList.remove('hidden');

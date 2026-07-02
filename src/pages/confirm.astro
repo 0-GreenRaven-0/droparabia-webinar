@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>You're In! — Droparabia</title>
+    <link rel="icon" type="image/png" href="/Droparabia.webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+
+  <body style="margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:#F0F0F0; padding:24px;">
+    <div class="confirm-wrap">
+      <h1 class="confirm-heading">You're In<span id="confirm-name"></span>!</h1>
+      <p class="confirm-sub">We'll be sending you the workshop's details and the link to join very soon so stay tuned!</p>
+    </div>
+
+    <style is:global>
+      html, body { background: #F0F0F0 !important; }
+    </style>
+    <style>
+      .confirm-wrap {
+        text-align: center;
+        max-width: 560px;
+      }
+      .confirm-heading {
+        font-family: 'IBrand', sans-serif;
+        font-size: clamp(2.2rem, 7vw, 3.5rem);
+        font-weight: 400;
+        color: #000;
+        margin: 0 0 20px;
+        line-height: 1.15;
+      }
+      .confirm-sub {
+        font-family: 'IBrand', sans-serif;
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        font-weight: 400;
+        color: #000;
+        line-height: 1.6;
+        margin: 0;
+      }
+    </style>
+
+    <script is:inline>
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get('name');
+      if (name) {
+        document.getElementById('confirm-name').textContent = ', ' + decodeURIComponent(name);
+      }
+    </script>
+  </body>
+</html>

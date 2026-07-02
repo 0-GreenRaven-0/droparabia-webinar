@@ -73,7 +73,7 @@ html, body {
 }
 
 @utility hero-brand {
-  @apply relative z-10 flex items-center justify-center gap-3 pt-2 pb-2 lg:pt-6 lg:pb-4;
+  @apply relative z-10 flex items-center justify-center gap-3 pt-2 pb-2 lg:pt-3 lg:pb-4;
 }
 
 @utility hero-nav {
