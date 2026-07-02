@@ -56,7 +56,7 @@ html, body {
 /* ─── Hero ───────────────────────────────────────────────────────────────── */
 
 @utility hero-section {
-  @apply relative w-full h-[72vh] lg:h-screen overflow-hidden lg:overflow-visible flex flex-col;
+  @apply relative w-full min-h-[72vh] lg:h-screen overflow-x-hidden lg:overflow-visible flex flex-col;
   background: #000 url('/mj3.webp') bottom/cover no-repeat;
   z-index: 50;
 }
@@ -131,10 +131,9 @@ html, body {
     background-clip: unset !important;
     color: #ffffff !important;
     text-shadow:
-      0 0 4px #fff,
-      0 0 10px #0044ff,
-      0 0 24px #0044ff,
-      0 0 50px rgba(0, 68, 255, 0.7);
+      0 0 2px #fff,
+      0 0 6px #0044ff,
+      0 0 14px rgba(0, 68, 255, 0.6);
   }
 }
 
