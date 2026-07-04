@@ -2,7 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 
-const TOTAL_SPOTS = 300;
+const TOTAL_SPOTS = 267;
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;

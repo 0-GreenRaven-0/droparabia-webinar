@@ -73,7 +73,7 @@ import FlipClock from './FlipClock.astro';
     <p class="hero-subheadline">Learn from A to Z how to launch your own profitable and a successful online store<br/><strong><em class="text-sm sm:text-base">without purchasing courses and mentorships!</em></strong></p>
     <a href="#register" class="hero-cta">
       Secure Your Spot Now
-      <span class="cta-spots"><span class="spots-count">300</span> spots remaining!</span>
+      <span class="cta-spots"><span class="spots-count">267</span> spots remaining!</span>
     </a>
     <div class="hero-counter">
       <FlipClock targetDate="2026-07-13 18:30:00" />
@@ -224,7 +224,7 @@ import FlipClock from './FlipClock.astro';
     .then(r => r.json())
     .then(data => {
       document.querySelectorAll('.spots-count').forEach(el => {
-        el.textContent = String(data.remaining ?? 300);
+        el.textContent = String(data.remaining ?? 267);
       });
     })
     .catch(() => {});
