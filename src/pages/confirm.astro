@@ -15,8 +15,9 @@ import '../styles/global.css';
 
   <body style="margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:#F0F0F0; padding:24px;">
     <div class="confirm-wrap">
-      <h1 class="confirm-heading">You're In<span id="confirm-name"></span>!</h1>
-      <p class="confirm-sub">We'll be sending you the workshop's details and the link to join very soon so stay tuned!</p>
+      <h1 class="confirm-heading">Your spot has been reserved<span id="confirm-name"></span>!</h1>
+      <p class="confirm-sub">You'll receive the link to join and more details very soon so stay tuned!</p>
+      <p class="confirm-warning">Please be sure to attend because no replays will be guaranteed!</p>
     </div>
 
     <style is:global>
@@ -41,6 +42,14 @@ import '../styles/global.css';
         font-weight: 400;
         color: #000;
         line-height: 1.6;
+        margin: 0 0 16px;
+      }
+      .confirm-warning {
+        font-family: 'IBrand', sans-serif;
+        font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+        font-weight: 400;
+        color: #cc0000;
+        line-height: 1.6;
         margin: 0;
       }
     </style>
@@ -49,7 +58,7 @@ import '../styles/global.css';
       const params = new URLSearchParams(window.location.search);
       const name = params.get('name');
       if (name) {
-        document.getElementById('confirm-name').textContent = ', ' + decodeURIComponent(name);
+        document.getElementById('confirm-name').textContent = ' ' + decodeURIComponent(name);
       }
     </script>
   </body>
