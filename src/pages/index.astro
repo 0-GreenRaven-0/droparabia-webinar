@@ -311,7 +311,12 @@ import FAQ from '../components/FAQ.astro';
         const data = {
           firstName: form.firstName.value.trim(),
           lastName: form.lastName.value.trim(),
-          phone: form.countryCode.value + form.phone.value.replace(/\D/g, ''),
+          phone: (function() {
+            var code = form.countryCode.value.replace('+', '');
+            var digits = form.phone.value.replace(/\D/g, '');
+            if (digits.startsWith(code)) digits = digits.slice(code.length);
+            return form.countryCode.value + digits;
+          })(),
           email: form.email.value.trim(),
         };
         btn.disabled = true;
@@ -580,8 +585,21 @@ import FAQ from '../components/FAQ.astro';
           }
         }
 
-        sel.addEventListener('change', applyFormat);
+        sel.addEventListener('change', function() {
+          applyFormat();
+          tel.value = '';
+        });
         applyFormat();
+
+        tel.addEventListener('input', function() {
+          var f = fmt[sel.value];
+          if (!f) return;
+          var digits = tel.value.replace(/\D/g, '');
+          if (digits.length > f.d) {
+            digits = digits.slice(0, f.d);
+            tel.value = digits;
+          }
+        });
       })();
     </script>
 
