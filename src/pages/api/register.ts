@@ -110,7 +110,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
     });
   }
 
-  await fetch(`${base}/A:I:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
+  await fetch(`${base}/A:I:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
