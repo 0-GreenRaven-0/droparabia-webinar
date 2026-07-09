@@ -369,11 +369,24 @@ import FAQ from '../components/FAQ.astro';
         // Lebanon: strip trunk prefix 0 after validation, not before
         if (countryCode === '+961' && rawDigits.startsWith('0')) rawDigits = rawDigits.slice(1);
 
+        var _utmParams = (function() {
+          var p = new URLSearchParams(window.location.search);
+          return {
+            utm_source:   p.get('utm_source')   || sessionStorage.getItem('utm_source')   || '',
+            utm_medium:   p.get('utm_medium')   || sessionStorage.getItem('utm_medium')   || '',
+            utm_campaign: p.get('utm_campaign') || sessionStorage.getItem('utm_campaign') || '',
+            utm_content:  p.get('utm_content')  || sessionStorage.getItem('utm_content')  || '',
+            utm_term:     p.get('utm_term')     || sessionStorage.getItem('utm_term')     || '',
+            referrer:     document.referrer || '',
+          };
+        })();
+
         const data = {
           firstName: form.firstName.value.trim(),
           lastName: form.lastName.value.trim(),
           phone: countryCode + rawDigits,
           email: form.email.value.trim(),
+          ..._utmParams,
         };
         btn.disabled = true;
         btn.textContent = 'Submitting...';
