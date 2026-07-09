@@ -350,10 +350,13 @@ import FAQ from '../components/FAQ.astro';
           '+998': 9,
         };
 
-        var countryCode = form.countryCode.value;
+        var countryCode = form.countryCode.value || '+961';
         var rawDigits = form.phone.value.replace(/\D/g, '');
         var code = countryCode.replace('+', '');
+        // strip country code if user typed it in the field
         if (rawDigits.startsWith(code)) rawDigits = rawDigits.slice(code.length);
+        // Lebanon: strip local trunk prefix 0
+        if (countryCode === '+961' && rawDigits.startsWith('0')) rawDigits = rawDigits.slice(1);
 
         var expectedDigits = fmt[countryCode];
         if (expectedDigits && rawDigits.length !== expectedDigits) {
