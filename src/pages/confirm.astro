@@ -17,6 +17,15 @@ import '../styles/global.css';
     <div class="confirm-wrap">
       <h1 class="confirm-heading">Your spot has been secured<span id="confirm-name"></span>!</h1>
       <p class="confirm-sub">We're going live at 6:30 PM, we'll send the link on WhatsApp as soon as we start!</p>
+
+      <div class="zoom-block">
+        <p class="zoom-label">Here's the Zoom link — save it somewhere just in case!</p>
+        <div class="zoom-row">
+          <span class="zoom-link-text">https://us06web.zoom.us/j/82230789524</span>
+          <button class="copy-btn" id="copy-btn" onclick="copyZoom()">Copy</button>
+        </div>
+        <p class="zoom-hint" id="copy-hint" style="display:none;">Copied to clipboard!</p>
+      </div>
     </div>
 
     <style is:global>
@@ -41,7 +50,55 @@ import '../styles/global.css';
         font-weight: 400;
         color: #000;
         line-height: 1.6;
-        margin: 0 0 16px;
+        margin: 0 0 28px;
+      }
+      .zoom-block {
+        margin-top: 8px;
+      }
+      .zoom-label {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0 0 10px;
+      }
+      .zoom-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        border: 1.5px solid #d0d0d0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        max-width: 100%;
+      }
+      .zoom-link-text {
+        font-family: 'Outfit', monospace;
+        font-size: 0.82rem;
+        color: #020887;
+        word-break: break-all;
+        text-align: left;
+      }
+      .copy-btn {
+        flex-shrink: 0;
+        padding: 6px 14px;
+        background: #020887;
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .copy-btn:hover { background: #0310b5; }
+      .zoom-hint {
+        margin-top: 8px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.85rem;
+        color: #16a34a;
+        font-weight: 600;
       }
     </style>
 
@@ -50,6 +107,20 @@ import '../styles/global.css';
       const name = params.get('name');
       if (name) {
         document.getElementById('confirm-name').textContent = ' ' + decodeURIComponent(name);
+      }
+
+      function copyZoom() {
+        navigator.clipboard.writeText('https://us06web.zoom.us/j/82230789524?pwd=K6FlWw4FbHlPNCyfRFhGUevaaweArl.1')
+          .then(function() {
+            var hint = document.getElementById('copy-hint');
+            var btn = document.getElementById('copy-btn');
+            btn.textContent = 'Copied!';
+            hint.style.display = 'block';
+            setTimeout(function() {
+              btn.textContent = 'Copy';
+              hint.style.display = 'none';
+            }, 2500);
+          });
       }
     </script>
   </body>
