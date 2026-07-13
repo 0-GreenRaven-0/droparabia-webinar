@@ -71,9 +71,9 @@ import FlipClock from './FlipClock.astro';
     <p class="hero-attention lg:hidden"><span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2 align-middle"></span>LIVE WORKSHOP</p>
     <h1 class="hero-headline">How to build a <span class="hero-gradient-text">high-earning</span> online store <span class="neon-underline lg:underline lg:decoration-blue-600 lg:underline-offset-4 lg:decoration-[3px]">without ever touching inventory</span></h1>
     <p class="hero-subheadline">Learn from A to Z how to launch your own profitable and a successful online store<br/><strong><em class="text-sm sm:text-base">without purchasing courses and mentorships!</em></strong></p>
-    <a href="#register" class="hero-cta" id="hero-cta">
-      Secure Your Spot Now
-      <span class="cta-spots"><span class="spots-count">267</span> spots remaining!</span>
+    <a class="hero-cta" id="hero-cta" style="cursor:default; pointer-events:none; opacity:0.85;">
+      You missed out :(
+      <span class="cta-spots">See you in the next event</span>
     </a>
     <div class="hero-counter">
       <FlipClock targetDate="2026-07-13 18:30:00" />
@@ -242,23 +242,4 @@ import FlipClock from './FlipClock.astro';
   overlay.addEventListener('click', closeMenu);
   menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
-  // Swap CTA to Zoom link when webinar goes live
-  (function() {
-    var ZOOM = 'https://us06web.zoom.us/j/82230789524?pwd=K6FlWw4FbHlPNCyfRFhGUevaaweArl.1';
-    var target = new Date('2026-07-13T18:30:00').getTime();
-
-    function checkLive() {
-      if (Date.now() < target) return;
-      var cta = document.getElementById('hero-cta');
-      if (!cta) return;
-      cta.href = ZOOM;
-      cta.target = '_blank';
-      cta.rel = 'noopener noreferrer';
-      cta.innerHTML = '<span style="font-size:1.1em;font-weight:800;letter-spacing:0.03em;">THE MEETING IS HAPPENING NOW</span><span style="font-size:0.9em;font-weight:600;margin-top:2px;">Click here to join quickly!!!</span>';
-      clearInterval(liveInterval);
-    }
-
-    var liveInterval = setInterval(checkLive, 1000);
-    checkLive();
-  })();
 </script>
