@@ -44,13 +44,13 @@ import FAQ from '../components/FAQ.astro';
 
     <FAQ />
 
-    <!-- Registration Form -->
+    <!-- Registration Closed -->
     <section id="register" class="py-20 px-6" style="background: #F0F0F0;">
-      <div class="max-w-md mx-auto">
-        <h2 class="text-3xl sm:text-4xl font-normal text-black text-center mb-8" style="font-family: 'IBrand', sans-serif;">
-          Secure your spot now!
-        </h2>
-        <form id="webinar-form" class="flex flex-col gap-4">
+      <div class="max-w-md mx-auto" style="text-align:center;">
+        <h2 style="font-family:'IBrand',sans-serif; font-size:clamp(2rem,6vw,3rem); font-weight:400; color:#000; margin-bottom:12px;">Registration is closed</h2>
+        <p style="font-family:'Outfit',sans-serif; font-size:1.05rem; color:#444; line-height:1.6;">The event has ended. See you in the next one!</p>
+      </div>
+      <div style="display:none"><form id="webinar-form" class="flex flex-col gap-4">
           <div class="flex gap-4">
             <div class="flex-1">
               <label class="block text-sm text-black/60 mb-1" style="font-family: 'Outfit', sans-serif;">First Name</label>
@@ -299,7 +299,7 @@ import FAQ from '../components/FAQ.astro';
           </button>
           <p id="form-msg" class="text-center text-sm hidden" style="font-family: 'Outfit', sans-serif;"></p>
         </form>
-      </div>
+      </div></div>
     </section>
 
     <script is:inline>
