@@ -1,0 +1,85 @@
+---
+import RegistrationForm from './RegistrationForm.astro';
+
+const WEBINAR_START = '2026-09-18 18:30:00';
+---
+
+<section class="register-section">
+  <RegistrationForm targetDate={WEBINAR_START} />
+</section>
+
+<style>
+  /* No background of its own — the whole page shares one background color. */
+  .register-section {
+    width: 100%;
+    padding: 8px 24px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  @media (max-width: 1023px) {
+    .register-section { padding: 8px 16px 24px; }
+  }
+
+  .zoom-live-cta {
+    font-family: 'Helvetica', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    padding: 16px;
+    border-radius: 16px;
+    color: #fff;
+    text-decoration: none;
+    background: rgb(20, 173, 0);
+    box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.35);
+  }
+  .zoom-live-cta span:first-child {
+    font-size: 1.1em;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+  .zoom-live-cta span:last-child {
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+</style>
+
+<script is:inline>
+  fetch('/api/spots')
+    .then(r => r.json())
+    .then(data => {
+      document.querySelectorAll('.spots-count').forEach(el => {
+        el.textContent = String(data.remaining ?? 287);
+      });
+    })
+    .catch(() => {});
+
+  // Swap the registration form for a Zoom join button once the webinar goes live —
+  // registering after it's already started doesn't make sense.
+  (function() {
+    var ZOOM = 'https://us06web.zoom.us/j/82230789524?pwd=K6FlWw4FbHlPNCyfRFhGUevaaweArl.1';
+    var target = new Date('2026-09-18T18:30:00').getTime();
+
+    function checkLive() {
+      if (Date.now() < target) return;
+      var formWrap = document.getElementById('register');
+      if (!formWrap) return;
+      var cta = document.createElement('a');
+      cta.href = ZOOM;
+      cta.target = '_blank';
+      cta.rel = 'noopener noreferrer';
+      cta.className = 'zoom-live-cta';
+      cta.innerHTML = '<span>THE MEETING IS HAPPENING NOW</span><span>Click here to join quickly!!!</span>';
+      formWrap.replaceWith(cta);
+      clearInterval(liveInterval);
+    }
+
+    var liveInterval = setInterval(checkLive, 1000);
+    checkLive();
+  })();
+</script>

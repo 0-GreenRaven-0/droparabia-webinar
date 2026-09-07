@@ -2,62 +2,54 @@
 ---
 
 <section class="learn" id="learn-section">
-  <div style="height: 50px;"></div>
   <h2>Here's what you'll learn:</h2>
 
   <div class="learn-grid">
     <div class="lesson">
       <div class="num">01</div>
-      <div class="ttl">Product Hunting:</div>
-      <div class="body">How to identify a winning product and which products you must avoid.</div>
+      <div class="ttl">Why stores are still thriving:</div>
+      <div class="body">Why e-com stores and other DTC Lebanese brands are still earning as high as ever despite the bad circumstances.</div>
     </div>
     <div class="lesson">
       <div class="num">02</div>
-      <div class="ttl">Finding a reliable supplier:</div>
-      <div class="body">How to find a reliable supplier (locally and Alibaba) and negotiate the best prices.</div>
+      <div class="ttl">Why most people fail:</div>
+      <div class="body">How most people fail at building their e-com businesses and end up wasting their time and hard-earned savings.</div>
     </div>
     <div class="lesson">
       <div class="num">03</div>
-      <div class="ttl">Building the store:</div>
-      <div class="body">How to build an online store on Shopify and set up Whish as your payment gateway.</div>
+      <div class="ttl">Lebanon's most powerful system:</div>
+      <div class="body">Discover Lebanon's new and most powerful system that allowed +800 Lebanese to build a successful online store without any experience.</div>
     </div>
     <div class="lesson">
       <div class="num">04</div>
-      <div class="ttl">Create &amp; Run Ads:</div>
-      <div class="body">How to create advertisements and run on social media to attract customers to your online store.</div>
+      <div class="ttl">The step-by-step blueprint:</div>
+      <div class="body">Step by step how to use this system and its AI features to build your own successful and high-earning online store.</div>
     </div>
     <div class="lesson">
       <div class="num">05</div>
-      <div class="ttl">Q&amp;A with Majd:</div>
-      <div class="body">Whatever question you have, Majd will answer them all to make sure you leave with a clear plan for starting your business.</div>
+      <div class="ttl">Scale past $10k in sales:</div>
+      <div class="body">How this system could allow you to later on scale above $10k in sales like our top 10% sellers in our community.</div>
     </div>
 
-    <!-- Bonus: spans 2 cols -->
+    <!-- Bonus: spans the full grid width -->
     <div class="lesson bonus">
-      <svg class="gift-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="6" y="22" width="52" height="36" rx="3"/>
-        <line x1="32" y1="22" x2="32" y2="58"/>
-        <line x1="6" y1="34" x2="58" y2="34"/>
-        <path d="M32 22c-8-12-22-2-10 0"/>
-        <path d="M32 22c8-12 22-2 10 0"/>
-      </svg>
-      <div class="num bonus-num">Bonus Gift!</div>
-      <span class="worth">Worth $997</span>
-      <div class="body" style="margin-top:14px; font-size:18px;">Those who stay until the very end of the workshop will receive <strong style="color:#000;">+7 guides</strong> that will kickstart your dropshipping journey.</div>
+      <h3 class="bonus-title">Plus a very special gift for you!</h3>
+      <div class="bonus-inner">
+        <img class="bonus-img" src="/free guides.jpeg" alt="7 free Droparabia e-books" loading="lazy" />
+        <div class="bonus-copy">
+          <p class="bonus-body">7 Free E-books that contains everything you need to learn how to manage all aspects of your business from creating and running ads, copywriting, branding...</p>
+          <p class="bonus-note">But only if you start till the end of the workshop</p>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="final-cta">
-    <h3>More than you'll ever get from YouTube or other gurus</h3>
-    <a href="#register" class="cta-btn">Secure Your Spot Now!</a>
-    <div class="fineprint">Replays aren't guaranteed so make sure you don't miss out!</div>
   </div>
 </section>
 
 <style>
   .learn {
     background: #F0F0F0;
-    padding: 30px 0 50px;
+    /* Absorbs the spacer div this section used to carry above its heading. */
+    padding: 80px 0 50px;
   }
   .learn h2 {
     margin: 0 0 50px;
@@ -120,6 +112,7 @@
   .bonus {
     grid-column: 1 / span 6;
     position: relative;
+    padding: 32px;
   }
   .bonus::after {
     content: "";
@@ -129,76 +122,57 @@
     border-radius: 28px;
     pointer-events: none;
   }
-  .bonus-num {
-    color: #000;
-    font-size: 44px;
-  }
-  .worth {
-    display: inline-block;
-    background: rgb(20, 173, 0);
-    color: #fff;
-    font-family: 'IBrand', sans-serif;
-    font-size: 14px;
-    padding: 4px 12px;
-    border-radius: 999px;
-    margin-top: 6px;
-    letter-spacing: 0.04em;
-  }
-  .gift-icon {
-    position: absolute;
-    right: 32px;
-    top: 32px;
-    width: 96px;
-    height: 96px;
-    color: #2563eb;
-    opacity: 0.3;
-    transform: rotate(-10deg);
-  }
 
-  /* Final CTA */
-  .final-cta {
-    margin-top: 64px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-  .final-cta h3 {
-    margin: 0;
+  .bonus-title {
     font-family: 'IBrand', sans-serif;
     font-weight: 400;
-    font-size: clamp(24px, 2.5vw, 36px);
+    font-size: clamp(26px, 3.4vw, 40px);
+    line-height: 1.15;
     letter-spacing: -0.01em;
     color: #000;
+    margin: 0 0 24px;
+    text-align: center;
   }
-  .cta-btn {
-    display: inline-flex;
+
+  .bonus-inner {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    background: rgb(20, 173, 0);
-    color: #fff;
+    gap: 32px;
+  }
+
+  .bonus-img {
+    width: 44%;
+    max-width: 420px;
+    height: auto;
+    border-radius: 16px;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .bonus-copy {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .bonus-body {
     font-family: 'Outfit', sans-serif;
+    font-weight: 500;
     font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    border-radius: 4px;
-    padding: 16px 48px;
-    text-decoration: none;
-    transition: background 0.2s ease, transform 0.15s ease;
+    line-height: 1.55;
+    color: rgba(0,0,0,0.75);
+    margin: 0;
   }
-  .cta-btn:hover {
-    background: rgb(16, 150, 0);
-    transform: translateY(-1px);
-  }
-  .fineprint {
+
+  .bonus-note {
     font-family: 'IBrand', sans-serif;
-    font-size: 12px;
-    color: rgba(0,0,0,0.7);
+    font-size: 28px;
+    line-height: 1.25;
+    color: #000;
+    margin: 20px 0 0;
   }
 
   @media (max-width: 1023px) {
+    .learn { padding-top: 20px; }
     .learn h2 { font-size: 28px; margin-bottom: 28px; }
     .learn-grid {
       grid-template-columns: 1fr;
@@ -208,8 +182,10 @@
     .lesson:nth-child(4),
     .lesson:nth-child(5),
     .bonus { grid-column: 1; }
-    .gift-icon { width: 60px; height: 60px; right: 16px; top: 16px; }
-    .final-cta { margin-top: 40px; }
-    .cta-btn { font-size: 16px; padding: 12px 28px; width: auto; }
+    .bonus { padding: 24px; }
+    .bonus-inner { flex-direction: column; gap: 20px; }
+    .bonus-img { width: 100%; max-width: 100%; }
+    .bonus-body { font-size: 15px; }
+    .bonus-note { font-size: 21px; }
   }
 </style>

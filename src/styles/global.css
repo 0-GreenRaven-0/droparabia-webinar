@@ -21,15 +21,36 @@ html, body {
   font-display: swap;
 }
 
-/* ─── Design Tokens ─────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Helvetica';
+  src: url('/fonts/helvetica/Helvetica.woff2') format('woff2'),
+       url('/fonts/helvetica/Helvetica.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('/fonts/helvetica/Helvetica-Bold.woff2') format('woff2'),
+       url('/fonts/helvetica/Helvetica-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Design Tokens ──────────────────────────────────────────────────────
+   Colors match droparabia-official's palette (src/styles/global.css there):
+   primary #001eff, secondary #7200b0, background #f0f0f0. */
 @theme {
-  --color-primary:        #2B9FD9;
-  --color-primary-hover:  #1E8AC4;
+  --color-primary:        #001EFF;
+  --color-primary-hover:  #0016C4;
+  --color-secondary:      #7200B0;
   --color-bg-dark:        #F0F0F0;
   --color-text-base:      #0D0D2B;
   --color-text-muted:     #64748B;
-  --color-border:         #2B9FD940;
-  --bg-gradient-brand:    linear-gradient(135deg, #2B9FD9 0%, #4040B2 100%);
+  --color-border:         #001EFF40;
+  --bg-gradient-brand:    linear-gradient(135deg, #001EFF 0%, #7200B0 100%);
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────────── */
@@ -40,7 +61,7 @@ html, body {
   }
 
   body {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Helvetica', Arial, sans-serif;
     color: #000;
   }
 
@@ -56,150 +77,45 @@ html, body {
 /* ─── Hero ───────────────────────────────────────────────────────────────── */
 
 @utility hero-section {
-  @apply relative w-full min-h-[72vh] lg:h-screen overflow-x-hidden lg:overflow-visible flex flex-col;
-  background: #000 url('/mj3.webp') bottom/cover no-repeat;
+  @apply relative w-full overflow-x-hidden lg:overflow-visible flex flex-col;
+  background: #F0F0F0;
   z-index: 50;
 }
 
-@media (min-width: 1024px) {
-  .hero-section {
-    background: #f0f0f0 !important;
-    height: 100vh !important;
-  }
-}
-
 @utility hero-content {
-  @apply relative z-10 flex flex-col items-center text-center pt-6 px-2 flex-1 gap-3 lg:gap-0 lg:pt-0 lg:justify-center lg:px-6 lg:max-w-3xl lg:mx-auto;
-}
-
-@utility hero-brand {
-  @apply relative z-10 flex items-center justify-center gap-3 pt-2 pb-2 lg:pt-3 lg:pb-4;
-}
-
-@utility hero-nav {
-  @apply relative z-10 hidden lg:flex items-center justify-center gap-8 pb-2;
-}
-
-@utility hero-nav-link {
-  font-family: 'IBrand', sans-serif;
-  @apply text-black text-sm no-underline relative;
-  &::after {
-    content: '';
-    @apply absolute bottom-0 left-1/2 w-0 h-[2px] bg-blue-600;
-    transform: translateX(-50%);
-    transition: width 0.3s ease;
-  }
-  &:hover::after {
-    @apply w-full;
-  }
-  &:hover {
-    @apply text-black;
-  }
-}
-
-@utility hero-logo {
-  @apply h-14 w-auto object-contain;
-}
-
-@utility hero-brand-name {
-  font-family: 'IBrand', sans-serif;
-  @apply text-3xl tracking-tight text-black;
+  @apply relative z-10 flex flex-col items-center text-center px-4 pt-5 pb-4 lg:pt-7 lg:pb-6 lg:px-6 max-w-4xl mx-auto;
 }
 
 @utility hero-attention {
-  font-family: 'Outfit', sans-serif;
-  @apply text-white lg:text-black text-xs lg:text-sm mb-1 self-center text-center lg:self-auto uppercase tracking-widest font-semibold;
+  font-family: 'Helvetica', Arial, sans-serif;
+  @apply text-black text-xs lg:text-sm mb-1 self-center text-center lg:self-auto uppercase tracking-widest font-semibold;
 }
 
 
 @utility hero-headline {
-  font-family: 'Outfit', sans-serif;
-  @apply text-[#F0F0F0] lg:text-gray-900 text-[1.7rem] lg:text-6xl tracking-tight mb-4 font-semibold text-center leading-snug lg:leading-tight;
+  font-family: 'Helvetica', Arial, sans-serif;
+  @apply text-gray-900 text-[1.42rem] lg:text-[2.75rem] max-w-[32ch] mx-auto tracking-tight mb-4 font-bold text-center leading-tight;
 }
 
 @utility hero-gradient-text {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg, #2563eb, #2563eb);
-  background-size: 200% auto;
-  animation: shimmer 3s linear infinite;
-}
-
-@media (max-width: 1023px) {
-  .hero-gradient-text {
-    background: none !important;
-    -webkit-background-clip: unset !important;
-    background-clip: unset !important;
-    color: #ffffff !important;
-  }
-}
-
-@media (min-width: 1024px) {
-  .hero-gradient-text {
-    background-image: linear-gradient(135deg, #0ea5e9, #2563eb, #7c3aed, #2563eb, #0ea5e9) !important;
-    filter: none;
-  }
-}
-
-@keyframes shimmer {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
+  background-image: linear-gradient(135deg, #001eff, #2745ff 45%, #06a2d1);
 }
 
 
 @utility hero-subheadline {
-  font-family: 'Outfit', sans-serif;
-  @apply text-white lg:text-black text-[0.8rem] lg:text-base leading-relaxed mb-4 lg:mb-6 w-full lg:max-w-2xl px-2 lg:px-0;
-}
-
-@utility hero-cta {
-  font-family: 'Outfit', sans-serif;
-  @apply inline-block text-white text-sm lg:text-lg no-underline px-8 py-3 lg:px-12 lg:py-4 mb-4 lg:mb-6 font-semibold uppercase tracking-wider;
-  background: rgb(20, 173, 0);
-  border: none;
-  border-radius: 4px;
-  transition: background 0.2s ease, transform 0.15s ease;
-  &:hover {
-    background: rgb(16, 150, 0);
-    transform: translateY(-1px);
-    color: #fff;
-  }
+  font-family: 'Helvetica', Arial, sans-serif;
+  @apply text-[#dc2626] text-[0.75rem] lg:text-[1.1rem] leading-relaxed mb-0 w-full lg:max-w-xl px-2 lg:px-0;
 }
 
 @utility hero-counter {
-  @apply flex justify-center;
+  @apply flex flex-col items-center justify-center;
 }
 
 /* ─── Components ─────────────────────────────────────────────────────────── */
 @layer components {
 
   /* Hero section */
-
-  .circle{
-    @apply absolute top-1/2 -translate-y-1/2 h-200 w-200 rounded-full;
-    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
-    border: 4px solid #2563eb;
-    z-index: 99;
-  }
-
-  .circle-reverse{
-    background: linear-gradient(315deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
-  }
-
-  .circle-img{
-    background: url('/mj1.png');
-    background-position: right;
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
-
-  .circle-img-mj{
-    background: url('/mj2.jpeg');
-    background-position: -40%;
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
-
-
 
   /* ------------ */
 
@@ -230,13 +146,13 @@ html, body {
   .btn-cta {
     @apply font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full text-lg sm:text-xl cursor-pointer w-full text-center block text-text-base;
     background: linear-gradient(#f0f0f0, #f0f0f0) padding-box,
-                linear-gradient(135deg, #2B9FD9, #5B5BC8, #4040B2) border-box;
+                linear-gradient(135deg, #001EFF, #4B0FC4, #7200B0) border-box;
     border: 4px solid transparent;
     transition: background 0.25s ease;
   }
   .btn-cta:hover {
     background: linear-gradient(#f0f0f0, #f0f0f0) padding-box,
-                linear-gradient(135deg, #7DD6FF, #9898FF, #7070E8) border-box;
+                linear-gradient(135deg, #5A6FFF, #8A5FE0, #A64FD0) border-box;
   }
 
   /* Used by FAQ */

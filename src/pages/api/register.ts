@@ -93,24 +93,24 @@ function buildTrafficSource(source: string, medium: string, referrer: string): s
   return 'Direct Visit';
 }
 
-const SHEET_HEADERS = ['First Name', 'Last Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook'];
+const SHEET_HEADERS = ['First Name', 'Last Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Headline'];
 
 async function appendToSheet(sheetId: string, row: string[], token: string): Promise<void> {
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
-  const check = await fetch(`${base}/A1:I1`, { headers: auth });
+  const check = await fetch(`${base}/A1:J1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
   const existingHeaders = checkData.values?.[0] ?? [];
   if (existingHeaders[0] !== 'First Name' || existingHeaders.length < SHEET_HEADERS.length) {
-    await fetch(`${base}/A1:I1?valueInputOption=USER_ENTERED`, {
+    await fetch(`${base}/A1:J1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
     });
   }
 
-  await fetch(`${base}/A:I:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
+  await fetch(`${base}/A:J:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -120,7 +120,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { firstName, lastName, email, phone, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer } = body;
+    const { firstName, lastName, email, phone, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, headline } = body;
 
     if (!firstName || !email || !phone) {
       return json({ success: false, error: 'Missing required fields' }, 400);
@@ -137,7 +137,7 @@ export const POST: APIRoute = async ({ request }) => {
       const campaignName  = isPaid ? (utm_campaign || '') : '';
       const creative      = isPaid ? (utm_content  || '') : '';
       const hook          = isPaid ? (utm_term     || '') : '';
-      await appendToSheet(sheetId, [firstName, lastName || '', email, phone, date, trafficSource, campaignName, creative, hook], token);
+      await appendToSheet(sheetId, [firstName, lastName || '', email, phone, date, trafficSource, campaignName, creative, hook, headline || ''], token);
     }
 
     return json({ success: true }, 200);

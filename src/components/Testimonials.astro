@@ -6,15 +6,10 @@ import 'swiper/css';
   <div class="section pt-4 sm:pt-10" style="padding-bottom: 40px;">
 
     <!-- Header -->
-    <div class="text-center mb-14 gs-test-header">
-      <h2 class="text-2xl lg:text-5xl font-normal mb-4 text-black lg:text-white">
-        Yes It's possible<br/>
-        <span class="text-[#2563eb] lg:text-cyan-400">+600 Lebanese</span> already did it
+    <div class="text-center mb-6 gs-test-header">
+      <h2 class="testo-heading text-sm lg:text-2xl font-semibold mb-4 text-black max-w-3xl mx-auto leading-snug">
+        <span class="text-[#001eff]">Over 800 Lebanese</span> are currently using this new system to sell all over Lebanon
       </h2>
-      <div class="flex items-center justify-center gap-3 mt-1 sm:hidden">
-        <svg width="20" height="28" viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2L10 22M4 16L10 24L16 16" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <svg width="20" height="28" viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2L10 22M4 16L10 24L16 16" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
     </div>
 
 
@@ -29,25 +24,21 @@ import 'swiper/css';
       <div class="swiper testimonials-swiper">
         <div class="swiper-wrapper">
           {[
+            // Newest testimonials first, ahead of the older case-study screenshots —
+            // matches droparabia-official's CaseStudyCarousels.astro.
+            "https://ik.imagekit.io/greenraven/droparabia/testimonial-1.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/droparabia/testimonial-2.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/droparabia/testimonial-3.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/droparabia/testimonial-4.png?tr=w-900,q-70,f-webp",
             "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/4.png?tr=w-900,q-70,f-webp",
             "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/5.png?tr=w-900,q-70,f-webp",
             "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png?tr=w-900,q-70,f-webp",
             "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/6.png?tr=w-900,q-70,f-webp",
             "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/1.png?tr=w-900,q-70,f-webp",
+            "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png?tr=w-900,q-70,f-webp",
             "https://ik.imagekit.io/greenraven/MJ/Case%20Studies/3.png?tr=w-900,q-70,f-webp",
             "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-900,q-70,f-webp",
             "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(2)%20(1)%20(1).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(3).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(4)%20(1).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(5).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(6).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(7)%20(1)%20(1).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(8).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(9)%20(2).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(10).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(11).png?tr=w-900,q-70,f-webp",
-            "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(12).png?tr=w-900,q-70,f-webp",
           ].map((src) => (
             <div class="swiper-slide">
               <img src={src} alt="Testimonial" loading="lazy" />
@@ -61,21 +52,34 @@ import 'swiper/css';
 </section>
 
 <style>
+  /* Wider than the shared .section cap so the slides get more room. */
+  .section {
+    max-width: 1400px;
+    padding-top: 46px;
+  }
+
   .carousel-container {
-    max-width: 1100px;
+    max-width: 1340px;
     margin: 0 auto;
-    padding: 0 76px;
+    padding: 0 70px;
     position: relative;
   }
 
+  /* Swiper's track is overflow:hidden, so without padding on every side the slide
+     shadows get sliced off flat against the container edge. The padding sits inside
+     the clip box, giving the halo room to render on all four sides.
+     The mask then fades those same edges out, so the slide scrolling in from
+     off-track — and its shadow — dissolves instead of hitting a hard vertical seam. */
   .testimonials-swiper {
-    padding-bottom: 0;
+    padding: 22px 24px 30px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
   }
 
   .testimonials-swiper .swiper-slide {
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    box-shadow: 0 0 22px rgba(0, 0, 0, 0.18), 0 12px 26px -6px rgba(0, 0, 0, 0.26);
   }
 
   .testimonials-swiper .swiper-slide img {
@@ -91,7 +95,7 @@ import 'swiper/css';
     transform: translateY(-50%);
     width: 56px;
     height: 56px;
-    background: #2563eb;
+    background: linear-gradient(135deg, #4B0FC4, #001EFF 45%, #000c66);
     color: #fff;
     border-radius: 50%;
     border: none;
@@ -121,25 +125,37 @@ import 'swiper/css';
 
   .carousel-container .swiper-button-prev:hover,
   .carousel-container .swiper-button-next:hover {
-    background: #2563eb;
+    background: linear-gradient(135deg, #4B0FC4, #001EFF 45%, #000c66);
     color: #fff;
   }
 
+  /* Overrides the global h1–h6 IBrand rule. */
+  .testo-heading {
+    font-family: 'Helvetica', Arial, sans-serif;
+  }
+
   .testo-section {
-    background: linear-gradient(135deg, #000c3d 0%, #001575 45%, #002199 70%, #001060 100%);
+    background: #F0F0F0;
   }
 
   @media (max-width: 1023px) {
-    .testo-section {
-      background: #F0F0F0;
+    .section {
+      padding-left: 8px;
+      padding-right: 8px;
     }
     .carousel-container {
-      padding: 0 32px;
+      padding: 0 6px;
+    }
+    /* Stays under the 22px slide gap so neighbours don't peek into the padding. */
+    .testimonials-swiper {
+      padding: 16px 14px 24px;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
     }
     .carousel-container .swiper-button-prev,
     .carousel-container .swiper-button-next {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
     }
     .carousel-container .swiper-button-prev svg,
     .carousel-container .swiper-button-next svg {
@@ -151,7 +167,7 @@ import 'swiper/css';
 
 <script>
   async function initSwipers() {
-    const [{ default: Swiper }, { Navigation, Autoplay }] = await Promise.all([
+    const [{ default: Swiper }, { Navigation }] = await Promise.all([
       import('swiper'),
       import('swiper/modules'),
     ]);
@@ -160,19 +176,17 @@ import 'swiper/css';
       const container = swiperEl.closest('.carousel-container');
       if (!container) return;
       new Swiper(swiperEl as HTMLElement, {
-        modules: [Navigation, Autoplay],
+        modules: [Navigation],
         slidesPerView: 1,
-        spaceBetween: 16,
+        // Each gap must stay wider than .testimonials-swiper's horizontal padding,
+        // otherwise the neighbouring slide pokes into that padding and shows as a
+        // sliver at the edge of the track.
+        spaceBetween: 22,
         breakpoints: {
-          600: { slidesPerView: 2, spaceBetween: 20 },
-          1024: { slidesPerView: 3, spaceBetween: 24 },
+          600: { slidesPerView: 2, spaceBetween: 28 },
+          1024: { slidesPerView: 3, spaceBetween: 34 },
         },
         loop: true,
-        autoplay: {
-          delay: 3500,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        },
         navigation: {
           nextEl: container.querySelector('.swiper-button-next') as HTMLElement,
           prevEl: container.querySelector('.swiper-button-prev') as HTMLElement,
