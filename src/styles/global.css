@@ -94,7 +94,7 @@ html, body {
 
 @utility hero-headline {
   font-family: 'Helvetica', Arial, sans-serif;
-  @apply text-gray-900 text-[1.42rem] lg:text-[2.75rem] max-w-[32ch] mx-auto tracking-tight mb-4 font-bold text-center leading-tight;
+  @apply text-gray-900 text-[1.42rem] lg:text-[2.75rem] max-w-[32ch] lg:max-w-[35ch] mx-auto tracking-tight mb-4 font-bold text-center leading-tight;
 }
 
 @utility hero-gradient-text {
