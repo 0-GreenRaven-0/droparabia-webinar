@@ -256,6 +256,38 @@ const { targetDate } = Astro.props;
       </div>
     </div>
 
+    <!-- Custom listbox rather than a native <select>: the OS draws a native option
+         popup at whatever width the longest option needs and refuses to wrap it, so
+         on a 375px phone these two long answers ran off both edges of the screen.
+         This panel is normal DOM, so it stays inside the card and wraps.
+         The chosen value rides in the hidden input, and because hidden inputs are
+         barred from constraint validation the submit handler enforces "required". -->
+    <div class="reg-field">
+      <span class="reg-label" id="reg-intent-label">Are you looking to invest into starting an online business?</span>
+      <div class="reg-dd" id="reg-intent-dd">
+        <button
+          type="button"
+          class="reg-dd-btn"
+          id="reg-intent-btn"
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="reg-intent-list"
+          aria-labelledby="reg-intent-label reg-intent-btn"
+        >
+          <span class="reg-dd-value is-placeholder" id="reg-intent-value">Select an option</span>
+          <svg class="reg-dd-chevron" width="12" height="8" viewBox="0 0 12 8" aria-hidden="true">
+            <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <ul class="reg-dd-list" id="reg-intent-list" role="listbox" aria-labelledby="reg-intent-label" hidden>
+          <li class="reg-dd-opt" role="option" aria-selected="false" data-value="Yes, I'm looking to invest and I need a low risk &amp; proven system">Yes, I'm looking to invest and I need a low risk &amp; proven system</li>
+          <li class="reg-dd-opt" role="option" aria-selected="false" data-value="No, I'm just discovering and not looking to start a business at the moment">No, I'm just discovering and not looking to start a business at the moment</li>
+        </ul>
+        <input type="hidden" name="intent" id="reg-intent" value="" />
+      </div>
+    </div>
+
     <button type="submit" class="reg-submit">Secure My Spot</button>
     <p class="reg-note">be sure to attend because replays aren't guaranteed</p>
     <p id="form-msg" class="reg-msg hidden"></p>
@@ -333,6 +365,153 @@ const { targetDate } = Astro.props;
   .reg-input:focus {
     outline: none;
     border-color: #001eff;
+  }
+
+  /* Custom dropdown — matches .reg-input's shell so it reads as the same family. */
+  .reg-dd {
+    position: relative;
+  }
+
+  .reg-dd-btn {
+    font-family: 'Helvetica', Arial, sans-serif;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    text-align: left;
+    background: #fff;
+    border: 1.5px solid #d6d6d6;
+    border-radius: 8px;
+    padding: 13px 14px;
+    font-size: 0.95rem;
+    color: #000;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.2s ease, background-color 0.15s ease;
+  }
+  .reg-dd-btn:hover {
+    border-color: #b4b4b4;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+  .reg-dd-btn:active {
+    background: #fafafa;
+  }
+  .reg-dd-btn:focus-visible {
+    outline: none;
+    border-color: #001eff;
+    box-shadow: 0 0 0 3px rgba(0, 30, 255, 0.14);
+  }
+  .reg-dd.is-open .reg-dd-btn {
+    border-color: #001eff;
+    box-shadow: 0 0 0 3px rgba(0, 30, 255, 0.12);
+  }
+
+  .reg-dd-chevron {
+    flex-shrink: 0;
+    color: #999;
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), color 0.15s ease;
+  }
+  .reg-dd-btn:hover .reg-dd-chevron {
+    color: #555;
+  }
+  .reg-dd.is-open .reg-dd-chevron {
+    transform: rotate(180deg);
+    color: #001eff;
+  }
+  /* Set by the submit handler when someone tries to submit without answering. */
+  .reg-dd.is-invalid .reg-dd-btn {
+    border-color: #cc0000;
+  }
+
+  .reg-dd-value {
+    /* Long answers wrap inside the card instead of forcing it wider. */
+    white-space: normal;
+    line-height: 1.35;
+  }
+  .reg-dd-value.is-placeholder {
+    color: rgba(0, 0, 0, 0.32);
+  }
+
+  .reg-dd-list {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 80;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    background: #fff;
+    border: 1.5px solid #d6d6d6;
+    border-radius: 8px;
+    box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.28);
+    /* Animated open/close. The list keeps [hidden] between transitions so it stays
+       out of the tab order; the script flips that a frame either side of the class. */
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+    transform-origin: top center;
+    pointer-events: none;
+    transition: opacity 0.16s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reg-dd.is-open .reg-dd-list {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .reg-dd-opt {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: #000;
+    padding: 11px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+  /* Brand blue marks the chosen answer. Declared BEFORE the hover rule —
+     both are specificity (0,2,0), so source order decides, and hover must win
+     when you point at the option that is already selected. */
+  .reg-dd-opt[aria-selected='true'] {
+    background: #001eff;
+    color: #fff;
+  }
+
+  /* Colour and position only — no weight change, which would reflow the text
+     (and could re-wrap a long answer) as the cursor passes over it. */
+  .reg-dd-opt:hover,
+  .reg-dd-opt.is-active {
+    /* Cyan from the hero gradient's tail — distinct from the blue that marks
+       the chosen answer, so hover and selection never read as the same thing. */
+    background: #06a2d1;
+    color: #fff;
+    transform: translateX(3px);
+  }
+
+  /* Options fan in just behind the panel. */
+  .reg-dd.is-open .reg-dd-opt {
+    /* backwards, not both: a filled-forwards animation would keep owning
+       transform after it ends and the hover slide would never apply. */
+    animation: reg-dd-opt-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+  .reg-dd.is-open .reg-dd-opt:nth-child(2) {
+    animation-delay: 0.05s;
+  }
+  @keyframes reg-dd-opt-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reg-dd-list,
+    .reg-dd-btn,
+    .reg-dd-chevron,
+    .reg-dd-opt {
+      transition-duration: 0.01ms;
+    }
+    .reg-dd.is-open .reg-dd-opt {
+      animation: none;
+    }
   }
 
   .reg-phone-row {
@@ -477,6 +656,17 @@ const { targetDate } = Astro.props;
       return;
     }
 
+    var intentDd = document.getElementById('reg-intent-dd');
+    if (!form.intent.value) {
+      intentDd.classList.add('is-invalid');
+      msg.textContent = 'Please choose an option above.';
+      msg.style.color = '#cc0000';
+      msg.classList.remove('hidden');
+      document.getElementById('reg-intent-btn').focus();
+      return;
+    }
+    intentDd.classList.remove('is-invalid');
+
     if (countryCode === '+961' && rawDigits.startsWith('0')) rawDigits = rawDigits.slice(1);
 
     var _utmParams = (function() {
@@ -502,6 +692,7 @@ const { targetDate } = Astro.props;
       email: form.email.value.trim(),
       // Which A/B headline this visitor saw — stamped by Hero.astro on page load.
       headline: sessionStorage.getItem('heroHeadlineName') || '',
+      intent: form.intent.value,
       ..._utmParams,
     };
     btn.disabled = true;
@@ -516,7 +707,11 @@ const { targetDate } = Astro.props;
       const result = await res.json();
       if (result.success) {
         const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ');
-        window.location.href = '/confirm?name=' + encodeURIComponent(fullName);
+        // Two thank-you pages: /confirm carries the Meta Pixel, /confirm-b carries no
+        // tracking at all. Only people who said they're looking to invest land on the
+        // tracked one, so the pixel optimises toward buyers instead of browsers.
+        const dest = data.intent.charAt(0) === 'Y' ? '/confirm' : '/confirm-b';
+        window.location.href = dest + '?name=' + encodeURIComponent(fullName);
       } else {
         msg.textContent = result.error || 'Something went wrong. Try again.';
         msg.classList.remove('hidden');
@@ -784,6 +979,92 @@ const { targetDate } = Astro.props;
         digits = digits.slice(0, f.d);
         tel.value = digits;
       }
+    });
+  })();
+</script>
+
+<script is:inline>
+  // Behaviour for the custom listbox that replaced the native <select>.
+  (function () {
+    var dd = document.getElementById('reg-intent-dd');
+    if (!dd) return;
+    var btn = document.getElementById('reg-intent-btn');
+    var list = document.getElementById('reg-intent-list');
+    var valueEl = document.getElementById('reg-intent-value');
+    var input = document.getElementById('reg-intent');
+    var opts = Array.prototype.slice.call(list.querySelectorAll('.reg-dd-opt'));
+    var activeIndex = -1;
+
+    function setActive(i) {
+      activeIndex = i;
+      opts.forEach(function (o, n) { o.classList.toggle('is-active', n === i); });
+      if (opts[i]) opts[i].scrollIntoView({ block: 'nearest' });
+    }
+
+    var hideTimer;
+
+    function open() {
+      clearTimeout(hideTimer);
+      list.hidden = false;
+      // Unhide first, then flip the class on the next frame so the browser has a
+      // painted "closed" state to animate away from.
+      requestAnimationFrame(function () { dd.classList.add('is-open'); });
+      btn.setAttribute('aria-expanded', 'true');
+      setActive(opts.findIndex(function (o) { return o.getAttribute('aria-selected') === 'true'; }));
+
+    }
+
+    function close() {
+      dd.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      setActive(-1);
+      // Re-hide only once it has faded out, so it leaves the tab order again.
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(function () { list.hidden = true; }, 200);
+    }
+
+    function choose(opt) {
+      opts.forEach(function (o) { o.setAttribute('aria-selected', String(o === opt)); });
+      // dataset holds the raw answer; textContent is the same string, already
+      // entity-decoded by the parser, so either works — dataset keeps them in sync.
+      input.value = opt.dataset.value;
+      valueEl.textContent = opt.dataset.value;
+      valueEl.classList.remove('is-placeholder');
+      dd.classList.remove('is-invalid');
+      close();
+      btn.focus();
+    }
+
+    btn.addEventListener('click', function () {
+      if (list.hidden) open(); else close();
+    });
+
+    opts.forEach(function (opt, i) {
+      opt.addEventListener('click', function () { choose(opt); });
+      // The keyboard highlight follows the mouse, so only one option is ever
+      // highlighted — otherwise the already-selected one would stay lit up
+      // alongside whatever is under the cursor.
+      opt.addEventListener('mouseenter', function () { setActive(i); });
+    });
+
+    // Keyboard support, so the control behaves like the select it replaced.
+    dd.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { close(); btn.focus(); return; }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (list.hidden) { open(); return; }
+        var next = activeIndex + (e.key === 'ArrowDown' ? 1 : -1);
+        setActive(Math.max(0, Math.min(opts.length - 1, next)));
+        return;
+      }
+      if ((e.key === 'Enter' || e.key === ' ') && !list.hidden) {
+        e.preventDefault();
+        if (opts[activeIndex]) choose(opts[activeIndex]);
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!dd.contains(e.target)) close();
     });
   })();
 </script>

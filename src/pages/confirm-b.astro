@@ -1,0 +1,11 @@
+---
+// Untracked thank-you page — reached by registrants who answered "No, I'm just
+// discovering...". Identical to /confirm but loads no Meta Pixel and no other
+// third-party script, so Meta never sees these conversions.
+//
+// Do not add a site-wide pixel/GTM/Zaraz injection: that would track this page too
+// and defeat the split.
+import ThankYou from '../components/ThankYou.astro';
+---
+
+<ThankYou />
