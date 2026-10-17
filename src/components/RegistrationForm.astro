@@ -5,20 +5,35 @@ import FlipClock from './FlipClock.astro';
 
 interface Props {
   targetDate: string;
+  /** The training page shows its own countdown in the hero, so the card hides this one. */
+  showCountdown?: boolean;
+  /** The landing page hides the seat counter. */
+  showSpots?: boolean;
+  heading?: string;
+  subheading?: string;
 }
-const { targetDate } = Astro.props;
+const { targetDate, showCountdown = true, showSpots = true, heading, subheading } = Astro.props;
 ---
 
 <div id="register" class="reg-form-wrap">
   <form id="webinar-form" class="reg-form">
+    {heading && <h2 class="reg-heading">{heading}</h2>}
+    {subheading && <p class="reg-subheading">{subheading}</p>}
+
     <div class="reg-countdown">
-      <FlipClock targetDate={targetDate} />
-      <p class="reg-spots"><span class="spots-count">287</span> spots remaining</p>
+      {showCountdown && <FlipClock targetDate={targetDate} />}
+      {showSpots && <p class="reg-spots"><span class="spots-count">287</span> spots remaining</p>}
     </div>
 
-    <div class="reg-field">
-      <label class="reg-label" for="reg-name">Full Name</label>
-      <input id="reg-name" type="text" name="fullName" required placeholder="Enter your name" class="reg-input" />
+    <div class="reg-name-row">
+      <div class="reg-field">
+        <label class="reg-label" for="reg-first-name">First Name</label>
+        <input id="reg-first-name" type="text" name="firstName" required autocomplete="given-name" placeholder="First name" class="reg-input" />
+      </div>
+      <div class="reg-field">
+        <label class="reg-label" for="reg-last-name">Last Name</label>
+        <input id="reg-last-name" type="text" name="lastName" required autocomplete="family-name" placeholder="Last name" class="reg-input" />
+      </div>
     </div>
 
     <div class="reg-field">
@@ -514,6 +529,30 @@ const { targetDate } = Astro.props;
     }
   }
 
+  .reg-heading {
+    font-family: 'IBrand', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.15;
+    color: #000;
+    margin: 0;
+  }
+  .reg-subheading {
+    font-family: 'Helvetica', Arial, sans-serif;
+    font-size: 0.9rem;
+    color: #4a5468;
+    margin: -10px 0 0;
+  }
+
+  .reg-name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 420px) {
+    .reg-name-row { grid-template-columns: 1fr; gap: 15px; }
+  }
+
   .reg-phone-row {
     display: flex;
     align-items: stretch;
@@ -681,13 +720,10 @@ const { targetDate } = Astro.props;
       };
     })();
 
-    // The sheet keeps first/last in separate columns, so split the single name field:
-    // first word is the first name, whatever follows is the last name.
-    var nameParts = form.fullName.value.trim().split(/\s+/);
-
     const data = {
-      firstName: nameParts[0] || '',
-      lastName: nameParts.slice(1).join(' '),
+      // Each goes straight into its own sheet column; stray inner spaces collapsed.
+      firstName: form.firstName.value.trim().replace(/\s+/g, ' '),
+      lastName: form.lastName.value.trim().replace(/\s+/g, ' '),
       phone: countryCode + rawDigits,
       email: form.email.value.trim(),
       // Which A/B headline this visitor saw — stamped by Hero.astro on page load.

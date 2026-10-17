@@ -122,6 +122,7 @@ export const POST: APIRoute = async ({ request }) => {
     const body = await request.json();
     const { firstName, lastName, email, phone, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, headline, intent } = body;
 
+    // Last name is optional: the landing form marks it optional and hides it on mobile.
     if (!firstName || !email || !phone) {
       return json({ success: false, error: 'Missing required fields' }, 400);
     }

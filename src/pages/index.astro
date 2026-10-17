@@ -1,111 +1,229 @@
 ---
+// Homepage: the pasted Landing_Page.html copied element for element, using its own
+// CSS (src/styles/landing.css), with Droparabia's palette, fonts and logo swapped in.
+// Its form markup is untouched; only the stub submit handler ("TODO: connect to your
+// CRM") is replaced below by a real POST to /api/register -> Google webinar sheet.
 import '../styles/global.css';
-import Header from '../components/Header.astro';
-import Hero from '../components/Hero.astro';
-import LearnSection from '../components/LearnSection.astro';
-import Testimonials from '../components/Testimonials.astro';
-import RegisterSection from '../components/RegisterSection.astro';
-import FinalCTA from '../components/FinalCTA.astro';
-import FAQ from '../components/FAQ.astro';
-
-
+import '../styles/landing.css';
+import { WEBINAR_START_ISO } from '../config/webinar';
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <meta name="generator" content={Astro.generator} />
-
-    <title>Droparabia — Free Live Workshop</title>
-    <meta
-      name="description"
-      content="Join Majd Abdulsalam in a live workshop and learn how to build a profitable dropshipping business in Lebanon using Droparabia — from scratch, step by step."
-    />
-
+    <title>Droparabia Free Live Training</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="/Droparabia.webp" />
-    <link rel="preload" as="image" href="/mj4.png" />
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
   </head>
+  <body>
+<div style="font-family: 'Helvetica', Arial, sans-serif; color: #0D0D2B; background: #FFFFFF; min-height: 100vh">
+<div style="background: #EEF1FF; border-bottom: 1px solid #DDE3F5">
+<div class="da-top" style="max-width: 1240px; margin: 0 auto; padding: 18px 24px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap">
+<div style="display: flex; align-items: center; gap: 10px">
+<img class="da-logo" src="/Droparabia.webp" alt="" style="width: 40px; height: 40px; object-fit: contain; display: block">
+<div class="da-brand" style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em; color: #0D0D2B">Droparabia</div>
+</div>
+<div style="background: #001EFF; color: #FFFFFF; font-weight: 700; font-size: 13px; letter-spacing: 0.08em; padding: 9px 16px; border-radius: 999px" class="da-pill">FREE LIVE TRAINING</div>
+</div>
+</div>
 
-  <body class="overflow-x-hidden" style="background: #F0F0F0;">
+<div class="da-wrap" style="max-width: 1240px; margin: 0 auto; padding: 40px 24px 0; box-sizing: border-box">
+<div class="da-layout">
 
-    <Header />
-    <Hero />
-    <Testimonials />
-    <RegisterSection />
-    <LearnSection />
-    <FinalCTA />
+<div class="da-main">
+<div class="da-hero">
 
-    <FAQ />
+<h1 class="da-h1" style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: clamp(32px, 4.4vw, 52px); line-height: 1.06; letter-spacing: -0.025em; margin: 0 0 18px; color: #0D0D2B">The No-Stock Blueprint: How Smart Lebanese Are Selling Online Without Ever Owning a Single Product</h1>
+<div style="color: #001EFF; font-weight: 700; font-size: 17px; margin-bottom: 14px">Thursday, October 29 · 8:00 PM Beirut time · Live on Zoom</div>
+<p class="da-lede" style="font-size: 18px; line-height: 1.6; color: #44506A; margin: 0 0 28px">Join Majd LIVE for a free training where he breaks down the exact system 800+ Droparabia users are running right now: which products to sell, how they reach the customer, and how you get paid. All without putting your money into stock.</p>
 
-    <!--
-      The registration form now lives directly in the Hero (see RegistrationForm.astro,
-      rendered inside <Hero /> above with id="register") instead of down here -- anchors
-      like the mobile-menu "Register Now" link and LearnSection's CTA point at #register
-      and scroll straight to it.
-    -->
+<div id="video" style="position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 3px solid #001EFF; background: #0D0D2B; display: flex; align-items: center; justify-content: center; margin-bottom: 20px">
+<div style="position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.6); color: #FFFFFF; font-size: 14px; padding: 7px 12px; border-radius: 999px">Tap for sound</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 14px">
+<div style="width: 96px; height: 72px; border-radius: 12px; background: #001EFF; display: flex; align-items: center; justify-content: center">
+<svg width="34" height="34" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"></path></svg>
+</div>
+<div style="color: #A9B6D0; font-size: 14px">[VIDEO: 60 to 90 sec invite from Majd at the whiteboard]</div>
+</div>
+</div>
 
-    <!-- Footer -->
-    <footer class="footer-section">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <a href="/" class="footer-logo-link">
-            <img src="/Droparabia.webp" alt="Droparabia logo" class="footer-logo-img" />
-            <span class="footer-logo-name">Droparabia</span>
-          </a>
-        </div>
-        <div class="footer-links">
-          <p class="footer-links-label">Legal</p>
-          <div class="footer-compliance">
-            <a href="/privacy-policy" class="footer-compliance-link">Privacy Policy</a>
-            <a href="/terms" class="footer-compliance-link">Terms &amp; Conditions</a>
-          </div>
-        </div>
-        <div class="footer-links">
-          <p class="footer-links-label">Follow us</p>
-          <div class="footer-socials">
-            <a href="https://www.instagram.com/mjbusinessofficial" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.668 1.0745-1.3368 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8504.6165 19.0872.321 18.2144.12 16.9418.0635 15.6647.0075 15.2531-.006 11.977.0001 8.7006.0061 8.2907.0208 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg>
-            </a>
-            <a href="https://www.youtube.com/@MJ.biznes" target="_blank" rel="noopener" class="footer-social-link" aria-label="YouTube">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© {new Date().getFullYear()} Droparabia. All rights reserved.</p>
-      </div>
-    </footer>
+<div class="da-cd" style="background: #001EFF; border-radius: 16px; padding: 20px 24px; margin-bottom: 14px; color: #FFFFFF">
+<div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 500; margin-bottom: 12px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+<span>Training starts in:</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; text-align: center">
+<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-d">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">DAYS</div></div>
+<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-h">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">HOURS</div></div>
+<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-m">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">MINS</div></div>
+<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-s">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">SECS</div></div>
+</div>
+</div>
+</div>
+<div class="da-rest">
 
-    <style>
-      .footer-section { background: #F0F0F0; padding: 48px 40px 0; margin-top: 40px; box-shadow: 0 -2px 14px rgba(0,0,0,0.13); }
-      .footer-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; flex-wrap: wrap; padding-bottom: 40px; border-bottom: 1px solid rgba(0,0,0,0.12); }
-      .footer-brand { display: flex; flex-direction: column; gap: 12px; max-width: 280px; }
-      .footer-logo-link { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
-      .footer-logo-img { width: 56px; height: 56px; object-fit: contain; border-radius: 10px; }
-      .footer-logo-name { font-family: 'IBrand', sans-serif; color: #000; font-size: 2rem; }
-      .footer-links { display: flex; flex-direction: column; gap: 12px; }
-      .footer-links-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #000; margin: 0; }
-      .footer-socials { display: flex; align-items: center; gap: 10px; }
-      .footer-social-link { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(0,0,0,0.06); color: #000; text-decoration: none; transition: background 0.15s, color 0.15s; }
-      .footer-social-link svg { width: 18px; height: 18px; }
-      .footer-social-link:hover { background: rgba(0,0,0,0.12); color: #000; }
-      .footer-compliance { display: flex; flex-direction: column; gap: 8px; }
-      .footer-compliance-link { color: rgba(0,0,0,0.75); text-decoration: none; font-size: 0.9rem; transition: opacity 0.15s; }
-      .footer-compliance-link:hover { opacity: 0.6; }
-      .footer-bottom { max-width: 1400px; margin: 0 auto; padding: 20px 0; }
-      .footer-bottom p { font-size: 0.8125rem; color: rgba(0,0,0,0.6); margin: 0; }
-      @media (max-width: 768px) { .footer-inner { flex-direction: column; gap: 24px; } }
-    </style>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 48px">
+<div style="background: #EEF1FF; border: 1px solid #DDE3F5; border-radius: 14px; padding: 18px"><div style="font-family: 'IBrand', sans-serif; font-size: 28px; font-weight: 800; color: #001EFF">800+</div><div style="font-size: 14px; color: #44506A; margin-top: 4px">active users selling</div></div>
+<div style="background: #EEF1FF; border: 1px solid #DDE3F5; border-radius: 14px; padding: 18px"><div style="font-family: 'IBrand', sans-serif; font-size: 28px; font-weight: 800; color: #001EFF">$400K+</div><div style="font-size: 14px; color: #44506A; margin-top: 4px">in sales by our users</div></div>
+<div style="background: #EEF1FF; border: 1px solid #DDE3F5; border-radius: 14px; padding: 18px"><div style="font-family: 'IBrand', sans-serif; font-size: 28px; font-weight: 800; color: #001EFF">90%</div><div style="font-size: 14px; color: #44506A; margin-top: 4px">COD delivery success</div></div>
+<div style="background: #EEF1FF; border: 1px solid #DDE3F5; border-radius: 14px; padding: 18px"><div style="font-family: 'IBrand', sans-serif; font-size: 28px; font-weight: 800; color: #001EFF">Shopify</div><div style="font-size: 14px; color: #44506A; margin-top: 4px">official partner</div></div>
+</div>
+
+<div style="background: #FFFFFF; border: 1px solid #DDE3F5; border-radius: 18px; padding: 30px 32px; margin-bottom: 48px; box-shadow: 0 10px 30px rgba(0,30,255,0.06)">
+<h2 style="font-family: 'IBrand', sans-serif; font-weight: 700; font-size: 26px; line-height: 1.2; margin: 0 0 16px; color: #0D0D2B">Everyone tells you to start an online store. Nobody tells you how to start without risking your savings.</h2>
+<p style="font-size: 17px; line-height: 1.65; color: #44506A; margin: 0 0 14px">You've watched the YouTube videos. You've saved the TikToks. You still don't know which products actually sell in Lebanon, who delivers them, or how the cash on delivery reaches you. And buying stock you're not sure you can sell? That's how most people lose their first $1,000.</p>
+<p style="font-size: 17px; line-height: 1.65; color: #0D0D2B; font-weight: 700; margin: 0">This isn't a "you" problem. It's an infrastructure problem. And it's already solved.</p>
+</div>
+
+<a href="#register" class="da-mcta">Save My Free Seat <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg></a>
+<h2 style="font-family: 'IBrand', sans-serif; font-weight: 700; font-size: 30px; margin: 0 0 12px; color: #0D0D2B">What You'll Learn:</h2>
+<p style="font-size: 17px; line-height: 1.6; color: #44506A; margin: 0 0 22px">In this free live training, Majd breaks down the Droparabia E-Commerce Infrastructure System, the same setup 800+ users are running right now.</p>
+<div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 52px">
+<div style="display: flex; gap: 14px; align-items: flex-start">
+<div style="flex: none; width: 28px; height: 28px; border-radius: 999px; background: #001EFF; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></div>
+<div style="font-size: 17px; line-height: 1.55"><b style="color: #0D0D2B">How to launch your store without buying inventory</b><span style="color: #44506A">, so your money goes into marketing, not boxes sitting in your room.</span></div>
+</div>
+<div style="display: flex; gap: 14px; align-items: flex-start">
+<div style="flex: none; width: 28px; height: 28px; border-radius: 999px; background: #001EFF; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></div>
+<div style="font-size: 17px; line-height: 1.55"><b style="color: #0D0D2B">How to pick products that already sell in the Lebanese market</b><span style="color: #44506A">, instead of guessing and testing random items for months.</span></div>
+</div>
+<div style="display: flex; gap: 14px; align-items: flex-start">
+<div style="flex: none; width: 28px; height: 28px; border-radius: 999px; background: #001EFF; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></div>
+<div style="font-size: 17px; line-height: 1.55"><b style="color: #0D0D2B">How orders get packed, delivered and paid for without you touching them</b><span style="color: #44506A">, from sourcing to the customer's doorstep to cash in your account.</span></div>
+</div>
+<div style="display: flex; gap: 14px; align-items: flex-start">
+<div style="flex: none; width: 28px; height: 28px; border-radius: 999px; background: #001EFF; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></div>
+<div style="font-size: 17px; line-height: 1.55"><b style="color: #0D0D2B">The one skill that actually decides your income</b><span style="color: #44506A">, and why it's marketing, not suppliers, logistics or a fancy website.</span></div>
+</div>
+<div style="display: flex; gap: 14px; align-items: flex-start">
+<div style="flex: none; width: 28px; height: 28px; border-radius: 999px; background: #001EFF; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></div>
+<div style="font-size: 17px; line-height: 1.55"><b style="color: #0D0D2B">The first 30 days, step by step</b><span style="color: #44506A">: exactly what to do each week if you're starting from zero next to your job or studies.</span></div>
+</div>
+</div>
+
+<a href="#register" class="da-mcta">Save My Free Seat <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg></a>
+<div style="background: #FFFFFF; border: 1px solid #DDE3F5; border-radius: 18px; padding: 30px 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,30,255,0.06)">
+<h2 style="font-family: 'IBrand', sans-serif; font-weight: 700; font-size: 26px; margin: 0 0 18px; color: #0D0D2B">Who This Is For</h2>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; gap: 12px; align-items: flex-start"><svg style="flex: none; margin-top: 3px" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#001EFF" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle></svg><span style="font-size: 16px; line-height: 1.55; color: #2B3754">Students and employees who want a real online business next to their studies or job</span></div>
+<div style="display: flex; gap: 12px; align-items: flex-start"><svg style="flex: none; margin-top: 3px" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#001EFF" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle></svg><span style="font-size: 16px; line-height: 1.55; color: #2B3754">Anyone who's consumed the free content for months and still doesn't have a store running</span></div>
+<div style="display: flex; gap: 12px; align-items: flex-start"><svg style="flex: none; margin-top: 3px" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#001EFF" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle></svg><span style="font-size: 16px; line-height: 1.55; color: #2B3754">Online sellers, e-com founders and entrepreneurs tired of being stuck with stock that doesn't move</span></div>
+<div style="display: flex; gap: 12px; align-items: flex-start"><svg style="flex: none; margin-top: 3px" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#001EFF" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle></svg><span style="font-size: 16px; line-height: 1.55; color: #2B3754">People ready to put in consistent work every week. If you're looking for a shortcut that pays without effort, skip this one.</span></div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="da-side" id="register">
+<div class="da-card" style="background: #FFFFFF; color: #0D0D2B; border-radius: 18px; padding: 26px 24px; border: 2px solid #001EFF; box-shadow: 0 20px 50px rgba(0,30,255,0.16)">
+<div id="da-form-wrap">
+<h2 class="da-title" style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.2; margin: 0 0 8px">Reserve Your Free Seat</h2>
+<div class="da-sub" style="font-size: 14px; color: #44506A; margin-bottom: 8px">Live on Zoom. No replay. Seats capped.</div>
+<form id="da-form" class="da-form" style="display: flex; flex-direction: column; gap: 14px">
+<div><label for="da-fn" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">First Name</label><input id="da-fn" class="da-input" type="text" placeholder="Enter your first name" required="required"></div>
+<div class="da-lname"><label for="da-ln" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Last Name</label><input id="da-ln" class="da-input" type="text" placeholder="Enter your last name"></div>
+<div><label for="da-em" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Email Address</label><input id="da-em" class="da-input" type="email" placeholder="you@email.com" required="required"></div>
+<div><label for="da-ph" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">WhatsApp Number</label>
+<div style="display: flex; gap: 8px"><div class="da-ccode" style="flex: none; height: 46px; display: flex; align-items: center; padding: 0 12px; border: 1px solid #D3DBEA; border-radius: 10px; font-size: 15px; background: #EEF1FF">+961</div><input id="da-ph" class="da-input" type="tel" placeholder="70 123 456" required="required"></div></div>
+<button type="submit" class="da-btn da-submit" style="height: 56px; border: none; border-radius: 12px; background: #001EFF; color: #FFFFFF; font: inherit; font-weight: 800; font-size: 17px; cursor: pointer">Save My Free Seat →</button>
+</form>
+</div>
+<div id="da-done" style="display:none">
+<div style="text-align: center; padding: 20px 4px">
+<div style="width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 999px; background: #001EFF; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></div>
+<h2 style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 24px; margin: 0 0 8px">You're in.</h2>
+<p style="font-size: 15px; line-height: 1.55; color: #44506A; margin: 0">Check WhatsApp. Your Zoom link and reminders are on the way. Block the time now: this one's live only.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div style="background: #0D0D2B; color: #FFFFFF; margin-top: 24px; padding: 32px 24px 40px; text-align: center">
+<div style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 20px; margin-bottom: 10px">Droparabia</div>
+<div style="display: flex; justify-content: center; gap: 20px; font-size: 14px; margin-bottom: 12px"><a href="/privacy-policy" style="color: #BFD0FF">Privacy Policy</a><a href="/terms" style="color: #BFD0FF">Terms &amp; Conditions</a></div>
+<div style="font-size: 12px; color: #A9B6D0">© 2026 Droparabia. All rights reserved.</div>
+</div>
+</div>
+
+<script is:inline define:vars={{ EVENT_DATE: WEBINAR_START_ISO }}>
+  (function () {
+    var t = new Date(EVENT_DATE).getTime();
+    function p(n) { return String(n).padStart(2, '0'); }
+    function tick() {
+      var x = Math.max(0, Math.floor((t - Date.now()) / 1000));
+      var d = Math.floor(x / 86400); x -= d * 86400;
+      var h = Math.floor(x / 3600);  x -= h * 3600;
+      var m = Math.floor(x / 60);
+      document.getElementById('cd-d').textContent = p(d);
+      document.getElementById('cd-h').textContent = p(h);
+      document.getElementById('cd-m').textContent = p(m);
+      document.getElementById('cd-s').textContent = p(x - m * 60);
+    }
+    tick(); setInterval(tick, 1000);
+  })();
+</script>
 
   </body>
 </html>
+
+<script is:inline>
+  // The mock-up's form, wired to the Google webinar sheet.
+  (function () {
+    var form = document.getElementById('da-form');
+    if (!form) return;
+    var btn = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var digits = document.getElementById('da-ph').value.replace(/\D/g, '');
+      if (digits.charAt(0) === '0') digits = digits.slice(1);
+      if (digits.indexOf('961') === 0) digits = digits.slice(3);
+      if (digits.length !== 8) {
+        document.getElementById('da-ph').focus();
+        alert('Please enter a valid 8-digit Lebanese number.');
+        return;
+      }
+
+      var params = new URLSearchParams(window.location.search);
+      var payload = {
+        firstName: document.getElementById('da-fn').value.trim().replace(/\s+/g, ' '),
+        lastName: document.getElementById('da-ln').value.trim().replace(/\s+/g, ' '),
+        email: document.getElementById('da-em').value.trim(),
+        phone: '+961' + digits,
+        utm_source: params.get('utm_source') || '',
+        utm_medium: params.get('utm_medium') || '',
+        utm_campaign: params.get('utm_campaign') || '',
+        utm_content: params.get('utm_content') || '',
+        utm_term: params.get('utm_term') || '',
+        referrer: document.referrer || '',
+      };
+
+      btn.disabled = true;
+      var label = btn.textContent;
+      btn.textContent = 'Saving your seat...';
+
+      fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (!res.success) throw new Error(res.error || 'failed');
+          var name = [payload.firstName, payload.lastName].filter(Boolean).join(' ');
+          window.location.href = '/confirm?name=' + encodeURIComponent(name);
+        })
+        .catch(function () {
+          btn.disabled = false;
+          btn.textContent = label;
+          alert('Something went wrong. Please try again.');
+        });
+    });
+  })();
+</script>

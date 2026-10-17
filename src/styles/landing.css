@@ -1,0 +1,47 @@
+body{margin:0;background:#FFFFFF}
+a{color:#001EFF}a:hover{color:#0016C4}
+.da-layout{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start}
+.da-main{flex:999 1 600px;min-width:0;order:1}
+.da-side{flex:1 1 340px;min-width:0;order:2;position:sticky;top:24px}
+.da-mcta{display:none}
+@keyframes da-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+@media (max-width: 1000px){.da-side{position:static}
+.da-card{padding:16px 16px !important;border-radius:14px !important}
+.da-quote,.da-lname,.da-sub{display:none !important}
+.da-title{font-size:19px !important;margin-bottom:10px !important}
+.da-form{gap:9px !important}
+.da-form label:not(.da-consent){position:absolute !important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.da-top{padding:12px 16px !important}
+.da-logo{width:32px !important;height:32px !important}
+.da-brand{font-size:18px !important}
+.da-pill{font-size:11px !important;padding:7px 12px !important}
+.da-wrap{padding-top:16px !important}
+.da-layout{gap:24px}
+.da-input{height:40px;font-size:14px}
+.da-ccode{height:40px !important}
+.da-consent{font-size:11px !important}
+.da-submit{height:48px !important;font-size:16px !important}
+.da-note{display:none !important}
+.da-main{display:contents}
+.da-hero{order:1;flex:1 1 100%;min-width:0}
+.da-side{order:2 !important;flex:1 1 100%}
+.da-rest{order:3;flex:1 1 100%;min-width:0}
+.da-layout{gap:0 !important}
+.da-h1{font-size:27px !important;margin-bottom:10px !important}
+.da-lede,.da-badge{display:none !important}
+.da-cd{padding:12px 10px !important;margin-bottom:16px !important}
+.da-cd [style*="font-size: 40px"]{font-size:28px !important}
+.da-side{margin-bottom:36px}
+.da-rest [style*="padding: 30px 32px"]{padding:22px 18px !important}
+.da-rest h2{font-size:23px !important}
+.da-mcta{display:flex;align-items:center;justify-content:center;gap:8px;margin:-24px 0 40px;height:52px;border-radius:12px;background:#001EFF;color:#FFFFFF !important;font-weight:800;font-size:16px;text-decoration:none}}
+.da-input{width:100%;box-sizing:border-box;height:46px;border:1px solid #D3DBEA;border-radius:10px;padding:0 14px;font:inherit;font-size:15px;color:#0D0D2B;background:#FFFFFF}
+.da-input:focus{outline:2px solid #001EFF;outline-offset:1px;border-color:#001EFF}
+.da-btn{transition:transform .15s ease, filter .15s ease}
+.da-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+
+/* IBrand ships a single weight; the mock-up's 700/800 would render as faux bold. */
+h1, h2, h3, h4, h5, h6,
+[style*="IBrand"] {
+  font-weight: 400 !important;
+}

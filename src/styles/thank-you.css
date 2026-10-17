@@ -1,0 +1,45 @@
+body{margin:0;background:#FFFFFF}
+a{color:#001EFF}a:hover{color:#0016C4}
+*{box-sizing:border-box}
+.ty-wrap{max-width:860px;margin:0 auto;padding:44px 24px 0}
+.ty-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-weight:800;border-radius:12px;transition:transform .15s ease, filter .15s ease}
+.ty-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.ty-step{display:flex;gap:16px;align-items:flex-start}
+.ty-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.ty-carousel{position:relative}
+.ty-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:4px 2px 12px;scrollbar-width:none}
+.ty-track::-webkit-scrollbar{display:none}
+.ty-slide{flex:0 0 calc((100% - 32px)/3);aspect-ratio:9/16;scroll-snap-align:start;border-radius:16px;overflow:hidden;background:#FFFFFF;border:1px solid #DDE3F5}
+.ty-slide img{width:100%;height:100%;object-fit:contain;display:block}
+.ty-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:46px;height:46px;border-radius:999px;border:none;background:#001EFF;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,30,255,.35)}
+.ty-arrow-l{left:-20px}.ty-arrow-r{right:-20px}
+.ty-reviews{columns:3 260px;column-gap:18px}
+.ty-review{break-inside:avoid;background:#FFFFFF;border:1px solid #DDE3F5;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 8px 24px rgba(13,13,43,.06)}
+@media (max-width: 700px){
+.ty-slide{flex-basis:78%}
+.ty-arrow{width:40px;height:40px}.ty-arrow-l{left:-6px}.ty-arrow-r{right:-6px}
+}
+@keyframes ty-pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.ty-check{animation:ty-pop .5s ease-out both}
+@media (max-width: 700px){
+.ty-top{padding:12px 16px !important}
+.ty-logo{width:32px !important;height:32px !important}
+.ty-brand{font-size:18px !important}
+.ty-pill{font-size:11px !important;padding:7px 12px !important}
+.ty-wrap{padding:28px 16px 0}
+.ty-h1{font-size:28px !important}
+.ty-card{padding:22px 18px !important}
+.ty-card h2{font-size:22px !important}
+.ty-cd-num{font-size:28px !important}
+.ty-cd{padding:12px 10px !important}
+.ty-actions .ty-btn{flex:1 1 100%}
+}
+
+/* IBrand ships a single weight; the mock-up's 700/800 would render as faux bold. */
+h1, h2, h3, h4, h5, h6,
+[style*="IBrand"] {
+  font-weight: 400 !important;
+}
+
+/* Wordmark matches the logo lockup on the landing page. */
+.ty-brand, .ty-footer-brand { font-family: 'IBrand', sans-serif; font-weight: 400; }

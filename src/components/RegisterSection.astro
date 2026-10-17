@@ -1,7 +1,6 @@
 ---
 import RegistrationForm from './RegistrationForm.astro';
-
-const WEBINAR_START = '2026-09-18 18:30:00';
+import { WEBINAR_START, WEBINAR_START_ISO } from '../config/webinar';
 ---
 
 <section class="register-section">
@@ -49,7 +48,7 @@ const WEBINAR_START = '2026-09-18 18:30:00';
   }
 </style>
 
-<script is:inline>
+<script is:inline define:vars={{ LIVE_AT: WEBINAR_START_ISO }}>
   fetch('/api/spots')
     .then(r => r.json())
     .then(data => {
@@ -63,7 +62,7 @@ const WEBINAR_START = '2026-09-18 18:30:00';
   // registering after it's already started doesn't make sense.
   (function() {
     var ZOOM = 'https://us06web.zoom.us/j/82230789524?pwd=K6FlWw4FbHlPNCyfRFhGUevaaweArl.1';
-    var target = new Date('2026-09-18T18:30:00').getTime();
+    var target = new Date(LIVE_AT).getTime();
 
     function checkLive() {
       if (Date.now() < target) return;

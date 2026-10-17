@@ -1,21 +1,17 @@
 ---
-// Shared body of both thank-you pages. There are two routes on purpose:
-//   /confirm    -> tracked:true   -> Meta Pixel loads, fires PageView + Lead
-//   /confirm-b  -> tracked:false  -> no pixel, no third-party script at all
-// RegistrationForm.astro picks the destination from the "looking to invest"
-// dropdown, so Meta only ever sees the qualified registrations.
+// Thank-you page: the pasted Thank_You_Page.html, using its own CSS
+// (src/styles/thank-you.css) with Droparabia's palette, fonts and logo swapped in.
 //
-// Keeping the page itself in one component means a copy change lands on both
-// routes; only the tracking differs.
+// Shared body of both routes, so the Meta split survives:
+//   /confirm   -> tracked:true  -> pixel loads, fires PageView + Lead
+//   /confirm-b -> tracked:false -> no pixel at all
 import '../styles/global.css';
+import '../styles/thank-you.css';
+import { WEBINAR_GCAL_URL, WHATSAPP_CHANNEL_URL, SOCIAL_INSTAGRAM, SOCIAL_YOUTUBE } from '../config/webinar';
 
-interface Props {
-  tracked?: boolean;
-}
+interface Props { tracked?: boolean; }
 const { tracked = false } = Astro.props;
 
-// Set PUBLIC_META_PIXEL_ID in .env to switch tracking on. Without it the tracked
-// page renders identically to the untracked one instead of emitting a broken snippet.
 const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
 const usePixel = tracked && !!pixelId;
 ---
@@ -23,14 +19,10 @@ const usePixel = tracked && !!pixelId;
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>You're In | Droparabia Free Live Training</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>You're In! — Droparabia</title>
     <link rel="icon" type="image/png" href="/Droparabia.webp" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
     {usePixel && (
       <script is:inline set:html={`
         !function(f,b,e,v,n,t,s)
@@ -47,120 +39,156 @@ const usePixel = tracked && !!pixelId;
       `} />
     )}
   </head>
-
-  <body style="margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:#F0F0F0; padding:24px;">
+  <body>
     {usePixel && (
       <noscript set:html={`<img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=${pixelId}&ev=Lead&noscript=1" />`} />
     )}
+<div style="font-family: 'Helvetica', Arial, sans-serif; color: #0D0D2B; background: #FFFFFF; min-height: 100vh">
 
-    <div class="confirm-wrap">
-      <h1 class="confirm-heading">Your spot has been secured<span id="confirm-name"></span>!</h1>
-      <p class="confirm-sub">We're going live at 6:30 PM, we'll send the link on WhatsApp as soon as we start!</p>
+<div style="background: #EEF1FF; border-bottom: 1px solid #DDE3F5">
+<div class="ty-top" style="max-width: 1240px; margin: 0 auto; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap">
+<div style="display: flex; align-items: center; gap: 10px">
+<img class="ty-logo" src="/Droparabia.webp" alt="" style="width: 40px; height: 40px; object-fit: contain; display: block">
+<div class="ty-brand" style="font-weight: 800; font-size: 22px; letter-spacing: -0.02em; color: #0D0D2B">Droparabia</div>
+</div>
+<div class="ty-pill" style="background: #001EFF; color: #FFFFFF; font-weight: 700; font-size: 13px; letter-spacing: 0.08em; padding: 9px 16px; border-radius: 999px">FREE LIVE TRAINING</div>
+</div>
+</div>
 
-      <div class="zoom-block">
-        <p class="zoom-label">Here's the Zoom link — save it somewhere just in case!</p>
-        <div class="zoom-row">
-          <span class="zoom-link-text">https://us06web.zoom.us/j/82230789524</span>
-          <button class="copy-btn" id="copy-btn" onclick="copyZoom()">Copy</button>
-        </div>
-        <p class="zoom-hint" id="copy-hint" style="display:none;">Copied to clipboard!</p>
-      </div>
-    </div>
+<div class="ty-wrap">
 
-    <style is:global>
-      html, body { background: #F0F0F0 !important; }
-    </style>
-    <style>
-      .confirm-wrap {
-        text-align: center;
-        max-width: 560px;
-      }
-      .confirm-heading {
-        font-family: 'IBrand', sans-serif;
-        font-size: clamp(2.2rem, 7vw, 3.5rem);
-        font-weight: 400;
-        color: #000;
-        margin: 0 0 20px;
-        line-height: 1.15;
-      }
-      .confirm-sub {
-        font-family: 'IBrand', sans-serif;
-        font-size: clamp(1rem, 2.5vw, 1.25rem);
-        font-weight: 400;
-        color: #000;
-        line-height: 1.6;
-        margin: 0 0 28px;
-      }
-      .zoom-block {
-        margin-top: 8px;
-      }
-      .zoom-label {
-        font-family: 'Outfit', sans-serif;
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: #333;
-        margin: 0 0 10px;
-      }
-      .zoom-row {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        background: #fff;
-        border: 1.5px solid #d0d0d0;
-        border-radius: 10px;
-        padding: 10px 14px;
-        max-width: 100%;
-      }
-      .zoom-link-text {
-        font-family: 'Outfit', monospace;
-        font-size: 0.82rem;
-        color: #020887;
-        word-break: break-all;
-        text-align: left;
-      }
-      .copy-btn {
-        flex-shrink: 0;
-        padding: 6px 14px;
-        background: #020887;
-        color: #fff;
-        font-family: 'Outfit', sans-serif;
-        font-size: 0.82rem;
-        font-weight: 600;
-        border: none;
-        border-radius: 7px;
-        cursor: pointer;
-        transition: background 0.15s;
-      }
-      .copy-btn:hover { background: #0310b5; }
-      .zoom-hint {
-        margin-top: 8px;
-        font-family: 'Outfit', sans-serif;
-        font-size: 0.85rem;
-        color: #16a34a;
-        font-weight: 600;
-      }
-    </style>
+<div style="text-align: center; margin-bottom: 28px">
+<div class="ty-check" style="width: 76px; height: 76px; margin: 0 auto 18px; border-radius: 999px; background: #001EFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 8px #E5EDFF">
+<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+</div>
+<h1 class="ty-h1" style="font-weight: 800; font-size: 44px; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 12px">You're In<span id="confirm-name"></span>! Here's What To Do Next.</h1>
+<p style="font-size: 18px; color: #44506A; margin: 0">Watch this short video from Majd first.</p>
+</div>
 
-    <script is:inline>
-      const params = new URLSearchParams(window.location.search);
-      const name = params.get('name');
-      if (name) {
-        document.getElementById('confirm-name').textContent = ' ' + decodeURIComponent(name);
-      }
+<div id="video" style="position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 3px solid #001EFF; background: #0D0D2B; display: flex; align-items: center; justify-content: center; margin-bottom: 40px">
+<div style="position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.6); color: #FFFFFF; font-size: 14px; padding: 7px 12px; border-radius: 999px">Tap for sound</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 0 16px; text-align: center">
+<div style="width: 96px; height: 72px; border-radius: 12px; background: #001EFF; display: flex; align-items: center; justify-content: center">
+<svg width="34" height="34" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"></path></svg>
+</div>
+<div style="color: #A9B6D0; font-size: 14px">[VIDEO: Majd thanks them for registering and tells them why they must show up live]</div>
+</div>
+</div>
 
-      function copyZoom() {
-        navigator.clipboard.writeText('https://us06web.zoom.us/j/82230789524?pwd=K6FlWw4FbHlPNCyfRFhGUevaaweArl.1')
-          .then(function() {
-            var hint = document.getElementById('copy-hint');
-            var btn = document.getElementById('copy-btn');
-            btn.textContent = 'Copied!';
-            hint.style.display = 'block';
-            setTimeout(function() {
-              btn.textContent = 'Copy';
-              hint.style.display = 'none';
-            }, 2500);
-          });
-      }
-    </script>
+<div class="ty-card" style="background: #FFFFFF; border: 1px solid #DDE3F5; border-radius: 18px; padding: 30px 32px; margin-bottom: 64px; box-shadow: 0 10px 30px rgba(0,30,255,0.06)">
+<h2 style="font-weight: 800; font-size: 28px; margin: 0 0 24px">Before The Training, Do These 3 Things</h2>
+<div style="display: flex; flex-direction: column; gap: 26px">
+
+<div class="ty-step">
+<div style="flex: none; width: 32px; height: 32px; border-radius: 999px; background: #001EFF; color: #FFFFFF; font-weight: 800; display: flex; align-items: center; justify-content: center">1</div>
+<div style="min-width: 0; flex: 1">
+<div style="font-weight: 700; font-size: 19px; margin-bottom: 6px">Join the WhatsApp Channel</div>
+<div style="font-size: 16px; line-height: 1.6; color: #44506A">This is where you get the Zoom link, the reminders and a few surprises before the training. Once you join, make sure notifications are on. If you don't, you might miss the link.</div>
+<div class="ty-actions"><a class="ty-btn" href={WHATSAPP_CHANNEL_URL || "#"} style="background: #001EFF; color: #FFFFFF; height: 48px; padding: 0 22px; font-size: 16px">Join the WhatsApp Channel</a></div>
+</div>
+</div>
+
+<div class="ty-step">
+<div style="flex: none; width: 32px; height: 32px; border-radius: 999px; background: #001EFF; color: #FFFFFF; font-weight: 800; display: flex; align-items: center; justify-content: center">2</div>
+<div style="min-width: 0; flex: 1">
+<div style="font-weight: 700; font-size: 19px; margin-bottom: 6px">Save the date in your calendar</div>
+<div style="font-size: 16px; line-height: 1.6; color: #44506A">Thursday, October 29 at 8:00 PM. It's live only, with no replay. Block the time now so nothing gets in the way.</div>
+<div class="ty-actions"><a class="ty-btn" target="_blank" rel="noopener" href={WEBINAR_GCAL_URL} style="background: #001EFF; color: #FFFFFF; height: 48px; padding: 0 22px; font-size: 16px">Add to Google Calendar</a></div>
+</div>
+</div>
+
+<div class="ty-step">
+<div style="flex: none; width: 32px; height: 32px; border-radius: 999px; background: #001EFF; color: #FFFFFF; font-weight: 800; display: flex; align-items: center; justify-content: center">3</div>
+<div style="min-width: 0; flex: 1">
+<div style="font-weight: 700; font-size: 19px; margin-bottom: 6px">Follow Majd before the training</div>
+<div style="font-size: 16px; line-height: 1.6; color: #44506A">Watch a few videos on Instagram and YouTube so you show up ready. You'll see real users, real stores and how the system works day to day.</div>
+<div class="ty-actions">
+<a class="ty-btn" target="_blank" rel="noopener" href={SOCIAL_INSTAGRAM} style="background: #001EFF; color: #FFFFFF; height: 48px; padding: 0 22px; font-size: 16px">Instagram</a>
+<a class="ty-btn" target="_blank" rel="noopener" href={SOCIAL_YOUTUBE} style="background: #001EFF; color: #FFFFFF; height: 48px; padding: 0 22px; font-size: 16px">YouTube</a>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div style="margin-bottom: 72px">
+<h2 style="font-weight: 800; font-size: 28px; margin: 0 0 20px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px"><span style="color: #001EFF">↓</span> Weekly latest results <span style="color: #001EFF">↓</span></h2>
+<div class="ty-carousel">
+<button type="button" class="ty-arrow ty-arrow-l" aria-label="Previous results" onclick="tyScroll(-1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+<div class="ty-track" id="ty-track">
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-1.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-2.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-3.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-4.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/4.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/5.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-1.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-2.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-3.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-4.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/4.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/5.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/6.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/1.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/3.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+<div class="ty-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-900,q-70,f-webp" alt="Droparabia user result" loading="lazy"></div>
+</div>
+<button type="button" class="ty-arrow ty-arrow-r" aria-label="Next results" onclick="tyScroll(1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+</div>
+</div>
+
+<div style="margin-bottom: 48px">
+<div style="display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 22px">
+<img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" style="height: 32px; display: block">
+<span class="ty-stars" style="display:inline-flex;gap:2px;vertical-align:middle"><svg width="28" height="28" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span>
+<b style="font-size: 22px">4.3</b>
+</div>
+<div class="ty-reviews">
+<div class="ty-review"><div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px"><b style="font-size: 16px">Michel Hsan</b><span style="font-size: 13px; color: #6B7488">Sep 27, 2026</span></div><span class="ty-stars" style="display:inline-flex;gap:2px;vertical-align:middle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><p style="font-size: 15px; line-height: 1.6; color: #44506A; margin: 0">This application significantly helps reduce shipping costs by allowing you to source the product without having to handle the shipping process yourself.</p></div>
+<div class="ty-review"><div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px"><b style="font-size: 16px">geo kazan</b><span style="font-size: 13px; color: #6B7488">Aug 29, 2026</span></div><span class="ty-stars" style="display:inline-flex;gap:2px;vertical-align:middle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><p style="font-size: 15px; line-height: 1.6; color: #44506A; margin: 0">The system works if you stay consistent and put enough effort</p></div>
+<div class="ty-review"><div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px"><b style="font-size: 16px">Karim Sabeh</b><span style="font-size: 13px; color: #6B7488">Jul 27, 2026</span></div><span class="ty-stars" style="display:inline-flex;gap:2px;vertical-align:middle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><p style="font-size: 15px; line-height: 1.6; color: #44506A; margin: 0">I use it personally it is beginner friendly and you can make a living from it</p></div>
+<div class="ty-review"><div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px"><b style="font-size: 16px">Karim Moghnieh</b><span style="font-size: 13px; color: #6B7488">Jun 18, 2026</span></div><span class="ty-stars" style="display:inline-flex;gap:2px;vertical-align:middle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><p style="font-size: 15px; line-height: 1.6; color: #44506A; margin: 0">Professional, reliable, and knowledgeable team. Helped spark out my career in freelancing!</p></div>
+<div class="ty-review"><div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px"><b style="font-size: 16px">Hhh Mmm</b><span style="font-size: 13px; color: #6B7488">Jun 17, 2026</span></div><span class="ty-stars" style="display:inline-flex;gap:2px;vertical-align:middle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><p style="font-size: 15px; line-height: 1.6; color: #44506A; margin: 0">One of the best programs<br>It gave me a real opportunity to grow and to be financially independent<br>Very professional team thank you for this helpful and easy program</p></div>
+<div class="ty-review"><div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px"><b style="font-size: 16px">MD Tech</b><span style="font-size: 13px; color: #6B7488">Jun 16, 2026</span></div><span class="ty-stars" style="display:inline-flex;gap:2px;vertical-align:middle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><p style="font-size: 15px; line-height: 1.6; color: #44506A; margin: 0">It's a very successful system and provides professional courses and continuous feedback and support for students. High quality products, excellent storage and packaging and smooth money transactions.<br><br>Very recommended for people who want to start a small e-com business with a small capitol</p></div>
+<div class="ty-review"><div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px"><b style="font-size: 16px">Tarek</b><span style="font-size: 13px; color: #6B7488">May 26, 2026</span></div><span class="ty-stars" style="display:inline-flex;gap:2px;vertical-align:middle"><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#00b67a" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><p style="font-size: 15px; line-height: 1.6; color: #44506A; margin: 0">Smooth experience using this app. The platform is easy to use and order processing is simple. Definitely a useful app for anyone running a dropshipping business.</p></div>
+</div>
+</div>
+
+<div class="ty-card" style="background: #EEF1FF; border: 1px solid #DDE3F5; border-radius: 18px; padding: 30px 32px; margin-bottom: 48px">
+<h2 style="font-weight: 800; font-size: 28px; margin: 0 0 14px">What You'll Learn At The Training</h2>
+<p style="font-size: 17px; line-height: 1.65; color: #44506A; margin: 0 0 14px">The No-Stock Blueprint: the exact system 800+ Droparabia users are running right now to sell online in Lebanon without ever owning a single product. Which products to sell, how they reach the customer's doorstep, and how the cash reaches you.</p>
+<p style="font-size: 17px; line-height: 1.65; color: #0D0D2B; font-weight: 700; margin: 0">This isn't theory. It's what's already working for people who started exactly where you are.</p>
+</div>
+
+</div>
+
+<div style="background: #0D0D2B; color: #FFFFFF; padding: 32px 24px 40px; text-align: center">
+<div class="ty-footer-brand" style="font-size: 20px; margin-bottom: 10px">Droparabia</div>
+<div style="display: flex; justify-content: center; gap: 20px; font-size: 14px; margin-bottom: 12px"><a href="/privacy-policy" style="color: #BFD0FF">Privacy Policy</a><a href="/terms" style="color: #BFD0FF">Terms &amp; Conditions</a></div>
+<div style="font-size: 12px; color: #A9B6D0">© 2026 Droparabia. All rights reserved.</div>
+</div>
+</div>
+
+<script is:inline>
+  // Greet them by the first name the registration form passed through.
+  (function () {
+    var n = new URLSearchParams(window.location.search).get('name');
+    if (!n) return;
+    var first = decodeURIComponent(n).trim().split(/\s+/)[0];
+    if (first) document.getElementById('confirm-name').textContent = ', ' + first;
+  })();
+
+  function tyScroll(dir) {
+    var t = document.getElementById('ty-track');
+    var sl = t.querySelector('.ty-slide');
+    var step = sl ? sl.getBoundingClientRect().width + 16 : 300;
+    if (dir > 0 && t.scrollLeft + t.clientWidth >= t.scrollWidth - 5) { t.scrollTo({ left: 0 }); return; }
+    if (dir < 0 && t.scrollLeft <= 5) { t.scrollTo({ left: t.scrollWidth }); return; }
+    t.scrollBy({ left: dir * step });
+  }
+</script>
   </body>
 </html>
