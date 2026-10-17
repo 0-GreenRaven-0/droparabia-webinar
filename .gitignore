@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Local Wrangler/Miniflare state. The deploy config here holds absolute Windows
+# paths into dist/, which is ignored, so committing it breaks the Cloudflare build.
+.wrangler/
