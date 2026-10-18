@@ -219,11 +219,11 @@ import { WEBINAR_START_ISO } from '../config/webinar';
         .then(function (res) {
           if (!res.success) throw new Error(res.error || 'failed');
 
-          // GA4 custom event #1: a seat was actually saved to the sheet.
+          // GA4 custom event: a seat was actually saved to the sheet.
           // Fired only on success, so failed attempts aren't counted.
           // No name, email or phone is sent — GA forbids PII.
           if (typeof window.gtag === 'function') {
-            window.gtag('event', 'webinar_subscribed', {
+            window.gtag('event', 'lead-registered', {
               webinar_date: '2026-10-29',
               traffic_source: payload.utm_source || 'direct',
               campaign: payload.utm_campaign || '',

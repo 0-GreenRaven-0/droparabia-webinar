@@ -86,7 +86,7 @@ const usePixel = tracked && !!pixelId;
 <div style="min-width: 0; flex: 1">
 <div style="font-weight: 700; font-size: 19px; margin-bottom: 6px">Join the WhatsApp Channel</div>
 <div style="font-size: 16px; line-height: 1.6; color: #44506A">This is where you get the Zoom link, the reminders and a few surprises before the training. Once you join, make sure notifications are on. If you don't, you might miss the link.</div>
-<div class="ty-actions"><a class="ty-btn" data-attend="whatsapp_channel" href={WHATSAPP_CHANNEL_URL || "#"} style="background: #001EFF; color: #FFFFFF; height: 48px; padding: 0 22px; font-size: 16px">Join the WhatsApp Channel</a></div>
+<div class="ty-actions"><a class="ty-btn" href={WHATSAPP_CHANNEL_URL || "#"} style="background: #001EFF; color: #FFFFFF; height: 48px; padding: 0 22px; font-size: 16px">Join the WhatsApp Channel</a></div>
 </div>
 </div>
 
@@ -95,7 +95,7 @@ const usePixel = tracked && !!pixelId;
 <div style="min-width: 0; flex: 1">
 <div style="font-weight: 700; font-size: 19px; margin-bottom: 6px">Save the date in your calendar</div>
 <div style="font-size: 16px; line-height: 1.6; color: #44506A">Thursday, October 29 at 8:00 PM. It's live only, with no replay. Block the time now so nothing gets in the way.</div>
-<div class="ty-actions"><a class="ty-btn" data-attend="calendar" target="_blank" rel="noopener" href={WEBINAR_GCAL_URL} style="background: #001EFF; color: #FFFFFF; height: 48px; padding: 0 22px; font-size: 16px">Add to Google Calendar</a></div>
+<div class="ty-actions"><a class="ty-btn" target="_blank" rel="noopener" href={WEBINAR_GCAL_URL} style="background: #001EFF; color: #FFFFFF; height: 48px; padding: 0 22px; font-size: 16px">Add to Google Calendar</a></div>
 </div>
 </div>
 
@@ -173,25 +173,6 @@ const usePixel = tracked && !!pixelId;
 <div style="font-size: 12px; color: #A9B6D0">© 2026 Droparabia. All rights reserved.</div>
 </div>
 </div>
-
-<script is:inline>
-  // Custom event #2: a registrant took a step that commits them to showing up.
-  // Both buttons on this page lead to attendance: the WhatsApp channel is where the
-  // Zoom link is delivered, and the calendar entry blocks out the time.
-  // One event, with a "method" param so GTM can split them if you want.
-  (function () {
-    document.querySelectorAll('[data-attend]').forEach(function (el) {
-      el.addEventListener('click', function () {
-        if (typeof window.gtag === 'function') {
-          window.gtag('event', 'webinar_attend', {
-            method: el.dataset.attend,
-            webinar_date: '2026-10-29',
-          });
-        }
-      });
-    });
-  })();
-</script>
 
 <script is:inline>
   // Greet them by the first name the registration form passed through.
