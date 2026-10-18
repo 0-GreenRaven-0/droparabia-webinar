@@ -1,6 +1,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { getRuntimeEnv } from '../../lib/env';
 
 const TOTAL_SPOTS = 287;
 
@@ -67,13 +68,11 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
   return data.access_token;
 }
 
-export const GET: APIRoute = async ({ locals }) => {
+export const GET: APIRoute = async () => {
   try {
-    // Same runtime-vs-build-time env problem as register.ts: on Cloudflare the
-    // dashboard values only exist on locals.runtime.env.
-    const runtimeEnv = (locals as { runtime?: { env?: Record<string, string> } })?.runtime?.env ?? {};
-    const sheetId = runtimeEnv.GOOGLE_SHEET_WEBINAR || import.meta.env.GOOGLE_SHEET_WEBINAR;
-    const credsJson = runtimeEnv.GOOGLE_SERVICE_ACCOUNT_JSON || import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    // Same runtime-vs-build-time env problem as register.ts.
+    const sheetId = (await getRuntimeEnv('GOOGLE_SHEET_WEBINAR')) || import.meta.env.GOOGLE_SHEET_WEBINAR;
+    const credsJson = (await getRuntimeEnv('GOOGLE_SERVICE_ACCOUNT_JSON')) || import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
 
     if (!sheetId || !credsJson) {
       return json({ remaining: TOTAL_SPOTS }, 200);

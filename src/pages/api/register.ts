@@ -1,6 +1,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { getRuntimeEnv } from '../../lib/env';
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;
@@ -127,7 +128,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   }
 }
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     const { firstName, lastName, email, phone, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, headline, intent } = body;
@@ -137,15 +138,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
       return json({ success: false, error: 'Missing required fields' }, 400);
     }
 
-    // On Cloudflare, dashboard variables and secrets arrive at runtime via
-    // locals.runtime.env. import.meta.env is inlined at BUILD time from .env, which
-    // does not exist in CI — so in production these were undefined, the write below
-    // was skipped, and the request still answered success:true. Hence registrations
-    // that appeared to work but never reached the sheet. Runtime first, build-time
-    // (local `astro dev`) as the fallback.
-    const runtimeEnv = (locals as { runtime?: { env?: Record<string, string> } })?.runtime?.env ?? {};
-    const sheetId = runtimeEnv.GOOGLE_SHEET_WEBINAR || import.meta.env.GOOGLE_SHEET_WEBINAR;
-    const credsJson = runtimeEnv.GOOGLE_SERVICE_ACCOUNT_JSON || import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    // Cloudflare dashboard variables and secrets only exist at RUNTIME, while
+    // import.meta.env is inlined at BUILD time from .env — a file that is not in CI.
+    // So in production both were undefined, the write below was skipped, and the
+    // request still answered success:true: registrations that looked fine and never
+    // reached the sheet. getEnv() prefers the runtime value and falls back to the
+    // build-time one for local `astro dev`.
+    const sheetId = (await getRuntimeEnv('GOOGLE_SHEET_WEBINAR')) || import.meta.env.GOOGLE_SHEET_WEBINAR;
+    const credsJson = (await getRuntimeEnv('GOOGLE_SERVICE_ACCOUNT_JSON')) || import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
 
     // Never report success when the row was not written.
     if (!sheetId || !credsJson) {
