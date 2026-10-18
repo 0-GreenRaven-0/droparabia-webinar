@@ -1,14 +1,22 @@
 ---
-// Google Analytics 4 (gtag.js) — the snippet supplied for this property.
+// Head tags for the training funnel: GA4 (gtag.js) + Google Tag Manager.
 //
-// Custom event this funnel sends:
-//   lead-registered  - registration accepted by /api/register (index.astro)
-// It is a custom event name, so mark it as a key event in GA4 under
-// Admin > Key events if you want it counted as a conversion.
+// The GTM <noscript> iframe is NOT here — it has to be the first thing inside
+// <body>, so each page renders <GtmNoscript /> there.
 //
-// Note: the older pages (choose-schedule, survey, terms, privacy-policy) still load
-// the separate GTM container GTM-NTGWNM69; this is only for the training funnel.
+// Custom event this funnel sends on a successful registration (index.astro):
+//   lead-registered
+// It goes out twice, on purpose, because the two tools listen differently:
+//   - gtag('event', 'lead-registered', ...)  -> straight to GA4
+//   - dataLayer.push({ event: 'lead-registered' }) -> so a GTM Custom Event
+//     trigger can fire on it
+// If you later tag it inside GTM as well, remove one of the two or GA4 will
+// count the same registration twice.
+//
+// Note: the older pages (choose-schedule, survey, terms, privacy-policy) load a
+// different, older container (GTM-NTGWNM69). This funnel uses GTM-M6Z6BXQQ.
 const GA_MEASUREMENT_ID = 'G-KBCL3ELQD7';
+const GTM_ID = 'GTM-M6Z6BXQQ';
 ---
 
 <!-- Google tag (gtag.js) -->
@@ -20,3 +28,18 @@ const GA_MEASUREMENT_ID = 'G-KBCL3ELQD7';
   gtag('js', new Date());
   gtag('config', GA_MEASUREMENT_ID);
 </script>
+
+<!-- Google Tag Manager -->
+<script is:inline define:vars={{ GTM_ID }}>
+  (function (w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      dl = l != 'dataLayer' ? '&l=' + l : '';
+    j.async = true;
+    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', GTM_ID);
+</script>
+<!-- End Google Tag Manager -->

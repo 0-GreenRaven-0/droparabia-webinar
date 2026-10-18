@@ -8,6 +8,7 @@
 import '../styles/global.css';
 import '../styles/thank-you.css';
 import Analytics from '../components/Analytics.astro';
+import GtmNoscript from '../components/GtmNoscript.astro';
 import { WEBINAR_GCAL_URL, WHATSAPP_CHANNEL_URL, SOCIAL_INSTAGRAM, SOCIAL_YOUTUBE } from '../config/webinar';
 
 interface Props { tracked?: boolean; }
@@ -42,6 +43,7 @@ const usePixel = tracked && !!pixelId;
     )}
   </head>
   <body>
+    <GtmNoscript />
     {usePixel && (
       <noscript set:html={`<img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=${pixelId}&ev=Lead&noscript=1" />`} />
     )}

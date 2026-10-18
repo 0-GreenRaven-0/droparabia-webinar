@@ -6,6 +6,7 @@
 import '../styles/global.css';
 import '../styles/landing.css';
 import Analytics from '../components/Analytics.astro';
+import GtmNoscript from '../components/GtmNoscript.astro';
 import { WEBINAR_START_ISO } from '../config/webinar';
 ---
 
@@ -18,6 +19,7 @@ import { WEBINAR_START_ISO } from '../config/webinar';
     <link rel="icon" type="image/png" href="/Droparabia.webp" />
   </head>
   <body>
+    <GtmNoscript />
 <div style="font-family: 'Helvetica', Arial, sans-serif; color: #0D0D2B; background: #FFFFFF; min-height: 100vh">
 <div style="background: #EEF1FF; border-bottom: 1px solid #DDE3F5">
 <div class="da-top" style="max-width: 1240px; margin: 0 auto; padding: 18px 24px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap">
@@ -222,6 +224,14 @@ import { WEBINAR_START_ISO } from '../config/webinar';
           // GA4 custom event: a seat was actually saved to the sheet.
           // Fired only on success, so failed attempts aren't counted.
           // No name, email or phone is sent — GA forbids PII.
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'lead-registered',
+            webinar_date: '2026-10-29',
+            traffic_source: payload.utm_source || 'direct',
+            campaign: payload.utm_campaign || '',
+          });
+
           if (typeof window.gtag === 'function') {
             window.gtag('event', 'lead-registered', {
               webinar_date: '2026-10-29',
