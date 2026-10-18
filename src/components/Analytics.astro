@@ -1,0 +1,23 @@
+---
+// Google Analytics 4 (gtag.js) — the snippet supplied for this property.
+//
+// Custom events this funnel sends:
+//   webinar_subscribed  - registration accepted by /api/register   (index.astro)
+//   webinar_attend      - registrant clicked through to attend     (ThankYou.astro)
+// Both are custom event names, so in GA4 mark them as key events under
+// Admin > Events if you want them counted as conversions.
+//
+// Note: the older pages (choose-schedule, survey, terms, privacy-policy) still load
+// the separate GTM container GTM-NTGWNM69; this is only for the training funnel.
+const GA_MEASUREMENT_ID = 'G-KBCL3ELQD7';
+---
+
+<!-- Google tag (gtag.js) -->
+<script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+<script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  window.gtag = gtag;
+  gtag('js', new Date());
+  gtag('config', GA_MEASUREMENT_ID);
+</script>

@@ -5,11 +5,13 @@
 // CRM") is replaced below by a real POST to /api/register -> Google webinar sheet.
 import '../styles/global.css';
 import '../styles/landing.css';
+import Analytics from '../components/Analytics.astro';
 import { WEBINAR_START_ISO } from '../config/webinar';
 ---
 
 <html lang="en">
   <head>
+    <Analytics />
     <meta charset="utf-8" />
     <title>Droparabia Free Live Training</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -216,8 +218,23 @@ import { WEBINAR_START_ISO } from '../config/webinar';
         .then(function (r) { return r.json(); })
         .then(function (res) {
           if (!res.success) throw new Error(res.error || 'failed');
+
+          // GA4 custom event #1: a seat was actually saved to the sheet.
+          // Fired only on success, so failed attempts aren't counted.
+          // No name, email or phone is sent — GA forbids PII.
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'webinar_subscribed', {
+              webinar_date: '2026-10-29',
+              traffic_source: payload.utm_source || 'direct',
+              campaign: payload.utm_campaign || '',
+            });
+          }
+
           var name = [payload.firstName, payload.lastName].filter(Boolean).join(' ');
-          window.location.href = '/confirm?name=' + encodeURIComponent(name);
+          // Give the tag a moment to fire before the page unloads.
+          setTimeout(function () {
+            window.location.href = '/confirm?name=' + encodeURIComponent(name);
+          }, 250);
         })
         .catch(function () {
           btn.disabled = false;
