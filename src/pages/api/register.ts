@@ -61,7 +61,12 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
     body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`,
   });
 
-  const data = await res.json() as { access_token: string };
+  const data = await res.json() as { access_token?: string; error?: string; error_description?: string };
+  if (!res.ok || !data.access_token) {
+    // A malformed or revoked service-account key used to surface as "undefined"
+    // bearer token and a quiet 401 from Sheets.
+    throw new Error(`Google token request failed: ${res.status} ${data.error_description || data.error || ''}`);
+  }
   return data.access_token;
 }
 
@@ -110,14 +115,19 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
     });
   }
 
-  await fetch(`${base}/A:K:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
+  // Sheets errors used to be ignored here, so a 403 (sheet not shared with the
+  // service account) or 404 (wrong id) still reported success and the row vanished.
+  const appended = await fetch(`${base}/A:K:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
   });
+  if (!appended.ok) {
+    throw new Error(`Sheets append failed: ${appended.status} ${await appended.text()}`);
+  }
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = await request.json();
     const { firstName, lastName, email, phone, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, headline, intent } = body;
@@ -127,10 +137,25 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ success: false, error: 'Missing required fields' }, 400);
     }
 
-    const sheetId = import.meta.env.GOOGLE_SHEET_WEBINAR;
-    const credsJson = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    // On Cloudflare, dashboard variables and secrets arrive at runtime via
+    // locals.runtime.env. import.meta.env is inlined at BUILD time from .env, which
+    // does not exist in CI — so in production these were undefined, the write below
+    // was skipped, and the request still answered success:true. Hence registrations
+    // that appeared to work but never reached the sheet. Runtime first, build-time
+    // (local `astro dev`) as the fallback.
+    const runtimeEnv = (locals as { runtime?: { env?: Record<string, string> } })?.runtime?.env ?? {};
+    const sheetId = runtimeEnv.GOOGLE_SHEET_WEBINAR || import.meta.env.GOOGLE_SHEET_WEBINAR;
+    const credsJson = runtimeEnv.GOOGLE_SERVICE_ACCOUNT_JSON || import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
 
-    if (sheetId && credsJson) {
+    // Never report success when the row was not written.
+    if (!sheetId || !credsJson) {
+      return json({
+        success: false,
+        error: `Sheet not configured: ${!sheetId ? 'GOOGLE_SHEET_WEBINAR' : ''}${!sheetId && !credsJson ? ' and ' : ''}${!credsJson ? 'GOOGLE_SERVICE_ACCOUNT_JSON' : ''} missing from the environment.`,
+      }, 500);
+    }
+
+    {
       const token = await getGoogleAccessToken(credsJson);
       const date = new Date().toLocaleDateString('en-GB');
       const isPaid = (utm_medium || '').toLowerCase().trim() === 'paid';
