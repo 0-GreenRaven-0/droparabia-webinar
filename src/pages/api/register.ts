@@ -2,6 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
+import { brevoAddContact } from '../../lib/brevo';
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;
@@ -166,7 +167,19 @@ export const POST: APIRoute = async ({ request }) => {
       await appendToSheet(sheetId, [firstName, lastName || '', email, phone, date, trafficSource, campaignName, creative, hook, headline || '', intent || ''], token);
     }
 
-    return json({ success: true }, 200);
+    // ── Brevo (after the sheet, never fatal) ──
+    // droparabia-landing forwarded Brevo's status to the visitor, so when its API key
+    // was revoked a 401 surfaced as "Could not subscribe" and lost leads whose sheet
+    // row had already been written. The row is the source of truth here: a Brevo
+    // failure is reported alongside success instead of replacing it.
+    const brevo = await brevoAddContact({
+      email,
+      firstName,
+      lastName: lastName || '',
+      phoneE164: phone,
+    });
+
+    return json(brevo.ok ? { success: true } : { success: true, brevoError: brevo.error }, 200);
   } catch (err) {
     return json({ success: false, error: String(err) }, 500);
   }
