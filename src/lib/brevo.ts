@@ -1,4 +1,5 @@
 import { getRuntimeEnv } from './env';
+import { CONFIRMATION_SENDER, CONFIRMATION_SUBJECT, confirmationText } from './confirmation-email';
 
 /**
  * Brevo contact creation, ported from droparabia-landing's subscribe.ts.
@@ -77,4 +78,58 @@ export async function brevoAddContact(contact: BrevoContact): Promise<BrevoResul
     return { ok: false, status: res.status, error: await res.text() };
   }
   return { ok: true };
+}
+
+export type BrevoEmailResult =
+  | { sent: true; messageId?: string }
+  | { sent: false; skipped: 'no_api_key' | 'dry_run'; payload?: unknown }
+  | { sent: false; status: number; error: string };
+
+/**
+ * Registration confirmation via Brevo's TRANSACTIONAL endpoint (/v3/smtp/email).
+ *
+ * Plain text only — no templateId, no htmlContent, no tracking parameters. A
+ * template send carries Brevo's HTML wrapper, tracking pixel and rewritten links;
+ * those are what make the message read as bulk and land in Gmail's Promotions tab.
+ * The body is composed in confirmation-email.ts.
+ */
+export async function brevoSendConfirmation(contact: {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}): Promise<BrevoEmailResult> {
+  const apiKey = (await getRuntimeEnv('BREVO_API_KEY')) || import.meta.env.BREVO_API_KEY;
+  if (!apiKey) return { sent: false, skipped: 'no_api_key' };
+
+  const name = [contact.firstName, contact.lastName].filter(Boolean).join(' ').trim();
+  const payload = {
+    sender: { name: CONFIRMATION_SENDER.name, email: CONFIRMATION_SENDER.email },
+    to: [{ email: contact.email, ...(name ? { name } : {}) }],
+    subject: CONFIRMATION_SUBJECT,
+    textContent: confirmationText(contact.firstName || ''),
+  };
+
+  // Dry run: payload is built exactly as it would be sent, but nothing leaves.
+  const dryRun = (await getRuntimeEnv('BREVO_EMAIL_DRY_RUN')) || import.meta.env.BREVO_EMAIL_DRY_RUN;
+  if (String(dryRun).toLowerCase() === 'true') {
+    return { sent: false, skipped: 'dry_run', payload };
+  }
+
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'api-key': apiKey,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  // Brevo answers 201 Created with the messageId on success.
+  if (res.status !== 201) {
+    return { sent: false, status: res.status, error: await res.text() };
+  }
+
+  const body = await res.json().catch(() => ({})) as { messageId?: string };
+  return { sent: true, messageId: body.messageId };
 }

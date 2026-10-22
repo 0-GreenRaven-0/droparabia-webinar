@@ -24,7 +24,7 @@ export const WEBINAR_GCAL_URL =
  * The mock-up left this as [WHATSAPP CHANNEL LINK] — until a real URL is set
  * the button renders disabled rather than linking somewhere broken.
  */
-export const WHATSAPP_CHANNEL_URL = '';
+export const WHATSAPP_CHANNEL_URL = 'https://whatsapp.com/channel/0029Vb8ydrhLdQeih1BBR02m';
 
 export const SOCIAL_INSTAGRAM = 'https://www.instagram.com/mjbusinessofficial';
 export const SOCIAL_YOUTUBE = 'https://www.youtube.com/@MJ.biznes';
