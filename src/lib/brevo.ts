@@ -1,5 +1,4 @@
 import { getRuntimeEnv } from './env';
-import { CONFIRMATION_SENDER, CONFIRMATION_SUBJECT, confirmationText } from './confirmation-email';
 
 /**
  * Brevo contact creation, ported from droparabia-landing's subscribe.ts.
@@ -82,16 +81,17 @@ export async function brevoAddContact(contact: BrevoContact): Promise<BrevoResul
 
 export type BrevoEmailResult =
   | { sent: true; messageId?: string }
-  | { sent: false; skipped: 'no_api_key' | 'dry_run'; payload?: unknown }
+  | { sent: false; skipped: 'no_api_key' | 'no_template_id' | 'dry_run'; payload?: unknown }
   | { sent: false; status: number; error: string };
 
 /**
- * Registration confirmation via Brevo's TRANSACTIONAL endpoint (/v3/smtp/email).
+ * Registration confirmation via Brevo's TRANSACTIONAL endpoint (/v3/smtp/email),
+ * rendered from a Brevo template.
  *
- * Plain text only — no templateId, no htmlContent, no tracking parameters. A
- * template send carries Brevo's HTML wrapper, tracking pixel and rewritten links;
- * those are what make the message read as bulk and land in Gmail's Promotions tab.
- * The body is composed in confirmation-email.ts.
+ * The subject, body and sender all come from the template, so the copy is edited
+ * in Brevo rather than here. The template must personalise with
+ * {{ params.FIRSTNAME }} — {{ contact.* }} does not resolve on the transactional
+ * stream and renders blank.
  */
 export async function brevoSendConfirmation(contact: {
   email: string;
@@ -101,12 +101,20 @@ export async function brevoSendConfirmation(contact: {
   const apiKey = (await getRuntimeEnv('BREVO_API_KEY')) || import.meta.env.BREVO_API_KEY;
   if (!apiKey) return { sent: false, skipped: 'no_api_key' };
 
+  const templateId = Number(
+    (await getRuntimeEnv('BREVO_CONFIRMATION_TEMPLATE_ID')) || import.meta.env.BREVO_CONFIRMATION_TEMPLATE_ID,
+  );
+  if (!templateId) return { sent: false, skipped: 'no_template_id' };
+
   const name = [contact.firstName, contact.lastName].filter(Boolean).join(' ').trim();
   const payload = {
-    sender: { name: CONFIRMATION_SENDER.name, email: CONFIRMATION_SENDER.email },
     to: [{ email: contact.email, ...(name ? { name } : {}) }],
-    subject: CONFIRMATION_SUBJECT,
-    textContent: confirmationText(contact.firstName || ''),
+    templateId,
+    params: { FIRSTNAME: contact.firstName || '' },
+    // Asks Brevo not to rewrite links, so the WhatsApp URL is not swapped for a
+    // tracking domain. Not guaranteed on this endpoint — if rewritten links show
+    // up in the delivered mail, switch click tracking off on the template itself.
+    headers: { 'X-Mailin-Track': '0' },
   };
 
   // Dry run: payload is built exactly as it would be sent, but nothing leaves.
