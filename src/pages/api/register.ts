@@ -2,7 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
-import { brevoAddContact, brevoSendConfirmation } from '../../lib/brevo';
+import { brevoAddContact } from '../../lib/brevo';
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;
@@ -100,21 +100,17 @@ function buildTrafficSource(source: string, medium: string, referrer: string): s
   return 'Direct Visit';
 }
 
-// Column L records when the confirmation email went out, so it is visible who
-// received one and a re-run cannot silently double-send.
-const SHEET_HEADERS = ['First Name', 'Last Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Headline', 'Investment Intent', 'Confirmation Sent At'];
-const CONFIRMATION_COLUMN = 'L';
+const SHEET_HEADERS = ['First Name', 'Last Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Headline', 'Investment Intent'];
 
-/** Appends the row and returns the row number Sheets put it on, for the stamp below. */
-async function appendToSheet(sheetId: string, row: string[], token: string): Promise<number | null> {
+async function appendToSheet(sheetId: string, row: string[], token: string): Promise<void> {
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
-  const check = await fetch(`${base}/A1:L1`, { headers: auth });
+  const check = await fetch(`${base}/A1:K1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
   const existingHeaders = checkData.values?.[0] ?? [];
   if (existingHeaders[0] !== 'First Name' || existingHeaders.length < SHEET_HEADERS.length) {
-    await fetch(`${base}/A1:L1?valueInputOption=USER_ENTERED`, {
+    await fetch(`${base}/A1:K1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
@@ -123,7 +119,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 
   // Sheets errors used to be ignored here, so a 403 (sheet not shared with the
   // service account) or 404 (wrong id) still reported success and the row vanished.
-  const appended = await fetch(`${base}/A:L:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
+  const appended = await fetch(`${base}/A:K:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -131,24 +127,6 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   if (!appended.ok) {
     throw new Error(`Sheets append failed: ${appended.status} ${await appended.text()}`);
   }
-
-  // e.g. "Sheet1!A7:L7" -> 7
-  const result = await appended.json() as { updates?: { updatedRange?: string } };
-  const match = /![A-Z]+(\d+)/.exec(result.updates?.updatedRange ?? '');
-  return match ? Number(match[1]) : null;
-}
-
-/** Writes the send timestamp into the row's confirmation column. Never fatal. */
-async function stampConfirmationSent(sheetId: string, rowNumber: number, token: string): Promise<void> {
-  const cell = `${CONFIRMATION_COLUMN}${rowNumber}`;
-  await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${cell}?valueInputOption=USER_ENTERED`,
-    {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ values: [[new Date().toISOString()]] }),
-    },
-  ).catch(() => { /* the stamp is bookkeeping; losing it must not affect the lead */ });
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -179,7 +157,6 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const token = await getGoogleAccessToken(credsJson);
-    let rowNumber: number | null = null;
     {
       const date = new Date().toLocaleDateString('en-GB');
       const isPaid = (utm_medium || '').toLowerCase().trim() === 'paid';
@@ -187,7 +164,7 @@ export const POST: APIRoute = async ({ request }) => {
       const campaignName  = isPaid ? (utm_campaign || '') : '';
       const creative      = isPaid ? (utm_content  || '') : '';
       const hook          = isPaid ? (utm_term     || '') : '';
-      rowNumber = await appendToSheet(sheetId, [firstName, lastName || '', email, phone, date, trafficSource, campaignName, creative, hook, headline || '', intent || ''], token);
+      await appendToSheet(sheetId, [firstName, lastName || '', email, phone, date, trafficSource, campaignName, creative, hook, headline || '', intent || ''], token);
     }
 
     // ── Brevo (after the sheet, never fatal) ──
@@ -202,31 +179,6 @@ export const POST: APIRoute = async ({ request }) => {
       phoneE164: phone,
     });
 
-    // ── Confirmation email (transactional, also never fatal) ──
-    // Being registered matters more than being emailed, so a send failure is reported
-    // in the payload and logged, never turned into an error for the visitor.
-    // It is awaited rather than fired-and-forgotten: a Worker stops executing once the
-    // response is returned, so an un-awaited fetch would be cancelled mid-flight. The
-    // call is a single round-trip, and nothing below it blocks the sheet row.
-    let emailStatus: Record<string, unknown> = {};
-    try {
-      const mail = await brevoSendConfirmation({ email, firstName, lastName: lastName || '' });
-      if (mail.sent) {
-        // Stamp only after a 2xx, so the column means "this person was emailed"
-        // and a replay can tell what still needs sending.
-        if (rowNumber) await stampConfirmationSent(sheetId, rowNumber, token);
-        emailStatus = { confirmationEmail: 'sent' };
-      } else if ('skipped' in mail) {
-        emailStatus = { confirmationEmail: `skipped:${mail.skipped}` };
-      } else {
-        console.error('[register] confirmation email failed', mail.status, mail.error);
-        emailStatus = { confirmationEmailError: mail.error };
-      }
-    } catch (mailErr) {
-      console.error('[register] confirmation email threw', mailErr);
-      emailStatus = { confirmationEmailError: String(mailErr) };
-    }
-
     // brevoSkipped is reported explicitly: a missing API key used to return a plain
     // success:true, which is indistinguishable from Brevo having accepted the contact.
     return json(
@@ -235,7 +187,6 @@ export const POST: APIRoute = async ({ request }) => {
         ...(brevo.ok
           ? (brevo.skipped ? { brevoSkipped: brevo.skipped } : {})
           : { brevoError: brevo.error }),
-        ...emailStatus,
       },
       200,
     );
