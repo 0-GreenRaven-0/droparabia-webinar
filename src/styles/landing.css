@@ -29,8 +29,6 @@ a{color:#001EFF}a:hover{color:#0016C4}
 .da-layout{gap:0 !important}
 .da-h1{font-size:27px !important;margin-bottom:10px !important}
 .da-lede,.da-badge{display:none !important}
-.da-cd{padding:12px 10px !important;margin-bottom:16px !important}
-.da-cd [style*="font-size: 40px"]{font-size:28px !important}
 .da-side{margin-bottom:36px}
 .da-rest [style*="padding: 30px 32px"]{padding:22px 18px !important}
 .da-rest h2{font-size:23px !important}
@@ -44,4 +42,257 @@ a{color:#001EFF}a:hover{color:#0016C4}
 h1, h2, h3, h4, h5, h6,
 [style*="IBrand"] {
   font-weight: 400 !important;
+}
+
+/* ── "What You'll Learn" grid ──────────────────────────────────────────────
+   Numbered cards on a 6-column grid: three across, then two wider ones —
+   the layout the old LearnSection component used. */
+.da-lessons {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 18px;
+  margin-bottom: 52px;
+}
+.da-lessons .da-lesson:nth-child(-n + 3) { grid-column: span 2; }
+.da-lessons .da-lesson:nth-child(4),
+.da-lessons .da-lesson:nth-child(5)      { grid-column: span 3; }
+
+.da-lesson {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 22px 24px;
+  /* Ring instead of a border so the 2px does not eat into the padding box. */
+  box-shadow: 0 0 0 2px #001EFF, 0 14px 30px rgba(0, 21, 115, 0.1);
+}
+.da-lesson-num {
+  font-family: 'IBrand', sans-serif;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: #001EFF;
+}
+.da-lesson-ttl {
+  margin-top: 10px;
+  font-family: 'IBrand', sans-serif;
+  font-size: 19px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #0D0D2B;
+}
+.da-lesson-body {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #44506A;
+}
+
+@media (max-width: 1000px) {
+  .da-lessons { grid-template-columns: 1fr; gap: 14px; margin-bottom: 40px; }
+  .da-lessons .da-lesson:nth-child(-n + 3),
+  .da-lessons .da-lesson:nth-child(4),
+  .da-lessons .da-lesson:nth-child(5) { grid-column: 1; }
+  .da-lesson { padding: 18px 20px; border-radius: 20px; }
+  .da-lesson-num { font-size: 30px; }
+  .da-lesson-ttl { font-size: 18px; }
+}
+
+/* Seat counter under the form heading */
+.da-seats {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0D0D2B;
+  text-align: center;
+  margin: 0 0 14px;
+}
+.da-seats .spots-count { color: #D92D20; }
+
+/* Red reminder under the submit button */
+.da-replay-note {
+  margin: 10px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  color: #D92D20;
+}
+
+/* Country code picker — matches .da-input's shell, with room for the chevron. */
+select.da-ccode {
+  flex: none;
+  height: 46px;
+  max-width: 116px;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #EEF1FF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23667' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center;
+  border: 1px solid #D3DBEA;
+  border-radius: 10px;
+  padding: 0 28px 0 12px;
+  font: inherit;
+  font-size: 15px;
+  color: #0D0D2B;
+  cursor: pointer;
+}
+select.da-ccode:focus {
+  outline: 2px solid #001EFF;
+  outline-offset: 1px;
+  border-color: #001EFF;
+}
+
+@media (max-width: 1000px) {
+  select.da-ccode { height: 40px; font-size: 14px; max-width: 104px; }
+  .da-seats { font-size: 18px; }
+}
+
+/* Countdown in the header, in place of the old "FREE LIVE TRAINING" pill:
+   plain black type on the page surface, no pill, labelled "Time left". */
+.da-cd-mini {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  color: #0D0D2B;
+  letter-spacing: 0;
+}
+.da-cd-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0D0D2B;
+  white-space: nowrap;
+}
+.da-cd-unit {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+}
+.da-cd-unit b {
+  font-family: 'IBrand', sans-serif;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1;
+  /* Fixed width so the row does not jitter as the seconds tick. */
+  min-width: 2ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.da-cd-unit i {
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+@media (max-width: 1000px) {
+  .da-cd-mini { gap: 9px; }
+  .da-cd-label { font-size: 12px; }
+  .da-cd-unit b { font-size: 19px; }
+  .da-cd-unit i { font-size: 11px; }
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────
+   Copied from droparabia-landing's footer (src/pages/index.astro there).
+   Its CSS variables are resolved to literals since this project does not
+   define that token set: --da-bg #F0F0F0, --da-ink #0B1230,
+   --da-ink-soft #4A5170, --da-ink-mute #7B8098, --da-line #DCDBD9,
+   --da-primary #001EFF, --sp-group clamp(36px, 5vw, 56px). */
+.footer {
+  background: #F0F0F0;
+  color: #0B1230;
+  padding: clamp(36px, 5vw, 56px) 0 0;
+  /* Cast upward, separating it from the section above rather than the page edge
+     below — matches the header's shadow, which casts the opposite way for the
+     same reason. */
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.16);
+  margin-top: 24px;
+}
+
+.footer-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 20px 32px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.footer-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.footer-logo-img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.footer-logo-name {
+  font-family: 'IBrand', sans-serif;
+  font-size: 1.4rem;
+  color: #0B1230;
+}
+
+.footer-links-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7B8098;
+  margin: 0 0 10px;
+}
+
+.footer-compliance {
+  display: grid;
+  gap: 7px;
+}
+
+.footer-compliance-link {
+  font-size: 0.88rem;
+  color: #4A5170;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-compliance-link:hover { color: #0B1230; }
+
+.footer-socials {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-social-link {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #DCDBD9;
+  color: #4A5170;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.footer-social-link:hover { background: #001EFF; color: #fff; }
+
+.footer-social-link svg {
+  width: 17px;
+  height: 17px;
+}
+
+.footer-bottom {
+  border-top: 1px solid #DCDBD9;
+  padding: 16px 20px;
+  text-align: center;
+}
+
+.footer-bottom p {
+  font-size: 0.8rem;
+  color: #7B8098;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .footer-inner { flex-direction: column; gap: 24px; }
 }

@@ -6,7 +6,10 @@ html {
   -ms-text-size-adjust: 100%;
 }
 html, body {
-  overflow-x: hidden;
+  /* clip, not hidden: `hidden` makes these scroll containers, which silently
+     breaks position:sticky on descendants (the registration card on the landing
+     page). `clip` suppresses horizontal overflow without that side effect. */
+  overflow-x: clip;
   max-width: 100%;
 }
 *, *::before, *::after {

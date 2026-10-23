@@ -27,4 +27,5 @@ export const WEBINAR_GCAL_URL =
 export const WHATSAPP_CHANNEL_URL = 'https://whatsapp.com/channel/0029Vb8ydrhLdQeih1BBR02m';
 
 export const SOCIAL_INSTAGRAM = 'https://www.instagram.com/mjbusinessofficial';
+export const SOCIAL_THREADS = 'https://www.threads.com/@mjbusinessofficial';
 export const SOCIAL_YOUTUBE = 'https://www.youtube.com/@MJ.biznes';
