@@ -2,7 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
-import { brevoAddContact, brevoSendConfirmation } from '../../lib/brevo';
+import { brevoAddContact } from '../../lib/brevo';
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;
@@ -179,27 +179,8 @@ export const POST: APIRoute = async ({ request }) => {
       phoneE164: phone,
     });
 
-    // ── Confirmation email (plain text, transactional, never fatal) ──
-    // Being registered matters more than being emailed: a send failure is logged and
-    // reported in the payload, never turned into an error for the visitor.
-    // Awaited rather than fired-and-forgotten because a Worker stops executing the
-    // moment it returns a response, which would cancel an un-awaited fetch mid-flight.
-    let emailStatus: Record<string, unknown> = {};
-    try {
-      const mail = await brevoSendConfirmation({ email, firstName, lastName: lastName || '' });
-      if (mail.sent) {
-        console.log('[register] confirmation sent', mail.messageId ?? '(no messageId)');
-        emailStatus = { confirmationEmail: 'sent', messageId: mail.messageId };
-      } else if ('skipped' in mail) {
-        emailStatus = { confirmationEmail: 'skipped:' + mail.skipped };
-      } else {
-        console.error('[register] confirmation failed', mail.status, mail.error);
-        emailStatus = { confirmationEmailError: mail.error };
-      }
-    } catch (mailErr) {
-      console.error('[register] confirmation threw', mailErr);
-      emailStatus = { confirmationEmailError: String(mailErr) };
-    }
+    // No email is sent from here. The contact landing on Brevo list 24 is what a
+    // Brevo automation keys off; the confirmation is owned entirely by Brevo.
 
     // brevoSkipped is reported explicitly: a missing API key used to return a plain
     // success:true, which is indistinguishable from Brevo having accepted the contact.
@@ -209,7 +190,6 @@ export const POST: APIRoute = async ({ request }) => {
         ...(brevo.ok
           ? (brevo.skipped ? { brevoSkipped: brevo.skipped } : {})
           : { brevoError: brevo.error }),
-        ...emailStatus,
       },
       200,
     );
