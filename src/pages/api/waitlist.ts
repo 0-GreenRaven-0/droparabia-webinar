@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const sheetId   = import.meta.env.GOOGLE_SHEET_WAITLIST_WEBINAR;
-    const credsJson = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    const credsJson = import.meta.env.SHEETS_SERVICE_ACCOUNT;
 
     if (!sheetId || !credsJson) {
       return json({ success: true }, 200);

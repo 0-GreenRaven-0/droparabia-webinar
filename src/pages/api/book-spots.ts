@@ -8,7 +8,7 @@ const MAX_SPOTS = 10;
 export const GET: APIRoute = async () => {
   try {
     const sheetId   = import.meta.env.GOOGLE_SHEET_BOOKED_WEBINAR;
-    const credsJson = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    const credsJson = import.meta.env.SHEETS_SERVICE_ACCOUNT;
 
     if (!sheetId || !credsJson) {
       return json({ booked: 0, remaining: MAX_SPOTS }, 200);

@@ -72,7 +72,7 @@ export const GET: APIRoute = async () => {
   try {
     // Same runtime-vs-build-time env problem as register.ts.
     const sheetId = (await getRuntimeEnv('GOOGLE_SHEET_WEBINAR')) || import.meta.env.GOOGLE_SHEET_WEBINAR;
-    const credsJson = (await getRuntimeEnv('GOOGLE_SERVICE_ACCOUNT_JSON')) || import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    const credsJson = (await getRuntimeEnv('SHEETS_SERVICE_ACCOUNT')) || import.meta.env.SHEETS_SERVICE_ACCOUNT;
 
     if (!sheetId || !credsJson) {
       return json({ remaining: TOTAL_SPOTS }, 200);

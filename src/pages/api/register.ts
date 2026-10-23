@@ -146,13 +146,13 @@ export const POST: APIRoute = async ({ request }) => {
     // reached the sheet. getEnv() prefers the runtime value and falls back to the
     // build-time one for local `astro dev`.
     const sheetId = (await getRuntimeEnv('GOOGLE_SHEET_WEBINAR')) || import.meta.env.GOOGLE_SHEET_WEBINAR;
-    const credsJson = (await getRuntimeEnv('GOOGLE_SERVICE_ACCOUNT_JSON')) || import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    const credsJson = (await getRuntimeEnv('SHEETS_SERVICE_ACCOUNT')) || import.meta.env.SHEETS_SERVICE_ACCOUNT;
 
     // Never report success when the row was not written.
     if (!sheetId || !credsJson) {
       return json({
         success: false,
-        error: `Sheet not configured: ${!sheetId ? 'GOOGLE_SHEET_WEBINAR' : ''}${!sheetId && !credsJson ? ' and ' : ''}${!credsJson ? 'GOOGLE_SERVICE_ACCOUNT_JSON' : ''} missing from the environment.`,
+        error: `Sheet not configured: ${!sheetId ? 'GOOGLE_SHEET_WEBINAR' : ''}${!sheetId && !credsJson ? ' and ' : ''}${!credsJson ? 'SHEETS_SERVICE_ACCOUNT' : ''} missing from the environment.`,
       }, 500);
     }
 
