@@ -30,3 +30,10 @@ pnpm-debug.log*
 # Raw video masters — kept locally only, never deployed. Cloudflare Pages rejects
 # any file over 25 MiB, so only the compressed web copies in public/ ship.
 video-masters/
+
+# Google service-account key files. These are private keys: they belong in .env
+# (and in the Cloudflare dashboard), never in the repository.
+*-*.json
+!package.json
+!package-lock.json
+!tsconfig.json

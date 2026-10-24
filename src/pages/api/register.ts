@@ -4,6 +4,7 @@ import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
 import { brevoAddContact, brevoSendTemplate } from '../../lib/brevo';
 import { webinarDayIndex } from '../../config/webinar';
+import { planOnSignup, ALL_TEMPLATES } from '../../lib/sequence';
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;
@@ -137,7 +138,8 @@ const SHEET_HEADERS = [
   'em (SHA-256)', 'ph (SHA-256)', 'fn (SHA-256)', 'ln (SHA-256)',
 ];
 
-async function appendToSheet(sheetId: string, row: string[], token: string): Promise<void> {
+/** Returns the 1-based row the registration landed on, so its send columns can be stamped. */
+async function appendToSheet(sheetId: string, row: string[], token: string): Promise<number> {
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
@@ -162,6 +164,54 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   if (!appended.ok) {
     throw new Error(`Sheets append failed: ${appended.status} ${await appended.text()}`);
   }
+
+  // Sheets reports where it put the row, e.g. "Sheet1!A7:S7". Parsing it is the
+  // only reliable way to know: counting rows separately would race another
+  // registration landing between the two calls.
+  const result = (await appended.json()) as { updates?: { updatedRange?: string } };
+  const match = /![A-Z]+(\d+)/.exec(result.updates?.updatedRange ?? '');
+  return match ? Number(match[1]) : 0;
+}
+
+/** Column letter for a 0-based index, A..Z then AA..AC. */
+function columnLetter(index: number): string {
+  return index < 26
+    ? String.fromCharCode(65 + index)
+    : 'A' + String.fromCharCode(65 + index - 26);
+}
+
+/**
+ * Records which templates were scheduled, in that registrant's own row.
+ *
+ * A filled cell is what stops the daily job sending the same template again, so
+ * this is the thing that makes the whole sequence idempotent.
+ */
+async function stampSends(
+  sheetId: string,
+  rowNumber: number,
+  token: string,
+  sends: { template: number; at: Date }[],
+): Promise<void> {
+  if (!rowNumber || !sends.length) return;
+  const firstSentColumn = 19; // T
+  const data = sends
+    .map((s) => {
+      const i = ALL_TEMPLATES.indexOf(s.template as never);
+      if (i === -1) return null;
+      return {
+        range: `${columnLetter(firstSentColumn + i)}${rowNumber}`,
+        values: [[s.at.toISOString()]],
+      };
+    })
+    .filter(Boolean);
+
+  data.push({ range: `${columnLetter(28)}${rowNumber}`, values: [['active']] }); // AC
+
+  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchUpdate`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ valueInputOption: 'RAW', data }),
+  });
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -195,6 +245,8 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const token = await getGoogleAccessToken(credsJson);
+    const now = new Date();
+    let rowNumber = 0;
     {
       // Hashed from the values this request carries, normalised first. Done here
       // rather than in the browser so a tampered or stale client cannot write
@@ -214,7 +266,7 @@ export const POST: APIRoute = async ({ request }) => {
       const userAgent = request.headers.get('User-Agent') || '';
       const eventTime = Math.floor(Date.now() / 1000);
 
-      await appendToSheet(sheetId, [
+      rowNumber = await appendToSheet(sheetId, [
         firstName, lastName || '', email, phone,
         buildTrafficSource(utm_source || '', utm_medium || '', referrer || ''),
         String(vslSeconds ?? 0),
@@ -236,14 +288,38 @@ export const POST: APIRoute = async ({ request }) => {
       webinarDay: webinarDayIndex(),
     });
 
-    // Day 0: the confirmation goes out now, from our own logic rather than a Brevo
-    // automation. It runs after the contact exists so the template's
-    // {{ contact.FIRSTNAME }} has something to render, and only when the contact
-    // actually landed — emailing someone Brevo rejected would promise them a seat
-    // that no list knows about.
-    const mail = brevo.ok && !brevo.skipped
-      ? await brevoSendTemplate(email)
-      : ({ ok: true, skipped: 'no_api_key' } as const);
+    // The sequence, owned by this codebase rather than by a Brevo automation.
+    //
+    // planOnSignup gives the confirmation plus whatever else this registrant is
+    // owed today: the day's email at signup+1h, and on Thursday the reminders
+    // that are still ahead of them. Anything in the future is handed to Brevo
+    // with scheduledAt, which is exact — far better than us trying to wake up at
+    // the right minute.
+    //
+    // It runs after the contact exists so the templates' {{ contact.FIRSTNAME }}
+    // has something to render, and only when the contact actually landed:
+    // emailing someone Brevo rejected would promise a seat no list knows about.
+    const sendable = brevo.ok && !brevo.skipped;
+    const plan = sendable ? planOnSignup(webinarDayIndex(now), now) : [];
+    const scheduled: { template: number; at: Date }[] = [];
+    const mailErrors: string[] = [];
+
+    for (const item of plan) {
+      // A few seconds of slack: "now" from the plan is already a moment ago, and
+      // Brevo rejects a scheduledAt in the past.
+      const future = item.at.getTime() > Date.now() + 5_000;
+      const res = await brevoSendTemplate(email, item.template, future ? item.at : undefined);
+      if (res.ok) scheduled.push({ template: item.template, at: item.at });
+      else mailErrors.push(`${item.template}: ${res.error}`);
+    }
+
+    // Stamped last, and only for what Brevo accepted, so the daily job never
+    // sees a template marked sent that never went out.
+    if (scheduled.length) {
+      await stampSends(sheetId, rowNumber, token, scheduled).catch(() => {
+        mailErrors.push('sheet stamp failed');
+      });
+    }
 
     // brevoSkipped is reported explicitly: a missing API key used to return a plain
     // success:true, which is indistinguishable from Brevo having accepted the contact.
@@ -253,7 +329,8 @@ export const POST: APIRoute = async ({ request }) => {
         ...(brevo.ok
           ? (brevo.skipped ? { brevoSkipped: brevo.skipped } : {})
           : { brevoError: brevo.error }),
-        ...(mail.ok ? {} : { mailError: mail.error }),
+        ...(mailErrors.length ? { mailErrors } : {}),
+        ...(scheduled.length ? { scheduled: scheduled.map((s) => s.template) } : {}),
       },
       200,
     );

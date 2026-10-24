@@ -105,6 +105,8 @@ export type BrevoSendResult =
 export async function brevoSendTemplate(
   email: string,
   templateId: number = BREVO_TEMPLATE_CONFIRMATION,
+  /** Omit to send now. Brevo accepts at most 72 hours ahead. */
+  scheduledAt?: Date,
 ): Promise<BrevoSendResult> {
   const apiKey = (await getRuntimeEnv('BREVO_API_KEY')) || import.meta.env.BREVO_API_KEY;
   if (!apiKey) return { ok: true, skipped: 'no_api_key' };
@@ -114,7 +116,12 @@ export async function brevoSendTemplate(
     headers: { 'Content-Type': 'application/json', 'api-key': apiKey },
     // No sender override: the template carries its own verified sender, and
     // passing a different one is how mail ends up unauthenticated.
-    body: JSON.stringify({ to: [{ email }], templateId }),
+    body: JSON.stringify({
+      to: [{ email }],
+      templateId,
+      // Brevo rejects milliseconds in this field.
+      ...(scheduledAt ? { scheduledAt: scheduledAt.toISOString().replace(/\.\d{3}Z$/, 'Z') } : {}),
+    }),
   });
 
   if (res.status !== 201 && res.status !== 202) {

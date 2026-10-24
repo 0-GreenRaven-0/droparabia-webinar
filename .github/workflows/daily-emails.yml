@@ -1,0 +1,50 @@
+name: Webinar daily emails
+
+# Schedules the day's emails through Brevo. It does not send them itself — it
+# hands Brevo a scheduledAt and Brevo fires at the exact minute. That is why the
+# cron time below is loose: GitHub's scheduler is best-effort and routinely runs
+# several minutes late, which would be fatal for the 20:00 "we're live" email if
+# this job were doing the sending.
+#
+# 05:00 UTC is 07:00 Beirut in winter — comfortably before the earliest slot
+# (10:00) and inside Brevo's 72-hour scheduling window for everything due today.
+
+on:
+  schedule:
+    - cron: '0 5 * * *'
+  # Manual runs, for the dry run and for recovering a missed day.
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Print the plan without sending or writing anything'
+        type: boolean
+        default: true
+
+concurrency:
+  # Two overlapping runs would both read an unstamped cell and both schedule the
+  # same email. One at a time, always.
+  group: webinar-daily-emails
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # 24 runs the TypeScript the schedule logic lives in without a build step.
+          node-version: '24'
+
+      - name: Schedule today's emails
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          GOOGLE_SHEET_WEBINAR: ${{ secrets.GOOGLE_SHEET_WEBINAR }}
+          SHEETS_MAILER_ACCOUNT: ${{ secrets.SHEETS_MAILER_ACCOUNT }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            node scripts/send-daily.mjs --dry-run
+          else
+            node scripts/send-daily.mjs
+          fi
