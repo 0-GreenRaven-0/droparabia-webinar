@@ -591,7 +591,10 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
       var regEventId = (window.crypto && window.crypto.randomUUID)
         ? window.crypto.randomUUID()
         : 'reg-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-      try { sessionStorage.setItem('da_reg_event_id', regEventId); } catch (_) {}
+      // Minted here so it can travel with the request, but NOT stored yet: the
+      // stored id is what makes /confirm fire Registered, so persisting it before
+      // the API has confirmed the row would leave a failed attempt able to fire
+      // the event if that visitor ever reached /confirm.
 
       var vslSeconds = 0;
       try { vslSeconds = parseInt(sessionStorage.getItem('da_vsl_seconds') || '0', 10) || 0; } catch (_) {}
@@ -661,8 +664,10 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 
             // The Registered event itself fires on /confirm, not here: this page
             // navigates away ~250ms from now, which is not enough for the beacon to
-            // reliably leave. Its id was minted before the POST and is already in
-            // sessionStorage, so the sheet row and the browser event share one id.
+            // reliably leave. Storing the id is what licenses that fire, so it
+            // happens only on this success path — the same id already went to the
+            // sheet with the request, so the row and the browser event share one.
+            sessionStorage.setItem('da_reg_event_id', regEventId);
 
             // Re-init straight away so anything else on this page is matched too.
             if (typeof window.fbq === 'function') {
