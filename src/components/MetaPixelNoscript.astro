@@ -1,0 +1,17 @@
+---
+// The pixel's <noscript> fallback. Separate from MetaPixel because an <img>
+// belongs in the body, not the head — same split as GtmNoscript.
+interface Props {
+  enabled?: boolean;
+  /** PageView on ordinary pages, Lead on the thank-you page. */
+  event?: string;
+}
+const { enabled = true, event = 'PageView' } = Astro.props;
+
+const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
+const show = enabled && !!pixelId;
+
+const src = 'https://www.facebook.com/tr?id=' + pixelId + '&ev=' + event + '&noscript=1';
+const img = '<img height="1" width="1" style="display:none" alt="" src="' + src + '" />';
+---
+{show && <noscript set:html={img} />}

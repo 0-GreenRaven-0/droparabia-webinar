@@ -7,6 +7,9 @@ import '../styles/global.css';
 import '../styles/landing.css';
 import Analytics from '../components/Analytics.astro';
 import GtmNoscript from '../components/GtmNoscript.astro';
+import MetaPixel from '../components/MetaPixel.astro';
+import MetaPixelNoscript from '../components/MetaPixelNoscript.astro';
+import MetaEvents from '../components/MetaEvents.astro';
 import { WEBINAR_START_ISO, SOCIAL_INSTAGRAM, SOCIAL_THREADS, SOCIAL_YOUTUBE } from '../config/webinar';
 import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 ---
@@ -14,6 +17,7 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 <html lang="en">
   <head>
     <Analytics />
+    <MetaPixel />
     <meta charset="utf-8" />
     <title>Droparabia Free Live Training</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,6 +25,7 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
   </head>
   <body>
     <GtmNoscript />
+    <MetaPixelNoscript />
 <div style="font-family: 'Helvetica', Arial, sans-serif; color: #0D0D2B; background: #FFFFFF; min-height: 100vh">
 <!-- No tint and no rule: the header sits on the same surface as the page. -->
 <div class="da-top" style="max-width: 1240px; margin: 0 auto; padding: 18px 24px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap">
@@ -28,13 +33,7 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 <img class="da-logo" src="/Droparabia.webp" alt="" style="width: 40px; height: 40px; object-fit: contain; display: block">
 <div class="da-brand" style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em; color: #0D0D2B">Droparabia</div>
 </div>
-<div class="da-cd-mini" aria-label="Time until the training starts">
-<span class="da-cd-label">Time left</span>
-<span class="da-cd-unit"><b id="cd-d">00</b><i>d</i></span>
-<span class="da-cd-unit"><b id="cd-h">00</b><i>h</i></span>
-<span class="da-cd-unit"><b id="cd-m">00</b><i>m</i></span>
-<span class="da-cd-unit"><b id="cd-s">00</b><i>s</i></span>
-</div>
+<div style="background: #001EFF; color: #FFFFFF; font-weight: 700; font-size: 13px; letter-spacing: 0.08em; padding: 9px 16px; border-radius: 999px" class="da-pill">FREE LIVE TRAINING</div>
 </div>
 
 <div class="da-wrap" style="max-width: 1240px; margin: 0 auto; padding: 40px 24px 0; box-sizing: border-box">
@@ -48,15 +47,27 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 <p class="da-lede" style="font-size: 18px; line-height: 1.6; color: #44506A; margin: 0 0 28px">Join Majd LIVE for a free training where he breaks down the exact system 800+ Droparabia users are running right now: which products to sell, how they reach the customer, and how you get paid. All without putting your money into stock.</p>
 
 <div id="video" style="position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 3px solid #001EFF; background: #0D0D2B; display: flex; align-items: center; justify-content: center; margin-bottom: 20px">
-<div style="position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.6); color: #FFFFFF; font-size: 14px; padding: 7px 12px; border-radius: 999px">Tap for sound</div>
-<div style="display: flex; flex-direction: column; align-items: center; gap: 14px">
-<div style="width: 96px; height: 72px; border-radius: 12px; background: #001EFF; display: flex; align-items: center; justify-content: center">
+<video id="vsl" class="vsl-video" poster="/vsl-main-poster.jpg" muted autoplay playsinline preload="metadata" src="/vsl-main.mp4"></video>
+<div class="vsl-sound" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.6); color: #FFFFFF; font-size: 26px; font-weight: 700; padding: 16px 30px; border-radius: 999px; pointer-events: none; white-space: nowrap">Tap for sound</div>
+<button type="button" class="vsl-play is-gone" aria-label="Play with sound" style="position: absolute; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(13,13,43,0.35); border: none; cursor: pointer">
+<span style="width: 96px; height: 72px; border-radius: 12px; background: #001EFF; display: flex; align-items: center; justify-content: center">
 <svg width="34" height="34" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"></path></svg>
-</div>
-<div style="color: #A9B6D0; font-size: 14px">[VIDEO: 60 to 90 sec invite from Majd at the whiteboard]</div>
-</div>
+</span>
+</button>
 </div>
 
+<div class="da-cd" style="background: #001EFF; border-radius: 16px; padding: 20px 24px; margin-bottom: 14px; color: #FFFFFF">
+<div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 500; margin-bottom: 12px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+<span>Training starts in:</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; text-align: center">
+<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-d">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">DAYS</div></div>
+<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-h">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">HOURS</div></div>
+<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-m">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">MINS</div></div>
+<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-s">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">SECS</div></div>
+</div>
+</div>
 </div>
 <div class="da-rest">
 
@@ -439,8 +450,48 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 
   </body>
 </html>
+<MetaEvents vslName="landing" />
 
 <script is:inline>
+  // VSL: starts on its own but silent, which is the only autoplay browsers allow.
+  // A "Tap for sound" badge sits on it the whole time it plays muted; one tap
+  // anywhere on the frame turns the sound on and hands over to the native controls.
+  (function () {
+    var v = document.getElementById('vsl');
+    if (!v) return;
+    var frame = v.parentElement;
+    var badge = frame.querySelector('.vsl-sound');
+    var play = frame.querySelector('.vsl-play');
+
+    function unmute() {
+      if (!v.muted) return;
+      v.muted = false;
+      v.volume = 1;
+      v.controls = true;
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
+      if (badge) badge.classList.add('is-gone');
+      if (play) play.classList.add('is-gone');
+    }
+
+    // The whole frame is the tap target, not just the badge.
+    frame.addEventListener('click', unmute);
+
+    // Autoplay can still be refused (iOS Low Power Mode, data-saver modes). The
+    // play button is the fallback so the frame never sits there looking dead; it
+    // stays hidden whenever autoplay does work.
+    var started = v.play();
+    if (started && started.catch) {
+      started.catch(function () {
+        if (play) play.classList.remove('is-gone');
+        if (badge) badge.classList.add('is-gone');
+      });
+    }
+  })();
+</script>
+
+
+<script is:inline define:vars={{ PIXEL_ID: import.meta.env.PUBLIC_META_PIXEL_ID }}>
   // The mock-up's form, wired to the Google webinar sheet.
   (function () {
     var form = document.getElementById('da-form');
@@ -524,6 +575,38 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
             });
           }
 
+          // ── Meta Pixel advanced matching ──
+          // Normalised, NOT hashed: the pixel applies SHA-256 itself, so hashing
+          // here would double-hash and match nobody. Copied from droparabia-landing:
+          // email trimmed and lowercased, phone as digits only with the country code
+          // and no plus or leading zero, names lowercased.
+          // Stored so every later page (and /confirm) re-inits the pixel with it.
+          try {
+            var em = (payload.email || '').trim().toLowerCase();
+            var ph = (payload.phone || '').replace(/\D/g, '');
+            var fn = (payload.firstName || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            var ln = (payload.lastName || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            localStorage.setItem('da_match', JSON.stringify({ em: em, ph: ph, fn: fn, ln: ln }));
+
+            // The Registered event itself fires on /confirm, not here: this page
+            // navigates away ~250ms from now, which is not enough for the beacon to
+            // reliably leave. The id is minted here so the Conversions API can later
+            // de-duplicate a server-side copy against the browser fire.
+            var regId = (window.crypto && window.crypto.randomUUID)
+              ? window.crypto.randomUUID()
+              : 'reg-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+            sessionStorage.setItem('da_reg_event_id', regId);
+
+            // Re-init straight away so anything else on this page is matched too.
+            if (typeof window.fbq === 'function') {
+              var match = {};
+              if (em) match.em = em;
+              if (ph) match.ph = ph;
+              if (fn) match.fn = fn;
+              if (ln) match.ln = ln;
+              if (PIXEL_ID) window.fbq('init', PIXEL_ID, match);
+            }
+          } catch (_) {}
           var name = [payload.firstName, payload.lastName].filter(Boolean).join(' ');
           // Give the tag a moment to fire before the page unloads.
           setTimeout(function () {

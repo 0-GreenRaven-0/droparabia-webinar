@@ -1,0 +1,79 @@
+---
+// The two Meta custom events, in one component so both pages fire them identically.
+//
+//   Registered — a seat was actually written to the sheet. Fired on the thank-you
+//                page rather than at submit time, because the landing page redirects
+//                ~250ms after the API answers and a beacon that late is not reliably
+//                sent. It only fires when the form minted an id for it, so a direct
+//                visit to /confirm or a refresh cannot invent a registration.
+//
+//   VSLView    — the visitor deliberately turned the sound on, which is the click
+//                that separates watching from autoplay wallpaper. Once per visitor
+//                per page, so a replay or a second visit does not inflate it.
+//
+// Both go out as trackCustom with an eventID. That id is what lets a later
+// Conversions API copy of the same event de-duplicate against this browser fire
+// instead of being counted twice.
+interface Props {
+  enabled?: boolean;
+  /** Which VSL this page holds, recorded as a parameter on VSLView. */
+  vslName: string;
+  /** Fire Registered here (the thank-you page). */
+  registered?: boolean;
+}
+const { enabled = true, vslName, registered = false } = Astro.props;
+
+const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
+const show = enabled && !!pixelId;
+---
+{show && (
+  <script is:inline define:vars={{ VSL_NAME: vslName, FIRE_REGISTERED: registered }}>
+    (function () {
+      function fbqReady() { return typeof window.fbq === 'function'; }
+
+      function newId(prefix) {
+        return (window.crypto && window.crypto.randomUUID)
+          ? window.crypto.randomUUID()
+          : prefix + '-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      }
+
+      // ── Registered ──
+      if (FIRE_REGISTERED) {
+        try {
+          var regId = sessionStorage.getItem('da_reg_event_id');
+          if (regId && !sessionStorage.getItem('da_reg_fired') && fbqReady()) {
+            window.fbq('trackCustom', 'Registered', {
+              content_name: 'Droparabia Free Live Training',
+              webinar_date: '2026-10-29',
+            }, { eventID: regId });
+            sessionStorage.setItem('da_reg_fired', '1');
+          }
+        } catch (_) {}
+      }
+
+      // ── VSLView ──
+      var v = document.getElementById('vsl');
+      if (!v) return;
+      var key = 'da_vslview_' + VSL_NAME;
+
+      function fireVslView() {
+        try {
+          if (localStorage.getItem(key)) return;
+          localStorage.setItem(key, '1');
+          if (!fbqReady()) return;
+          window.fbq('trackCustom', 'VSLView', {
+            content_name: VSL_NAME,
+          }, { eventID: newId('vsl') });
+        } catch (_) {}
+      }
+
+      // Listening for the unmute itself, not for the click: a click listener
+      // would depend on running after the player's own handler, which is only
+      // true while the scripts happen to be in this order. volumechange fires
+      // once the sound is actually on, whichever code turned it on.
+      v.addEventListener('volumechange', function () {
+        if (!v.muted) fireVslView();
+      });
+    })();
+  </script>
+)}

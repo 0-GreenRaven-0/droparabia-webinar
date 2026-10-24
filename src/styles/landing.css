@@ -144,49 +144,6 @@ select.da-ccode:focus {
   .da-seats { font-size: 18px; }
 }
 
-/* Countdown in the header, in place of the old "FREE LIVE TRAINING" pill:
-   plain black type on the page surface, no pill, labelled "Time left". */
-.da-cd-mini {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 14px;
-  color: #0D0D2B;
-  letter-spacing: 0;
-}
-.da-cd-label {
-  font-size: 14px;
-  font-weight: 700;
-  color: #0D0D2B;
-  white-space: nowrap;
-}
-.da-cd-unit {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 3px;
-}
-.da-cd-unit b {
-  font-family: 'IBrand', sans-serif;
-  font-weight: 400;
-  font-size: 26px;
-  line-height: 1;
-  /* Fixed width so the row does not jitter as the seconds tick. */
-  min-width: 2ch;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-.da-cd-unit i {
-  font-style: normal;
-  font-size: 13px;
-  font-weight: 700;
-  opacity: 0.85;
-}
-
-@media (max-width: 1000px) {
-  .da-cd-mini { gap: 9px; }
-  .da-cd-label { font-size: 12px; }
-  .da-cd-unit b { font-size: 19px; }
-  .da-cd-unit i { font-size: 11px; }
-}
 
 /* ── Footer ──────────────────────────────────────────────────────────────
    Copied from droparabia-landing's footer (src/pages/index.astro there).
@@ -295,4 +252,41 @@ select.da-ccode:focus {
 
 @media (max-width: 640px) {
   .footer-inner { flex-direction: column; gap: 24px; }
+}
+
+/* ── VSL player ──────────────────────────────────────────────────────────
+   The video fills the mock-up's 16:9 frame. It starts muted so browsers
+   allow autoplay; the overlay turns sound on, which is what the mock-up's
+   "Tap for sound" pill promised. */
+.vsl-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.vsl-sound,
+.vsl-play {
+  z-index: 2;
+  transition: opacity 0.25s ease;
+}
+.vsl-play:hover span {
+  transform: scale(1.06);
+}
+.vsl-play span {
+  transition: transform 0.2s ease;
+}
+/* Once sound is on, the overlay has done its job and the native controls take over. */
+.vsl-sound.is-gone,
+.vsl-play.is-gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The whole frame unmutes on tap, so it should read as tappable. */
+#video { cursor: pointer; }
+
+@media (max-width: 1000px) {
+  .vsl-sound { font-size: 18px !important; padding: 12px 22px !important; }
 }

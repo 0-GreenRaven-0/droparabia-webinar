@@ -9,13 +9,14 @@ import '../styles/global.css';
 import '../styles/thank-you.css';
 import Analytics from '../components/Analytics.astro';
 import GtmNoscript from '../components/GtmNoscript.astro';
+import MetaPixel from '../components/MetaPixel.astro';
+import MetaPixelNoscript from '../components/MetaPixelNoscript.astro';
+import MetaEvents from './MetaEvents.astro';
 import { WEBINAR_GCAL_URL, WHATSAPP_CHANNEL_URL, SOCIAL_INSTAGRAM, SOCIAL_YOUTUBE } from '../config/webinar';
 
 interface Props { tracked?: boolean; }
 const { tracked = false } = Astro.props;
 
-const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
-const usePixel = tracked && !!pixelId;
 ---
 
 <html lang="en">
@@ -26,27 +27,11 @@ const usePixel = tracked && !!pixelId;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/png" href="/Droparabia.webp" />
-    {usePixel && (
-      <script is:inline set:html={`
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window,document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '${pixelId}');
-        fbq('track', 'PageView');
-        fbq('track', 'Lead');
-      `} />
-    )}
+    <MetaPixel enabled={tracked} lead />
   </head>
   <body>
     <GtmNoscript />
-    {usePixel && (
-      <noscript set:html={`<img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=${pixelId}&ev=Lead&noscript=1" />`} />
-    )}
+    <MetaPixelNoscript enabled={tracked} event="Lead" />
 <div style="font-family: 'Helvetica', Arial, sans-serif; color: #0D0D2B; background: #FFFFFF; min-height: 100vh">
 
 <!-- No tint and no rule: the header sits on the same surface as the page. -->
@@ -71,13 +56,13 @@ const usePixel = tracked && !!pixelId;
 </div>
 
 <div id="video" style="position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 3px solid #001EFF; background: #0D0D2B; display: flex; align-items: center; justify-content: center; margin-bottom: 40px">
-<div style="position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.6); color: #FFFFFF; font-size: 14px; padding: 7px 12px; border-radius: 999px">Tap for sound</div>
-<div style="display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 0 16px; text-align: center">
-<div style="width: 96px; height: 72px; border-radius: 12px; background: #001EFF; display: flex; align-items: center; justify-content: center">
+<video id="vsl" class="vsl-video" poster="/vsl-thank-you-poster.jpg" muted autoplay playsinline preload="metadata" src="/vsl-thank-you.mp4"></video>
+<div class="vsl-sound" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.6); color: #FFFFFF; font-size: 26px; font-weight: 700; padding: 16px 30px; border-radius: 999px; pointer-events: none; white-space: nowrap">Tap for sound</div>
+<button type="button" class="vsl-play is-gone" aria-label="Play with sound" style="position: absolute; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(13,13,43,0.35); border: none; cursor: pointer">
+<span style="width: 96px; height: 72px; border-radius: 12px; background: #001EFF; display: flex; align-items: center; justify-content: center">
 <svg width="34" height="34" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"></path></svg>
-</div>
-<div style="color: #A9B6D0; font-size: 14px">[VIDEO: Majd thanks them for registering and tells them why they must show up live]</div>
-</div>
+</span>
+</button>
 </div>
 
 <div class="ty-card" style="background: #FFFFFF; border: 1px solid #DDE3F5; border-radius: 18px; padding: 30px 32px; margin-bottom: 64px; box-shadow: 0 10px 30px rgba(0,30,255,0.06)">
@@ -197,3 +182,43 @@ const usePixel = tracked && !!pixelId;
 </script>
   </body>
 </html>
+<MetaEvents enabled={tracked} vslName="thank-you" registered />
+
+<script is:inline>
+  // VSL: starts on its own but silent, which is the only autoplay browsers allow.
+  // A "Tap for sound" badge sits on it the whole time it plays muted; one tap
+  // anywhere on the frame turns the sound on and hands over to the native controls.
+  (function () {
+    var v = document.getElementById('vsl');
+    if (!v) return;
+    var frame = v.parentElement;
+    var badge = frame.querySelector('.vsl-sound');
+    var play = frame.querySelector('.vsl-play');
+
+    function unmute() {
+      if (!v.muted) return;
+      v.muted = false;
+      v.volume = 1;
+      v.controls = true;
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
+      if (badge) badge.classList.add('is-gone');
+      if (play) play.classList.add('is-gone');
+    }
+
+    // The whole frame is the tap target, not just the badge.
+    frame.addEventListener('click', unmute);
+
+    // Autoplay can still be refused (iOS Low Power Mode, data-saver modes). The
+    // play button is the fallback so the frame never sits there looking dead; it
+    // stays hidden whenever autoplay does work.
+    var started = v.play();
+    if (started && started.catch) {
+      started.catch(function () {
+        if (play) play.classList.remove('is-gone');
+        if (badge) badge.classList.add('is-gone');
+      });
+    }
+  })();
+</script>
+

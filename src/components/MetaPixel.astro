@@ -1,0 +1,49 @@
+---
+// Meta Pixel base code, in one place so the snippet is not copied per page.
+//
+// The id is PUBLIC_ so it reaches the browser, which also means it is inlined at
+// BUILD time: Cloudflare needs PUBLIC_META_PIXEL_ID set as a build variable and a
+// fresh deploy, not just a runtime secret.
+//
+// `enabled` is what keeps /confirm-b untracked: when false nothing renders at all,
+// so no fbevents.js, no cookie, no request to Facebook.
+interface Props {
+  enabled?: boolean;
+  /** Fire Lead on top of PageView (the thank-you page). */
+  lead?: boolean;
+}
+const { enabled = true, lead = false } = Astro.props;
+
+const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
+const show = enabled && !!pixelId;
+
+// Built here rather than inline in the markup: a template literal holding a
+// nested one is more than the .astro parser will take.
+const snippet = [
+  "!function(f,b,e,v,n,t,s)",
+  "{if(f.fbq)return;n=f.fbq=function(){n.callMethod?",
+  "n.callMethod.apply(n,arguments):n.queue.push(arguments)};",
+  "if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';",
+  "n.queue=[];t=b.createElement(e);t.async=!0;",
+  "t.src=v;s=b.getElementsByTagName(e)[0];",
+  "s.parentNode.insertBefore(t,s)}(window, document,'script',",
+  "'https://connect.facebook.net/en_US/fbevents.js');",
+  // Advanced matching: whatever the registration form saved (da_match) is handed
+  // to every later init, so events carry em/ph/fn/ln. Plain normalised values —
+  // the pixel hashes them with SHA-256 itself; hashing them here would double-hash
+  // and match nothing. Same approach as droparabia-landing.
+  "var daMatch = {};",
+  "try {",
+  "  var daStored = JSON.parse(localStorage.getItem('da_match') || '{}');",
+  "  if (daStored.em) daMatch.em = daStored.em;",
+  "  if (daStored.ph) daMatch.ph = daStored.ph;",
+  "  if (daStored.fn) daMatch.fn = daStored.fn;",
+  "  if (daStored.ln) daMatch.ln = daStored.ln;",
+  "} catch(_) {}",
+  "if (daMatch.em || daMatch.ph) fbq('init', '" + pixelId + "', daMatch);",
+  "else fbq('init', '" + pixelId + "');",
+  "fbq('track', 'PageView');",
+  ...(lead ? ["fbq('track', 'Lead');"] : []),
+].join("\n");
+---
+{show && <script is:inline set:html={snippet} />}

@@ -26,3 +26,7 @@ pnpm-debug.log*
 # Local Wrangler/Miniflare state. The deploy config here holds absolute Windows
 # paths into dist/, which is ignored, so committing it breaks the Cloudflare build.
 .wrangler/
+
+# Raw video masters — kept locally only, never deployed. Cloudflare Pages rejects
+# any file over 25 MiB, so only the compressed web copies in public/ ship.
+video-masters/

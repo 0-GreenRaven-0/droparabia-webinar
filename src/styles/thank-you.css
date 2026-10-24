@@ -43,3 +43,40 @@ h1, h2, h3, h4, h5, h6,
 
 /* Wordmark matches the logo lockup on the landing page. */
 .ty-brand, .ty-footer-brand { font-family: 'IBrand', sans-serif; font-weight: 400; }
+
+/* ── VSL player ──────────────────────────────────────────────────────────
+   The video fills the mock-up's 16:9 frame. It starts muted so browsers
+   allow autoplay; the overlay turns sound on, which is what the mock-up's
+   "Tap for sound" pill promised. */
+.vsl-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.vsl-sound,
+.vsl-play {
+  z-index: 2;
+  transition: opacity 0.25s ease;
+}
+.vsl-play:hover span {
+  transform: scale(1.06);
+}
+.vsl-play span {
+  transition: transform 0.2s ease;
+}
+/* Once sound is on, the overlay has done its job and the native controls take over. */
+.vsl-sound.is-gone,
+.vsl-play.is-gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The whole frame unmutes on tap, so it should read as tappable. */
+#video { cursor: pointer; }
+
+@media (max-width: 700px){
+  .vsl-sound { font-size: 18px !important; padding: 12px 22px !important; }
+}
