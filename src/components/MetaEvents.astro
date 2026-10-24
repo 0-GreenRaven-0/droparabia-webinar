@@ -37,15 +37,27 @@ const show = enabled && !!pixelId;
           : prefix + '-' + Date.now() + '-' + Math.random().toString(36).slice(2);
       }
 
-      // ── Registered ──
+      // ── Registered, and its standard-event twin Lead ──
+      // Both describe the same thing and fire together under the same condition:
+      // an id is only in sessionStorage once the row reached the sheet. Lead is
+      // the standard event, which is what Meta's own optimisation and reporting
+      // understand; Registered is the custom one, kept because its name survives
+      // in audiences and custom conversions built on it.
+      //
+      // They share one event id on purpose. Meta de-duplicates on event name AND
+      // id together, so a shared id never collapses the two into one — it just
+      // means the single Event ID column in the sheet can de-duplicate both when
+      // they are uploaded through the Conversions API.
       if (FIRE_REGISTERED) {
         try {
           var regId = sessionStorage.getItem('da_reg_event_id');
           if (regId && !sessionStorage.getItem('da_reg_fired') && fbqReady()) {
-            window.fbq('trackCustom', 'Registered', {
+            var regParams = {
               content_name: 'Droparabia Free Live Training',
               webinar_date: '2026-10-29',
-            }, { eventID: regId });
+            };
+            window.fbq('trackCustom', 'Registered', regParams, { eventID: regId });
+            window.fbq('track', 'Lead', regParams, { eventID: regId });
             sessionStorage.setItem('da_reg_fired', '1');
           }
         } catch (_) {}

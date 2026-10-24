@@ -3,7 +3,8 @@
 // (src/styles/thank-you.css) with Droparabia's palette, fonts and logo swapped in.
 //
 // Shared body of both routes, so the Meta split survives:
-//   /confirm   -> tracked:true  -> pixel loads, fires PageView + Lead
+//   /confirm   -> tracked:true  -> pixel loads; Registered + Lead fire
+//                                  only for a confirmed registration
 //   /confirm-b -> tracked:false -> no pixel at all
 import '../styles/global.css';
 import '../styles/thank-you.css';
@@ -27,11 +28,11 @@ const { tracked = false } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/png" href="/Droparabia.webp" />
-    <MetaPixel enabled={tracked} lead />
+    <MetaPixel enabled={tracked} />
   </head>
   <body>
     <GtmNoscript />
-    <MetaPixelNoscript enabled={tracked} event="Lead" />
+    <MetaPixelNoscript enabled={tracked} />
 <div style="font-family: 'Helvetica', Arial, sans-serif; color: #0D0D2B; background: #FFFFFF; min-height: 100vh">
 
 <!-- No tint and no rule: the header sits on the same surface as the page. -->

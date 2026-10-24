@@ -9,10 +9,8 @@
 // so no fbevents.js, no cookie, no request to Facebook.
 interface Props {
   enabled?: boolean;
-  /** Fire Lead on top of PageView (the thank-you page). */
-  lead?: boolean;
 }
-const { enabled = true, lead = false } = Astro.props;
+const { enabled = true } = Astro.props;
 
 const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
 const show = enabled && !!pixelId;
@@ -43,7 +41,6 @@ const snippet = [
   "if (daMatch.em || daMatch.ph) fbq('init', '" + pixelId + "', daMatch);",
   "else fbq('init', '" + pixelId + "');",
   "fbq('track', 'PageView');",
-  ...(lead ? ["fbq('track', 'Lead');"] : []),
 ].join("\n");
 ---
 {show && <script is:inline set:html={snippet} />}
