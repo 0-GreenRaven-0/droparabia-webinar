@@ -1,4 +1,5 @@
 ---
+import { META_PIXEL_ID } from '../config/meta';
 // The two Meta custom events, in one component so both pages fire them identically.
 //
 //   Registered — a seat was actually written to the sheet. Fired on the thank-you
@@ -23,7 +24,7 @@ interface Props {
 }
 const { enabled = true, vslName, registered = false } = Astro.props;
 
-const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
+const pixelId = META_PIXEL_ID;
 const show = enabled && !!pixelId;
 ---
 {show && (

@@ -1,9 +1,10 @@
 ---
+import { META_PIXEL_ID } from '../config/meta';
 // Meta Pixel base code, in one place so the snippet is not copied per page.
 //
-// The id is PUBLIC_ so it reaches the browser, which also means it is inlined at
-// BUILD time: Cloudflare needs PUBLIC_META_PIXEL_ID set as a build variable and a
-// fresh deploy, not just a runtime secret.
+// The id comes from src/config/meta.ts, not from the environment: it is public
+// by definition and a build-time variable that CI never had silently compiled
+// the whole pixel out of production.
 //
 // `enabled` is what keeps /confirm-b untracked: when false nothing renders at all,
 // so no fbevents.js, no cookie, no request to Facebook.
@@ -12,7 +13,7 @@ interface Props {
 }
 const { enabled = true } = Astro.props;
 
-const pixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
+const pixelId = META_PIXEL_ID;
 const show = enabled && !!pixelId;
 
 // Built here rather than inline in the markup: a template literal holding a

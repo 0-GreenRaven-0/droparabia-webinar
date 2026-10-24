@@ -12,6 +12,7 @@ import MetaPixelNoscript from '../components/MetaPixelNoscript.astro';
 import MetaEvents from '../components/MetaEvents.astro';
 import { WEBINAR_START_ISO, SOCIAL_INSTAGRAM, SOCIAL_THREADS, SOCIAL_YOUTUBE } from '../config/webinar';
 import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
+import { META_PIXEL_ID } from '../config/meta';
 ---
 
 <html lang="en">
@@ -522,7 +523,7 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 </script>
 
 
-<script is:inline define:vars={{ PIXEL_ID: import.meta.env.PUBLIC_META_PIXEL_ID }}>
+<script is:inline define:vars={{ PIXEL_ID: META_PIXEL_ID }}>
   // The mock-up's form, wired to the Google webinar sheet.
   (function () {
     var form = document.getElementById('da-form');
