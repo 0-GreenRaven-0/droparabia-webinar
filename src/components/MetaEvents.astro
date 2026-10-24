@@ -70,10 +70,17 @@ const show = enabled && !!pixelId;
       if (!v) return;
       var key = 'da_vslview_' + VSL_NAME;
 
+      // Guarded in memory only, not in storage. A stored flag meant the browser
+      // decided whether this event happened: someone who had ever unmuted once
+      // was silently never counted again, on any later visit. The visitor's
+      // action is what fires it now — once per page view, so toggling the sound
+      // off and on again cannot inflate the count, but every fresh visit counts.
+      var vslFired = false;
+
       function fireVslView() {
         try {
-          if (localStorage.getItem(key)) return;
-          localStorage.setItem(key, '1');
+          if (vslFired) return;
+          vslFired = true;
           if (!fbqReady()) return;
           var vslId = newId('vsl');
           // Kept so the registration that may follow can carry this id into the
