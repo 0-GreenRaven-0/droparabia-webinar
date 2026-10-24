@@ -129,10 +129,10 @@ const SHEET_HEADERS = [
   // How much of the VSL they actually watched
   'VSL Watch (s)',
   // Everything Meta's Conversions API needs to send this as a server-side event.
-  // Event ID de-duplicates against the browser's Registered fire; Event Time is
+  // Each event carries its own id so each de-duplicates on its own; Event Time is
   // the unix seconds the event happened; fbp/fbc/IP/UA are sent verbatim; the
   // four hashes are SHA-256 of the normalised values.
-  'Event ID', 'Event Time', 'fbp', 'fbc', 'Client IP', 'User Agent', 'Event Source URL',
+  'Registered Event ID', 'Lead Event ID', 'VSLView Event ID', 'Event Time', 'fbp', 'fbc', 'Client IP', 'User Agent', 'Event Source URL',
   'em (SHA-256)', 'ph (SHA-256)', 'fn (SHA-256)', 'ln (SHA-256)',
 ];
 
@@ -140,11 +140,11 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
-  const check = await fetch(`${base}/A1:Q1`, { headers: auth });
+  const check = await fetch(`${base}/A1:S1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
   const existingHeaders = checkData.values?.[0] ?? [];
   if (existingHeaders[0] !== 'First Name' || existingHeaders.length < SHEET_HEADERS.length) {
-    await fetch(`${base}/A1:Q1?valueInputOption=USER_ENTERED`, {
+    await fetch(`${base}/A1:S1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
@@ -153,7 +153,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 
   // Sheets errors used to be ignored here, so a 403 (sheet not shared with the
   // service account) or 404 (wrong id) still reported success and the row vanished.
-  const appended = await fetch(`${base}/A:Q:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
+  const appended = await fetch(`${base}/A:S:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -169,7 +169,7 @@ export const POST: APIRoute = async ({ request }) => {
     // utm_campaign/content/term and headline are still sent by the form but not
     // stored; Traffic Source is derived from utm_source/utm_medium/referrer.
     const { firstName, lastName, email, phone, utm_source, utm_medium, referrer,
-            vslSeconds, eventId, fbp, fbc, sourceUrl } = body;
+            vslSeconds, eventId, leadEventId, vslEventId, fbp, fbc, sourceUrl } = body;
 
     // Last name is optional: the landing form marks it optional and hides it on mobile.
     if (!firstName || !email || !phone) {
@@ -217,7 +217,7 @@ export const POST: APIRoute = async ({ request }) => {
         firstName, lastName || '', email, phone,
         buildTrafficSource(utm_source || '', utm_medium || '', referrer || ''),
         String(vslSeconds ?? 0),
-        eventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
+        eventId || '', leadEventId || '', vslEventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
         emHash, phHash, fnHash, lnHash,
       ], token);
     }

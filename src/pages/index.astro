@@ -588,9 +588,20 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
       // Minted before the POST so the same id reaches both the sheet and the
       // browser's Registered event: that is what lets a server-side copy of the
       // event de-duplicate instead of counting twice.
-      var regEventId = (window.crypto && window.crypto.randomUUID)
-        ? window.crypto.randomUUID()
-        : 'reg-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      function daNewId(prefix) {
+        return (window.crypto && window.crypto.randomUUID)
+          ? window.crypto.randomUUID()
+          : prefix + '-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      }
+      // One id per event. A Conversions API upload has to replay the exact id the
+      // browser used for that event name, so Registered and Lead cannot share one
+      // if both are to de-duplicate independently.
+      var regEventId = daNewId('reg');
+      var leadEventId = daNewId('lead');
+      // Minted when VSLView fired on this page, if it did; it travels with the
+      // registration so the sheet row carries all three ids.
+      var vslEventId = '';
+      try { vslEventId = localStorage.getItem('da_vslview_landing_id') || ''; } catch (_) {}
       // Minted here so it can travel with the request, but NOT stored yet: the
       // stored id is what makes /confirm fire Registered, so persisting it before
       // the API has confirmed the row would leave a failed attempt able to fire
@@ -612,6 +623,8 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
         referrer: document.referrer || '',
         vslSeconds: vslSeconds,
         eventId: regEventId,
+        leadEventId: leadEventId,
+        vslEventId: vslEventId,
         fbp: fbp,
         fbc: fbc,
         sourceUrl: window.location.href,
@@ -668,6 +681,7 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
             // happens only on this success path — the same id already went to the
             // sheet with the request, so the row and the browser event share one.
             sessionStorage.setItem('da_reg_event_id', regEventId);
+            sessionStorage.setItem('da_lead_event_id', leadEventId);
 
             // Re-init straight away so anything else on this page is matched too.
             if (typeof window.fbq === 'function') {

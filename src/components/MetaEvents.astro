@@ -44,20 +44,21 @@ const show = enabled && !!pixelId;
       // understand; Registered is the custom one, kept because its name survives
       // in audiences and custom conversions built on it.
       //
-      // They share one event id on purpose. Meta de-duplicates on event name AND
-      // id together, so a shared id never collapses the two into one — it just
-      // means the single Event ID column in the sheet can de-duplicate both when
-      // they are uploaded through the Conversions API.
+      // Each carries its OWN event id, minted by the form and written to its own
+      // column in the sheet. A Conversions API upload has to send back the exact
+      // id the browser used for that event name, so one id per event is what
+      // keeps every one of them de-duplicable on its own.
       if (FIRE_REGISTERED) {
         try {
           var regId = sessionStorage.getItem('da_reg_event_id');
+          var leadId = sessionStorage.getItem('da_lead_event_id');
           if (regId && !sessionStorage.getItem('da_reg_fired') && fbqReady()) {
             var regParams = {
               content_name: 'Droparabia Free Live Training',
               webinar_date: '2026-10-29',
             };
             window.fbq('trackCustom', 'Registered', regParams, { eventID: regId });
-            window.fbq('track', 'Lead', regParams, { eventID: regId });
+            window.fbq('track', 'Lead', regParams, { eventID: leadId || regId });
             sessionStorage.setItem('da_reg_fired', '1');
           }
         } catch (_) {}
@@ -73,9 +74,14 @@ const show = enabled && !!pixelId;
           if (localStorage.getItem(key)) return;
           localStorage.setItem(key, '1');
           if (!fbqReady()) return;
+          var vslId = newId('vsl');
+          // Kept so the registration that may follow can carry this id into the
+          // sheet. Without it the landing-page VSLView would be the one event
+          // with no server-side counterpart to de-duplicate against.
+          localStorage.setItem(key + '_id', vslId);
           window.fbq('trackCustom', 'VSLView', {
             content_name: VSL_NAME,
-          }, { eventID: newId('vsl') });
+          }, { eventID: vslId });
         } catch (_) {}
       }
 
