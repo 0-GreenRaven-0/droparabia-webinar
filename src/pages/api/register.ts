@@ -3,6 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
 import { brevoAddContact } from '../../lib/brevo';
+import { webinarDayIndex } from '../../config/webinar';
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;
@@ -232,6 +233,7 @@ export const POST: APIRoute = async ({ request }) => {
       firstName,
       lastName: lastName || '',
       phoneE164: phone,
+      webinarDay: webinarDayIndex(),
     });
 
     // No email is sent from here. The contact landing on Brevo list 24 is what a

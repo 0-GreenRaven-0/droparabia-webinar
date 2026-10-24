@@ -16,6 +16,8 @@ export interface BrevoContact {
   lastName?: string;
   /** E.164, e.g. +96170123456. Brevo rejects anything else. */
   phoneE164?: string;
+  /** 0-5 step the Brevo automation keys off; see webinarDayIndex(). */
+  webinarDay?: number;
 }
 
 export type BrevoResult =
@@ -35,6 +37,9 @@ export async function brevoAddContact(contact: BrevoContact): Promise<BrevoResul
       FIRSTNAME: contact.firstName || '',
       LASTNAME: contact.lastName || '',
       ...(contact.phoneE164 ? { SMS: contact.phoneE164 } : {}),
+      // Sent even when 0: omitting it would leave day-0 registrants with no
+      // value at all, which an automation reads as 'not set' rather than 'day 0'.
+      ...(contact.webinarDay != null ? { WEBINAR_DAY: contact.webinarDay } : {}),
     },
     listIds: [listId],
     // Existing contacts are updated rather than rejected as duplicates.
