@@ -72,45 +72,49 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
   return data.access_token;
 }
 
-function buildTrafficSource(source: string, medium: string, referrer: string): string {
-  const s = (source || '').toLowerCase().trim();
-  const m = (medium || '').toLowerCase().trim();
 
-  if (s) {
-    if ((s === 'ig' || s === 'instagram') && m === 'paid') return 'Instagram Paid Ad';
-    if ((s === 'fb' || s === 'facebook')  && m === 'paid') return 'Facebook Paid Ad';
-    if ((s === 'ig' || s === 'instagram'))                 return 'Instagram Organic';
-    if (s === 'linkedin' || s === 'lnkd.in')              return 'LinkedIn';
-    if (s === 'google' && m === 'organic')                 return 'Google Search';
-    return [s, m].filter(Boolean).join(' / ');
-  }
-
-  if (referrer) {
-    try {
-      const host = new URL(referrer).hostname.replace('www.', '');
-      if (host.includes('instagram.com'))                           return 'Instagram Organic';
-      if (host.includes('linkedin.com') || host.includes('lnkd.in')) return 'LinkedIn';
-      if (host.includes('facebook.com'))                            return 'Facebook Organic';
-      if (host.includes('google.com'))                              return 'Google Search';
-      if (host.includes('youtube.com'))                             return 'YouTube';
-      return host;
-    } catch { return referrer; }
-  }
-
-  return 'Direct Visit';
+/**
+ * Meta's Conversions API wants user data hashed with SHA-256, lowercase hex, and
+ * normalised BEFORE hashing — otherwise 'A@b.com ' and 'a@b.com' hash differently
+ * and match nobody. Normalisation mirrors what the browser sends to the pixel, so
+ * the server-side copy of an event matches the same person as the browser fire.
+ *
+ * fbp, fbc, the IP and the user agent are deliberately NOT hashed: Meta matches
+ * those verbatim and hashing them makes them useless.
+ */
+async function sha256Hex(value: string): Promise<string> {
+  if (!value) return '';
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-const SHEET_HEADERS = ['First Name', 'Last Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Headline', 'Investment Intent'];
+const normEmail = (v: string) => (v || '').trim().toLowerCase();
+/** Digits only, country code included, no plus and no leading zero. */
+const normPhone = (v: string) => (v || '').replace(/[^0-9]/g, '').replace(/^0+/, '');
+const normName  = (v: string) => (v || '').trim().toLowerCase().replace(/\s+/g, ' ');
+
+const SHEET_HEADERS = [
+  // Who registered
+  'First Name', 'Last Name', 'Email', 'Phone',
+  // How much of the VSL they actually watched
+  'VSL Watch (s)',
+  // Everything Meta's Conversions API needs to send this as a server-side event.
+  // Event ID de-duplicates against the browser's Registered fire; Event Time is
+  // the unix seconds the event happened; fbp/fbc/IP/UA are sent verbatim; the
+  // four hashes are SHA-256 of the normalised values.
+  'Event ID', 'Event Time', 'fbp', 'fbc', 'Client IP', 'User Agent', 'Event Source URL',
+  'em (SHA-256)', 'ph (SHA-256)', 'fn (SHA-256)', 'ln (SHA-256)',
+];
 
 async function appendToSheet(sheetId: string, row: string[], token: string): Promise<void> {
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
-  const check = await fetch(`${base}/A1:K1`, { headers: auth });
+  const check = await fetch(`${base}/A1:P1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
   const existingHeaders = checkData.values?.[0] ?? [];
   if (existingHeaders[0] !== 'First Name' || existingHeaders.length < SHEET_HEADERS.length) {
-    await fetch(`${base}/A1:K1?valueInputOption=USER_ENTERED`, {
+    await fetch(`${base}/A1:P1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
@@ -119,7 +123,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 
   // Sheets errors used to be ignored here, so a 403 (sheet not shared with the
   // service account) or 404 (wrong id) still reported success and the row vanished.
-  const appended = await fetch(`${base}/A:K:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
+  const appended = await fetch(`${base}/A:P:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -132,7 +136,9 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { firstName, lastName, email, phone, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, headline, intent } = body;
+    // The form still sends utm_*/referrer/headline; they are simply not stored any
+    // more, the sheet holding only the registrant and what Meta needs.
+    const { firstName, lastName, email, phone, vslSeconds, eventId, fbp, fbc, sourceUrl } = body;
 
     // Last name is optional: the landing form marks it optional and hides it on mobile.
     if (!firstName || !email || !phone) {
@@ -158,13 +164,30 @@ export const POST: APIRoute = async ({ request }) => {
 
     const token = await getGoogleAccessToken(credsJson);
     {
-      const date = new Date().toLocaleDateString('en-GB');
-      const isPaid = (utm_medium || '').toLowerCase().trim() === 'paid';
-      const trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '');
-      const campaignName  = isPaid ? (utm_campaign || '') : '';
-      const creative      = isPaid ? (utm_content  || '') : '';
-      const hook          = isPaid ? (utm_term     || '') : '';
-      await appendToSheet(sheetId, [firstName, lastName || '', email, phone, date, trafficSource, campaignName, creative, hook, headline || '', intent || ''], token);
+      // Hashed from the values this request carries, normalised first. Done here
+      // rather than in the browser so a tampered or stale client cannot write
+      // hashes that match nobody.
+      const [emHash, phHash, fnHash, lnHash] = await Promise.all([
+        sha256Hex(normEmail(email)),
+        sha256Hex(normPhone(phone)),
+        sha256Hex(normName(firstName)),
+        sha256Hex(normName(lastName || '')),
+      ]);
+
+      // Cloudflare puts the visitor's real address in CF-Connecting-IP; the
+      // socket address would be Cloudflare's own edge and match nothing.
+      const clientIp = request.headers.get('CF-Connecting-IP')
+        || request.headers.get('X-Forwarded-For')?.split(',')[0].trim()
+        || '';
+      const userAgent = request.headers.get('User-Agent') || '';
+      const eventTime = Math.floor(Date.now() / 1000);
+
+      await appendToSheet(sheetId, [
+        firstName, lastName || '', email, phone,
+        String(vslSeconds ?? 0),
+        eventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
+        emHash, phHash, fnHash, lnHash,
+      ], token);
     }
 
     // ── Brevo (after the sheet, never fatal) ──

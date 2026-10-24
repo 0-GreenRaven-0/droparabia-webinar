@@ -488,6 +488,23 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
       if (play) play.classList.add('is-gone');
     }
 
+
+    // Watch time, in seconds, for the sheet row. Accumulated from timeupdate
+    // deltas rather than read off currentTime, so scrubbing forward cannot
+    // inflate it and a pause does not keep counting. Deltas over a second are
+    // treated as a seek and skipped.
+    var daWatched = 0;
+    var daLastTime = null;
+    v.addEventListener('timeupdate', function () {
+      var now = v.currentTime;
+      if (daLastTime !== null) {
+        var step = now - daLastTime;
+        if (step > 0 && step < 1) daWatched += step;
+      }
+      daLastTime = now;
+      try { sessionStorage.setItem('da_vsl_seconds', String(Math.round(daWatched))); } catch (_) {}
+    });
+
     // The whole frame is the tap target, not just the badge.
     frame.addEventListener('click', unmute);
 
@@ -544,6 +561,41 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
       }
 
       var params = new URLSearchParams(window.location.search);
+
+      // ── What the Conversions API needs, gathered browser-side ──
+      // _fbp and _fbc are set by the pixel itself and are NOT hashed: Meta matches
+      // them verbatim. _fbc only exists once someone has arrived on an ad click, so
+      // it is rebuilt from the fbclid parameter when the cookie has not been written
+      // yet (the pixel writes it asynchronously and the form can beat it).
+      // Split rather than a regex: the escapes in a regex built from a string
+      // are easy to lose, and losing them here silently returns an empty _fbp
+      // while _fbc still works, which is almost impossible to spot by reading.
+      function daCookie(name) {
+        var parts = document.cookie.split(';');
+        for (var i = 0; i < parts.length; i++) {
+          var p = parts[i].trim();
+          if (p.indexOf(name + '=') === 0) return p.slice(name.length + 1);
+        }
+        return '';
+      }
+      var fbp = daCookie('_fbp');
+      var fbc = daCookie('_fbc');
+      if (!fbc) {
+        var fbclid = params.get('fbclid');
+        if (fbclid) fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+      }
+
+      // Minted before the POST so the same id reaches both the sheet and the
+      // browser's Registered event: that is what lets a server-side copy of the
+      // event de-duplicate instead of counting twice.
+      var regEventId = (window.crypto && window.crypto.randomUUID)
+        ? window.crypto.randomUUID()
+        : 'reg-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      try { sessionStorage.setItem('da_reg_event_id', regEventId); } catch (_) {}
+
+      var vslSeconds = 0;
+      try { vslSeconds = parseInt(sessionStorage.getItem('da_vsl_seconds') || '0', 10) || 0; } catch (_) {}
+
       var payload = {
         firstName: document.getElementById('da-fn').value.trim().replace(/\s+/g, ' '),
         lastName: document.getElementById('da-ln').value.trim().replace(/\s+/g, ' '),
@@ -555,6 +607,11 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
         utm_content: params.get('utm_content') || '',
         utm_term: params.get('utm_term') || '',
         referrer: document.referrer || '',
+        vslSeconds: vslSeconds,
+        eventId: regEventId,
+        fbp: fbp,
+        fbc: fbc,
+        sourceUrl: window.location.href,
       };
 
       btn.disabled = true;
@@ -604,12 +661,8 @@ import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 
             // The Registered event itself fires on /confirm, not here: this page
             // navigates away ~250ms from now, which is not enough for the beacon to
-            // reliably leave. The id is minted here so the Conversions API can later
-            // de-duplicate a server-side copy against the browser fire.
-            var regId = (window.crypto && window.crypto.randomUUID)
-              ? window.crypto.randomUUID()
-              : 'reg-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-            sessionStorage.setItem('da_reg_event_id', regId);
+            // reliably leave. Its id was minted before the POST and is already in
+            // sessionStorage, so the sheet row and the browser event share one id.
 
             // Re-init straight away so anything else on this page is matched too.
             if (typeof window.fbq === 'function') {
