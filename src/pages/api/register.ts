@@ -73,6 +73,34 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
 }
 
 
+function buildTrafficSource(source: string, medium: string, referrer: string): string {
+  const s = (source || '').toLowerCase().trim();
+  const m = (medium || '').toLowerCase().trim();
+
+  if (s) {
+    if ((s === 'ig' || s === 'instagram') && m === 'paid') return 'Instagram Paid Ad';
+    if ((s === 'fb' || s === 'facebook')  && m === 'paid') return 'Facebook Paid Ad';
+    if ((s === 'ig' || s === 'instagram'))                 return 'Instagram Organic';
+    if (s === 'linkedin' || s === 'lnkd.in')              return 'LinkedIn';
+    if (s === 'google' && m === 'organic')                 return 'Google Search';
+    return [s, m].filter(Boolean).join(' / ');
+  }
+
+  if (referrer) {
+    try {
+      const host = new URL(referrer).hostname.replace('www.', '');
+      if (host.includes('instagram.com'))                           return 'Instagram Organic';
+      if (host.includes('linkedin.com') || host.includes('lnkd.in')) return 'LinkedIn';
+      if (host.includes('facebook.com'))                            return 'Facebook Organic';
+      if (host.includes('google.com'))                              return 'Google Search';
+      if (host.includes('youtube.com'))                             return 'YouTube';
+      return host;
+    } catch { return referrer; }
+  }
+
+  return 'Direct Visit';
+}
+
 /**
  * Meta's Conversions API wants user data hashed with SHA-256, lowercase hex, and
  * normalised BEFORE hashing — otherwise 'A@b.com ' and 'a@b.com' hash differently
@@ -96,6 +124,8 @@ const normName  = (v: string) => (v || '').trim().toLowerCase().replace(/\s+/g, 
 const SHEET_HEADERS = [
   // Who registered
   'First Name', 'Last Name', 'Email', 'Phone',
+  // Where they came from
+  'Traffic Source',
   // How much of the VSL they actually watched
   'VSL Watch (s)',
   // Everything Meta's Conversions API needs to send this as a server-side event.
@@ -110,11 +140,11 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
-  const check = await fetch(`${base}/A1:P1`, { headers: auth });
+  const check = await fetch(`${base}/A1:Q1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
   const existingHeaders = checkData.values?.[0] ?? [];
   if (existingHeaders[0] !== 'First Name' || existingHeaders.length < SHEET_HEADERS.length) {
-    await fetch(`${base}/A1:P1?valueInputOption=USER_ENTERED`, {
+    await fetch(`${base}/A1:Q1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
@@ -123,7 +153,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 
   // Sheets errors used to be ignored here, so a 403 (sheet not shared with the
   // service account) or 404 (wrong id) still reported success and the row vanished.
-  const appended = await fetch(`${base}/A:P:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
+  const appended = await fetch(`${base}/A:Q:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -136,9 +166,10 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    // The form still sends utm_*/referrer/headline; they are simply not stored any
-    // more, the sheet holding only the registrant and what Meta needs.
-    const { firstName, lastName, email, phone, vslSeconds, eventId, fbp, fbc, sourceUrl } = body;
+    // utm_campaign/content/term and headline are still sent by the form but not
+    // stored; Traffic Source is derived from utm_source/utm_medium/referrer.
+    const { firstName, lastName, email, phone, utm_source, utm_medium, referrer,
+            vslSeconds, eventId, fbp, fbc, sourceUrl } = body;
 
     // Last name is optional: the landing form marks it optional and hides it on mobile.
     if (!firstName || !email || !phone) {
@@ -184,6 +215,7 @@ export const POST: APIRoute = async ({ request }) => {
 
       await appendToSheet(sheetId, [
         firstName, lastName || '', email, phone,
+        buildTrafficSource(utm_source || '', utm_medium || '', referrer || ''),
         String(vslSeconds ?? 0),
         eventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
         emHash, phHash, fnHash, lnHash,
