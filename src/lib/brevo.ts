@@ -83,3 +83,43 @@ export async function brevoAddContact(contact: BrevoContact): Promise<BrevoResul
   }
   return { ok: true };
 }
+
+/** "Webinar - Email 1" — the day-0 confirmation, sent the moment someone registers. */
+export const BREVO_TEMPLATE_CONFIRMATION = 23;
+
+export type BrevoSendResult =
+  | { ok: true; messageId?: string; skipped?: 'no_api_key' }
+  | { ok: false; status: number; error: string };
+
+/**
+ * Sends a Brevo template to one address.
+ *
+ * The template renders {{ contact.FIRSTNAME }}, which Brevo resolves from the
+ * stored contact rather than from this request — so the contact has to exist
+ * before this runs, or the greeting comes out blank. brevoAddContact() is
+ * called first for exactly that reason.
+ *
+ * Never fatal: the sheet row is the registration. An email that fails to send
+ * is reported alongside success, not in place of it.
+ */
+export async function brevoSendTemplate(
+  email: string,
+  templateId: number = BREVO_TEMPLATE_CONFIRMATION,
+): Promise<BrevoSendResult> {
+  const apiKey = (await getRuntimeEnv('BREVO_API_KEY')) || import.meta.env.BREVO_API_KEY;
+  if (!apiKey) return { ok: true, skipped: 'no_api_key' };
+
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'api-key': apiKey },
+    // No sender override: the template carries its own verified sender, and
+    // passing a different one is how mail ends up unauthenticated.
+    body: JSON.stringify({ to: [{ email }], templateId }),
+  });
+
+  if (res.status !== 201 && res.status !== 202) {
+    return { ok: false, status: res.status, error: await res.text() };
+  }
+  const data = (await res.json().catch(() => ({}))) as { messageId?: string };
+  return { ok: true, messageId: data.messageId };
+}

@@ -2,7 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
-import { brevoAddContact } from '../../lib/brevo';
+import { brevoAddContact, brevoSendTemplate } from '../../lib/brevo';
 import { webinarDayIndex } from '../../config/webinar';
 
 function base64url(data: string | ArrayBuffer): string {
@@ -236,8 +236,14 @@ export const POST: APIRoute = async ({ request }) => {
       webinarDay: webinarDayIndex(),
     });
 
-    // No email is sent from here. The contact landing on Brevo list 24 is what a
-    // Brevo automation keys off; the confirmation is owned entirely by Brevo.
+    // Day 0: the confirmation goes out now, from our own logic rather than a Brevo
+    // automation. It runs after the contact exists so the template's
+    // {{ contact.FIRSTNAME }} has something to render, and only when the contact
+    // actually landed — emailing someone Brevo rejected would promise them a seat
+    // that no list knows about.
+    const mail = brevo.ok && !brevo.skipped
+      ? await brevoSendTemplate(email)
+      : ({ ok: true, skipped: 'no_api_key' } as const);
 
     // brevoSkipped is reported explicitly: a missing API key used to return a plain
     // success:true, which is indistinguishable from Brevo having accepted the contact.
@@ -247,6 +253,7 @@ export const POST: APIRoute = async ({ request }) => {
         ...(brevo.ok
           ? (brevo.skipped ? { brevoSkipped: brevo.skipped } : {})
           : { brevoError: brevo.error }),
+        ...(mail.ok ? {} : { mailError: mail.error }),
       },
       200,
     );
