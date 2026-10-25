@@ -42,6 +42,9 @@ jobs:
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           GOOGLE_SHEET_WEBINAR: ${{ secrets.GOOGLE_SHEET_WEBINAR }}
           SHEETS_MAILER_ACCOUNT: ${{ secrets.SHEETS_MAILER_ACCOUNT }}
+        # On a schedule trigger there are no inputs, so this expands to
+        # [ "" = "true" ] and takes the live branch — which is what the nightly
+        # run wants. Only a manual dispatch with the box ticked goes dry.
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             node scripts/send-daily.mjs --dry-run

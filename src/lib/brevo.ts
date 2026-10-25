@@ -55,23 +55,35 @@ export async function brevoAddContact(contact: BrevoContact): Promise<BrevoResul
 
   let res = await post(body);
 
-  // updateEnabled resolves a duplicate EMAIL but not a duplicate SMS: if the number
-  // already belongs to another contact, Brevo hard-rejects with 400 duplicate_parameter
-  // and the signup is lost. Retry without the phone so the lead still reaches the list;
-  // the number simply stays on whichever contact already owns it.
+  // The phone number is the one field that can sink an otherwise good signup, in
+  // two ways. updateEnabled resolves a duplicate EMAIL but not a duplicate SMS: a
+  // number already owned by another contact comes back 400 duplicate_parameter.
+  // And Brevo validates the number itself, so a typo or a landline typed into the
+  // phone field comes back 400 invalid_parameter — which cost us a real registrant
+  // (+961 33 979 789, not a valid Lebanese mobile prefix) on day 1 of the campaign.
+  //
+  // Neither is a reason to lose the lead. Retry without the phone: the address
+  // reaches the list and gets the sequence, and the number is simply not stored.
   if (res.status === 400) {
     const text = await res.clone().text();
-    let duplicateSms = false;
+    let retryWithoutSms = false;
     try {
-      const parsed = JSON.parse(text) as { code?: string; metadata?: { duplicate_identifiers?: string[] } };
-      duplicateSms =
+      const parsed = JSON.parse(text) as {
+        code?: string;
+        message?: string;
+        metadata?: { duplicate_identifiers?: string[] };
+      };
+      const duplicateSms =
         parsed.code === 'duplicate_parameter' &&
         Array.isArray(parsed.metadata?.duplicate_identifiers) &&
         parsed.metadata.duplicate_identifiers.includes('SMS');
+      const invalidPhone =
+        parsed.code === 'invalid_parameter' && /phone|sms/i.test(parsed.message || '');
+      retryWithoutSms = duplicateSms || invalidPhone;
     } catch {
       /* non-JSON error body — reported as-is below */
     }
-    if (duplicateSms) {
+    if (retryWithoutSms) {
       const attributes = { ...(body.attributes as Record<string, unknown>) };
       delete attributes.SMS;
       res = await post({ ...body, attributes });

@@ -48,18 +48,35 @@ const COL = {
 };
 const SENT_COLUMN = Object.fromEntries(ALL_TEMPLATES.map((t, i) => [t, COL.SENT_FIRST + i]));
 
-const required = (name) => {
-  const v = process.env[name];
-  if (!v) {
-    console.error(`Missing ${name}. Set it as a repository secret.`);
-    process.exit(1);
-  }
-  return v;
-};
+// Checked together, not one at a time. Exiting on the first missing secret hides
+// the rest, so you fix one, wait for the next run, and find another — which is how
+// day 1 of the campaign was spent.
+const MISSING = ['BREVO_API_KEY', 'GOOGLE_SHEET_WEBINAR', 'SHEETS_MAILER_ACCOUNT'].filter(
+  (name) => !process.env[name],
+);
+if (MISSING.length) {
+  console.error(`Missing repository secret(s): ${MISSING.join(', ')}`);
+  console.error('Add them under Settings -> Secrets and variables -> Actions -> Repository secrets.');
+  process.exit(1);
+}
 
-const BREVO_API_KEY = required('BREVO_API_KEY');
-const SHEET_ID = required('GOOGLE_SHEET_WEBINAR');
-const CREDS = JSON.parse(required('SHEETS_MAILER_ACCOUNT'));
+const BREVO_API_KEY = process.env.BREVO_API_KEY;
+const SHEET_ID = process.env.GOOGLE_SHEET_WEBINAR;
+
+// A service-account key pasted with its line breaks intact parses as nothing
+// useful, and the failure otherwise surfaces as an unreadable JSON error.
+let CREDS;
+try {
+  CREDS = JSON.parse(process.env.SHEETS_MAILER_ACCOUNT);
+} catch {
+  console.error('SHEETS_MAILER_ACCOUNT is not valid JSON.');
+  console.error('Paste the whole service-account file, braces included, as one value.');
+  process.exit(1);
+}
+if (!CREDS.client_email || !CREDS.private_key) {
+  console.error('SHEETS_MAILER_ACCOUNT is missing client_email or private_key.');
+  process.exit(1);
+}
 
 // ── Google auth ──────────────────────────────────────────────────────────────
 async function sheetsToken() {
