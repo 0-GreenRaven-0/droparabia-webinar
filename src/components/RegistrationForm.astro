@@ -639,7 +639,10 @@ const { targetDate, showCountdown = true, showSpots = true, heading, subheading 
     const btn = form.querySelector('button[type="submit"]');
     const msg = document.getElementById('form-msg');
     var fmt = {
-      '+961': 8, '+971': 9, '+966': 9, '+1': 10, '+44': 10, '+33': 9,
+      // Lebanon is the one entry with two valid lengths: an 03 number is 7 digits
+      // after the country code, a 70/71/76/78/79/81 number is 8. Everywhere else
+      // a single number is still fine.
+      '+961': [7, 8], '+971': 9, '+966': 9, '+1': 10, '+44': 10, '+33': 9,
       '+86': 11, '+91': 10, '+90': 10, '+49': 10, '+7': 10, '+55': 11,
       '+20': 10, '+52': 10, '+34': 9, '+39': 10, '+81': 10, '+82': 10,
       '+62': 9, '+60': 9, '+63': 10, '+64': 9, '+65': 8, '+66': 9,
@@ -685,9 +688,17 @@ const { targetDate, showCountdown = true, showSpots = true, heading, subheading 
     var code = countryCode.replace('+', '');
     if (rawDigits.startsWith(code)) rawDigits = rawDigits.slice(code.length);
 
+    // The trunk zero is how a Lebanese number is written, printed and dictated,
+    // so most people type it. It has to come off BEFORE the length check, not
+    // after: counted with it, 03 123 456 reads as nine digits and is refused.
+    if (countryCode === '+961' && rawDigits.startsWith('0')) rawDigits = rawDigits.slice(1);
+
     var expectedDigits = fmt[countryCode];
-    if (expectedDigits && rawDigits.length !== expectedDigits) {
-      msg.textContent = 'Please enter a valid ' + expectedDigits + '-digit phone number.';
+    var allowedLengths = expectedDigits == null
+      ? null
+      : (Array.isArray(expectedDigits) ? expectedDigits : [expectedDigits]);
+    if (allowedLengths && allowedLengths.indexOf(rawDigits.length) === -1) {
+      msg.textContent = 'Please enter a valid ' + allowedLengths.join(' or ') + '-digit phone number.';
       msg.style.color = '#cc0000';
       msg.classList.remove('hidden');
       btn.disabled = false;
@@ -705,8 +716,6 @@ const { targetDate, showCountdown = true, showSpots = true, heading, subheading 
       return;
     }
     intentDd.classList.remove('is-invalid');
-
-    if (countryCode === '+961' && rawDigits.startsWith('0')) rawDigits = rawDigits.slice(1);
 
     var _utmParams = (function() {
       var p = new URLSearchParams(window.location.search);
@@ -873,7 +882,10 @@ const { targetDate, showCountdown = true, showSpots = true, heading, subheading 
       '+996':  { d: 9,  p: 'XXX XXX XXX' },
       '+856':  { d: 9,  p: 'XX XXX XXXX' },
       '+371':  { d: 8,  p: 'XXXX XXXX' },
-      '+961':  { d: 8,  p: 'XX XXX XXX' },
+      // max allows the trunk zero to be typed: 070 123 456 is nine characters,
+      // and capping at eight silently ate the last digit, submitting a number
+      // that was wrong rather than one that was rejected.
+      '+961':  { d: 8,  max: 9, p: 'XX XXX XXX' },
       '+266':  { d: 8,  p: 'XXXX XXXX' },
       '+231':  { d: 8,  p: 'XX XXX XXX' },
       '+218':  { d: 9,  p: 'XX XXX XXXX' },
@@ -993,7 +1005,7 @@ const { targetDate, showCountdown = true, showSpots = true, heading, subheading 
     function applyFormat() {
       var f = fmt[sel.value];
       if (f) {
-        tel.maxLength = f.d;
+        tel.maxLength = f.max || f.d;
         tel.placeholder = f.p;
       } else {
         tel.maxLength = 15;
@@ -1010,9 +1022,10 @@ const { targetDate, showCountdown = true, showSpots = true, heading, subheading 
     tel.addEventListener('input', function() {
       var f = fmt[sel.value];
       if (!f) return;
+      var cap = f.max || f.d;
       var digits = tel.value.replace(/\D/g, '');
-      if (digits.length > f.d) {
-        digits = digits.slice(0, f.d);
+      if (digits.length > cap) {
+        digits = digits.slice(0, cap);
         tel.value = digits;
       }
     });
