@@ -537,7 +537,10 @@ import { META_PIXEL_ID } from '../config/meta';
       // not here falls back to a permissive 6-15 digit check rather than rejecting a
       // valid number from a country we did not enumerate.
       var DIGITS = {
-        '+961': 8, '+971': 9, '+966': 9, '+1': 10, '+44': 10, '+33': 9, '+49': 10,
+        // Lebanon takes two: an 03 number is 7 digits once the trunk zero is off,
+        // every other mobile prefix (70/71/76/78/79/81) is 8. A single number is
+        // still fine for the rest.
+        '+961': [7, 8], '+971': 9, '+966': 9, '+1': 10, '+44': 10, '+33': 9, '+49': 10,
         '+20': 10, '+90': 10, '+962': 9, '+963': 9, '+964': 10, '+965': 8, '+968': 8,
         '+970': 9, '+973': 8, '+974': 8, '+212': 9, '+213': 9, '+216': 8, '+218': 9,
         '+234': 10, '+254': 9, '+91': 10, '+92': 10, '+86': 11, '+7': 10, '+55': 11,
@@ -546,17 +549,23 @@ import { META_PIXEL_ID } from '../config/meta';
 
       var cc = document.getElementById('da-cc').value || '+961';
       var digits = document.getElementById('da-ph').value.replace(/\D/g, '');
-      if (digits.charAt(0) === '0') digits = digits.slice(1);
+      // Country code first, trunk zero second. Done the other way round, a pasted
+      // "+961 03 751 043" keeps its zero — the 961 is stripped afterwards and the
+      // leftover 03751043 is eight digits, so it passes and stores +96103751043.
       // Tolerate the country code being typed into the number field as well.
       var bare = cc.replace('+', '');
       if (digits.indexOf(bare) === 0 && digits.length > bare.length) digits = digits.slice(bare.length);
+      if (digits.charAt(0) === '0') digits = digits.slice(1);
 
       var expected = DIGITS[cc];
-      var valid = expected ? digits.length === expected : (digits.length >= 6 && digits.length <= 15);
+      var lengths = expected == null ? null : (Array.isArray(expected) ? expected : [expected]);
+      var valid = lengths
+        ? lengths.indexOf(digits.length) !== -1
+        : (digits.length >= 6 && digits.length <= 15);
       if (!valid) {
         document.getElementById('da-ph').focus();
-        alert(expected
-          ? 'Please enter a valid ' + expected + '-digit number for ' + cc + '.'
+        alert(lengths
+          ? 'Please enter a valid ' + lengths.join(' or ') + '-digit number for ' + cc + '.'
           : 'Please enter a valid phone number.');
         return;
       }
