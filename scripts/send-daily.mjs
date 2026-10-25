@@ -129,6 +129,7 @@ console.log(`Registrants   : ${Math.max(0, rows.length - 1)}\n`);
 
 const updates = [];
 let scheduled = 0;
+let sentNow = 0;
 let skipped = 0;
 let duplicates = 0;
 const failures = [];
@@ -166,9 +167,15 @@ for (let r = 1; r < rows.length; r++) {
     const isDuplicate = seen.has(key);
     seen.add(key);
 
+    // GitHub's scheduler is best-effort and the first real run fired 4h35m after
+    // its cron time. If the slot has already gone by, Brevo refuses a scheduledAt
+    // in the past and the email is lost outright — so send it now instead. Late is
+    // recoverable; never is not.
+    const future = item.at.getTime() > Date.now() + 2 * 60 * 1000;
+
     if (DRY_RUN) {
       console.log(
-        `  ${isDuplicate ? 'stamp only (duplicate address)' : 'would schedule'} ` +
+        `  ${isDuplicate ? 'stamp only (duplicate address)' : (future ? 'would schedule' : 'would send NOW (slot passed)')} ` +
         `${item.template} -> ${email} at ${item.at.toISOString()}`,
       );
       if (isDuplicate) duplicates++; else scheduled++;
@@ -188,7 +195,7 @@ for (let r = 1; r < rows.length; r++) {
       body: JSON.stringify({
         to: [{ email }],
         templateId: item.template,
-        scheduledAt: item.at.toISOString().replace(/\.\d{3}Z$/, 'Z'),
+        ...(future ? { scheduledAt: item.at.toISOString().replace(/\.\d{3}Z$/, 'Z') } : {}),
       }),
     });
 
@@ -203,6 +210,7 @@ for (let r = 1; r < rows.length; r++) {
     });
     if (body.batchId) updates.push({ range: `${colLetter(COL.BATCH_ID)}${r + 1}`, values: [[body.batchId]] });
     scheduled++;
+    if (!future) sentNow++;
   }
 }
 
@@ -223,6 +231,10 @@ if (updates.length) {
   }
 }
 
-console.log(`\nscheduled: ${scheduled}   duplicates stamped: ${duplicates}   skipped: ${skipped}   failed: ${failures.length}`);
+console.log(
+  `\nscheduled: ${scheduled}` +
+  (sentNow ? `   (of which sent immediately because the slot had passed: ${sentNow})` : '') +
+  `   duplicates stamped: ${duplicates}   skipped: ${skipped}   failed: ${failures.length}`,
+);
 for (const f of failures) console.error('  FAILED ' + f);
 process.exit(failures.length ? 1 : 0);

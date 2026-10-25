@@ -11,7 +11,14 @@ name: Webinar daily emails
 
 on:
   schedule:
-    - cron: '0 5 * * *'
+    # Three attempts, not one. GitHub's scheduler is best-effort: the first real
+    # run of this workflow fired at 09:35 UTC for a 05:00 cron, 4h35m late, which
+    # is after the 10:00 Beirut slot it was meant to schedule. Whole hours on the
+    # hour are the most contended, so these sit early and on an odd minute, and
+    # the job is idempotent — a stamped cell means done, so later runs do nothing.
+    - cron: '23 1 * * *'
+    - cron: '23 3 * * *'
+    - cron: '23 5 * * *'
   # Manual runs, for the dry run and for recovering a missed day.
   workflow_dispatch:
     inputs:
