@@ -140,6 +140,20 @@ const failures = [];
 // still stamped, otherwise tomorrow's run would treat them as unsent.
 const alreadySent = new Map(); // template -> Set<email>
 
+// When an address registered again today, it already had a confirmation sent and
+// the day's email scheduled at signup+1h. Its OLDER row still takes today's slot,
+// and a re-registration shortly before that slot puts the two within minutes of
+// each other — a confirmation and the day's email landing together. Keep both
+// copies, but never closer than an hour apart.
+const confirmedTodayAt = new Map(); // email -> latest registration today, ms
+for (let r = 1; r < rows.length; r++) {
+  const email = (rows[r][COL.EMAIL] || '').trim().toLowerCase();
+  const t = Number(rows[r][COL.EVENT_TIME]);
+  if (!email || !Number.isFinite(t) || t <= 0) continue;
+  if (beirutDate(new Date(t * 1000)) !== today) continue;
+  confirmedTodayAt.set(email, Math.max(confirmedTodayAt.get(email) ?? 0, t * 1000));
+}
+
 for (let r = 1; r < rows.length; r++) {
   const row = rows[r];
   const email = (row[COL.EMAIL] || '').trim();
@@ -167,16 +181,26 @@ for (let r = 1; r < rows.length; r++) {
     const isDuplicate = seen.has(key);
     seen.add(key);
 
+    // Hold the slot copy back if this address got a confirmation today.
+    let at = item.at;
+    if (item.reason === 'daily-slot') {
+      const confirmedAt = confirmedTodayAt.get(key);
+      if (confirmedAt) {
+        const earliest = new Date(confirmedAt + 60 * 60 * 1000);
+        if (earliest > at) at = earliest;
+      }
+    }
+
     // GitHub's scheduler is best-effort and the first real run fired 4h35m after
     // its cron time. If the slot has already gone by, Brevo refuses a scheduledAt
     // in the past and the email is lost outright — so send it now instead. Late is
     // recoverable; never is not.
-    const future = item.at.getTime() > Date.now() + 2 * 60 * 1000;
+    const future = at.getTime() > Date.now() + 2 * 60 * 1000;
 
     if (DRY_RUN) {
       console.log(
         `  ${isDuplicate ? 'stamp only (duplicate address)' : (future ? 'would schedule' : 'would send NOW (slot passed)')} ` +
-        `${item.template} -> ${email} at ${item.at.toISOString()}`,
+        `${item.template} -> ${email} at ${at.toISOString()}`,
       );
       if (isDuplicate) duplicates++; else scheduled++;
       continue;
@@ -184,7 +208,7 @@ for (let r = 1; r < rows.length; r++) {
 
     // Stamped but not sent: the address already got this template this run.
     if (isDuplicate) {
-      updates.push({ range: `${colLetter(col)}${r + 1}`, values: [[item.at.toISOString()]] });
+      updates.push({ range: `${colLetter(col)}${r + 1}`, values: [[at.toISOString()]] });
       duplicates++;
       continue;
     }
@@ -195,7 +219,7 @@ for (let r = 1; r < rows.length; r++) {
       body: JSON.stringify({
         to: [{ email }],
         templateId: item.template,
-        ...(future ? { scheduledAt: item.at.toISOString().replace(/\.\d{3}Z$/, 'Z') } : {}),
+        ...(future ? { scheduledAt: at.toISOString().replace(/\.\d{3}Z$/, 'Z') } : {}),
       }),
     });
 
@@ -206,7 +230,7 @@ for (let r = 1; r < rows.length; r++) {
     const body = await send.json().catch(() => ({}));
     updates.push({
       range: `${colLetter(col)}${r + 1}`,
-      values: [[item.at.toISOString()]],
+      values: [[at.toISOString()]],
     });
     if (body.batchId) updates.push({ range: `${colLetter(COL.BATCH_ID)}${r + 1}`, values: [[body.batchId]] });
     scheduled++;
