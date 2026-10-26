@@ -420,6 +420,34 @@ import { META_PIXEL_ID } from '../config/meta';
 </div>
 
 <script is:inline>
+  // Campaign tags, captured the moment the visit lands.
+  //
+  // This has to run on page load, not at submit: the parameters only exist on the
+  // URL the visit arrived on, and the referrer only on its first page. Reading
+  // them at submit meant anyone who opened the Terms, pressed Back, or reloaded
+  // without the query string registered as if they had come from nowhere — real
+  // ad clicks recorded as untraceable visits.
+  //
+  // First value wins, so a later page view cannot overwrite a known source with
+  // a blank one.
+  (function () {
+    try {
+      var p = new URLSearchParams(window.location.search);
+      var fields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      for (var i = 0; i < fields.length; i++) {
+        var v = p.get(fields[i]);
+        if (v && !sessionStorage.getItem('da_' + fields[i])) sessionStorage.setItem('da_' + fields[i], v);
+      }
+      if (document.referrer && !sessionStorage.getItem('da_referrer')) {
+        sessionStorage.setItem('da_referrer', document.referrer);
+      }
+    } catch (_) {
+      // Private mode or blocked storage: the submit handler still reads the URL.
+    }
+  })();
+</script>
+
+<script is:inline>
   // Live seat count from the same sheet registrations are written to. Until it
   // answers, the line shows three pulsing dots rather than a placeholder number:
   // a hardcoded figure that then jumps to the real one reads as a fake counter.
@@ -595,6 +623,25 @@ import { META_PIXEL_ID } from '../config/meta';
 
       var params = new URLSearchParams(window.location.search);
 
+      /**
+       * The campaign tag for this visit: whatever the URL carries now, otherwise
+       * whatever the first page of this visit carried. The first value wins and is
+       * kept, so a later page view cannot overwrite a real source with a blank.
+       * document.referrer is stored the same way, since it also only exists on the
+       * page the visit landed on.
+       */
+      function daAttr(name) {
+        var live = name === 'referrer' ? (document.referrer || '') : (params.get(name) || '');
+        try {
+          var saved = sessionStorage.getItem('da_' + name);
+          if (live && !saved) { sessionStorage.setItem('da_' + name, live); return live; }
+          return live || saved || '';
+        } catch (_) {
+          // Private mode and blocked storage both throw; the live value still works.
+          return live;
+        }
+      }
+
       // ── What the Conversions API needs, gathered browser-side ──
       // _fbp and _fbc are set by the pixel itself and are NOT hashed: Meta matches
       // them verbatim. _fbc only exists once someone has arrived on an ad click, so
@@ -648,12 +695,17 @@ import { META_PIXEL_ID } from '../config/meta';
         lastName: document.getElementById('da-ln').value.trim().replace(/\s+/g, ' '),
         email: document.getElementById('da-em').value.trim(),
         phone: cc + digits,
-        utm_source: params.get('utm_source') || '',
-        utm_medium: params.get('utm_medium') || '',
-        utm_campaign: params.get('utm_campaign') || '',
-        utm_content: params.get('utm_content') || '',
-        utm_term: params.get('utm_term') || '',
-        referrer: document.referrer || '',
+        // Remembered from the landing URL, not just read off the current one.
+        // Reading only the live query string meant any second page view threw the
+        // attribution away: open the Terms and come back, hit Back from anywhere,
+        // reload without the parameters, and a paid click arrived looking like it
+        // came from nowhere. That is what the untagged rows mostly were.
+        utm_source: daAttr('utm_source'),
+        utm_medium: daAttr('utm_medium'),
+        utm_campaign: daAttr('utm_campaign'),
+        utm_content: daAttr('utm_content'),
+        utm_term: daAttr('utm_term'),
+        referrer: daAttr('referrer'),
         vslSeconds: vslSeconds,
         eventId: regEventId,
         leadEventId: leadEventId,

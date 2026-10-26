@@ -131,22 +131,23 @@ function buildTrafficSource(source: string, medium: string, referrer: string, fb
   // source and buried whichever ad actually brought them.
   if (host && ownHost && host === ownHost.replace('www.', '')) host = '';
 
-  // "Untagged" rather than "Organic": the visit came from that platform without
-  // campaign parameters, which happens to a story swipe-up and to a click from an
-  // ad's comments alike. Naming it organic is what hid 21 Meta visits as reach we
-  // never had; naming it paid would hide the stories instead.
+  // Every ad link carries utm_source, and the tags now survive internal
+  // navigation, so a Meta visit arriving without them did not come through an ad
+  // link: a story swipe-up, the profile or bio link, a shared link, or a click
+  // from an ad's comments. That is organic by the ordinary meaning of the word.
   if (host) {
-    if (host.includes('instagram.com'))                           return 'Instagram (untagged)';
-    if (host.includes('facebook.com'))                            return 'Facebook (untagged)';
+    if (host.includes('instagram.com'))                           return 'Instagram Organic';
+    if (host.includes('facebook.com'))                            return 'Facebook Organic';
     if (host.includes('linkedin.com') || host.includes('lnkd.in')) return 'LinkedIn';
     if (host.includes('google.com'))                              return 'Google Search';
     if (host.includes('youtube.com'))                             return 'YouTube';
     return host;
   }
 
-  // No parameters, no outside referrer, but a Meta click behind it: the referrer
-  // was stripped, as in-app browsers routinely do, not a visit from nowhere.
-  if (clickedAnAd) return 'Meta (untagged)';
+  // No tags and no outside referrer, but a Meta click behind it. In-app browsers
+  // strip the referrer routinely, so this is a Meta visit whose surface we cannot
+  // name — not someone who typed the address.
+  if (clickedAnAd) return 'Meta Organic';
 
   return 'Direct Visit';
 }
