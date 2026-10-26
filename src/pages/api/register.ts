@@ -121,6 +121,18 @@ function buildTrafficSource(source: string, medium: string, referrer: string, fb
     return [s, m].filter(Boolean).join(' / ');
   }
 
+  // Meta's click token carries the ad id when the click came from an ad, and
+  // nothing when it did not. It survives even where the UTMs are lost, so it
+  // settles what the referrer alone cannot: of the 14 visits once filed as
+  // Facebook organic, 8 held an ad id and were ours all along, while every story
+  // and direct visit held none. Checked against known-paid rows first: 79/79
+  // Facebook, 17/17 Audience Network.
+  //
+  // The token is undocumented and Meta may change it, so this is only consulted
+  // when no UTM survives, and it never overrides one.
+  const fbclid = (fbc || '').split('.').slice(3).join('.');
+  const fromAnAd = /YWRpZA|FkaWQ|hZGlk/.test(fbclid);
+
   let host = '';
   if (referrer) {
     try { host = new URL(referrer).hostname.replace('www.', ''); } catch { /* keep '' */ }
@@ -136,8 +148,8 @@ function buildTrafficSource(source: string, medium: string, referrer: string, fb
   // link: a story swipe-up, the profile or bio link, a shared link, or a click
   // from an ad's comments. That is organic by the ordinary meaning of the word.
   if (host) {
-    if (host.includes('instagram.com'))                           return 'Instagram Organic';
-    if (host.includes('facebook.com'))                            return 'Facebook Organic';
+    if (host.includes('instagram.com'))                           return fromAnAd ? 'Instagram Paid Ad' : 'Instagram Organic';
+    if (host.includes('facebook.com'))                            return fromAnAd ? 'Facebook Paid Ad'  : 'Facebook Organic';
     if (host.includes('linkedin.com') || host.includes('lnkd.in')) return 'LinkedIn';
     if (host.includes('google.com'))                              return 'Google Search';
     if (host.includes('youtube.com'))                             return 'YouTube';
@@ -147,9 +159,9 @@ function buildTrafficSource(source: string, medium: string, referrer: string, fb
   // No tags and no referrer, which is what an in-app browser usually sends. The
   // app is still named in the user agent, so the platform need not be guessed:
   // every such visit in this campaign turned out to be the Facebook app.
-  if (/Instagram/i.test(userAgent)) return 'Instagram Organic';
-  if (/FBAN|FBAV|FB_IAB/i.test(userAgent)) return 'Facebook Organic';
-  if (clickedAnAd) return 'Meta Organic';
+  if (/Instagram/i.test(userAgent)) return fromAnAd ? 'Instagram Paid Ad' : 'Instagram Organic';
+  if (/FBAN|FBAV|FB_IAB/i.test(userAgent)) return fromAnAd ? 'Facebook Paid Ad' : 'Facebook Organic';
+  if (clickedAnAd) return fromAnAd ? 'Meta Paid Ad' : 'Meta Organic';
 
   return 'Direct Visit';
 }
