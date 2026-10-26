@@ -76,30 +76,62 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
 }
 
 
-function buildTrafficSource(source: string, medium: string, referrer: string): string {
+/**
+ * Where a registrant came from.
+ *
+ * The UTM parameters are the first authority, but they go missing far more often
+ * than you would expect: a visitor who clicks the ad, browses away and returns
+ * through Facebook arrives with no query string at all. Judged on the referrer
+ * alone that reads as organic reach, which was wrong for every single one of the
+ * 21 rows labelled that way during this campaign — all of them carried an ad
+ * click id, while the only genuinely unattributed visits carried none.
+ *
+ * So `fbc` is the tiebreaker. It is derived from the fbclid Meta appends to an ad
+ * click and stored in a cookie for 90 days, meaning its presence proves this
+ * person clicked an ad at some point, even when the parameters are long gone. For
+ * a campaign whose traffic is bought, crediting that to paid is right, and it
+ * stops the ad spend being under-reported by a tenth.
+ */
+function buildTrafficSource(source: string, medium: string, referrer: string, fbc: string, ownHost: string): string {
   const s = (source || '').toLowerCase().trim();
   const m = (medium || '').toLowerCase().trim();
+  const clickedAnAd = Boolean((fbc || '').trim());
 
   if (s) {
     if ((s === 'ig' || s === 'instagram') && m === 'paid') return 'Instagram Paid Ad';
     if ((s === 'fb' || s === 'facebook')  && m === 'paid') return 'Facebook Paid Ad';
+    // Meta fills utm_source from {{site_source_name}}: fb, ig, an, msg. The last
+    // two had no rule and fell through to a raw "an / paid".
+    if (s === 'an')                                        return 'Audience Network Paid Ad';
+    if (s === 'msg' || s === 'messenger')                  return 'Messenger Paid Ad';
     if ((s === 'ig' || s === 'instagram'))                 return 'Instagram Organic';
     if (s === 'linkedin' || s === 'lnkd.in')              return 'LinkedIn';
     if (s === 'google' && m === 'organic')                 return 'Google Search';
     return [s, m].filter(Boolean).join(' / ');
   }
 
+  let host = '';
   if (referrer) {
-    try {
-      const host = new URL(referrer).hostname.replace('www.', '');
-      if (host.includes('instagram.com'))                           return 'Instagram Organic';
-      if (host.includes('linkedin.com') || host.includes('lnkd.in')) return 'LinkedIn';
-      if (host.includes('facebook.com'))                            return 'Facebook Organic';
-      if (host.includes('google.com'))                              return 'Google Search';
-      if (host.includes('youtube.com'))                             return 'YouTube';
-      return host;
-    } catch { return referrer; }
+    try { host = new URL(referrer).hostname.replace('www.', ''); } catch { /* keep '' */ }
   }
+
+  // Our own pages are not a source. Someone reading the Terms and coming back is
+  // the same visit, and treating the domain as a referrer both invented a traffic
+  // source and buried whichever ad actually brought them.
+  if (host && ownHost && host === ownHost.replace('www.', '')) host = '';
+
+  if (host) {
+    if (host.includes('instagram.com'))                           return clickedAnAd ? 'Instagram Paid Ad' : 'Instagram Organic';
+    if (host.includes('facebook.com'))                            return clickedAnAd ? 'Facebook Paid Ad'  : 'Facebook Organic';
+    if (host.includes('linkedin.com') || host.includes('lnkd.in')) return 'LinkedIn';
+    if (host.includes('google.com'))                              return 'Google Search';
+    if (host.includes('youtube.com'))                             return 'YouTube';
+    return host;
+  }
+
+  // No parameters and no outside referrer, but they have clicked an ad before:
+  // a return visit that paid for itself, not someone who appeared from nowhere.
+  if (clickedAnAd) return 'Meta Paid Ad';
 
   return 'Direct Visit';
 }
@@ -280,7 +312,10 @@ export const POST: APIRoute = async ({ request }) => {
 
       rowNumber = await appendToSheet(sheetId, [
         firstName, lastName || '', email, phoneE164,
-        buildTrafficSource(utm_source || '', utm_medium || '', referrer || ''),
+        buildTrafficSource(
+          utm_source || '', utm_medium || '', referrer || '', fbc || '',
+          (() => { try { return new URL(sourceUrl || request.url).hostname; } catch { return ''; } })(),
+        ),
         String(vslSeconds ?? 0),
         eventId || '', leadEventId || '', vslEventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
         emHash, phHash, fnHash, lnHash,
