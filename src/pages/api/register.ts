@@ -86,11 +86,17 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
  * 21 rows labelled that way during this campaign — all of them carried an ad
  * click id, while the only genuinely unattributed visits carried none.
  *
- * So `fbc` is the tiebreaker. It is derived from the fbclid Meta appends to an ad
- * click and stored in a cookie for 90 days, meaning its presence proves this
- * person clicked an ad at some point, even when the parameters are long gone. For
- * a campaign whose traffic is bought, crediting that to paid is right, and it
- * stops the ad spend being under-reported by a tenth.
+ * `fbc` is a weaker signal than it looks. Meta appends fbclid to organic links as
+ * well as ads — including links in ad comments and from a profile — so its
+ * presence proves the click came from a Meta surface, not that it was bought. We
+ * post Instagram stories, so an Instagram click with no tags could be either, and
+ * calling it paid would take the credit from the stories.
+ *
+ * What the data does say: every fbc in this campaign was stamped within half an
+ * hour of the registration, median about a minute. There are no stale cookies, so
+ * an untagged Meta click is a visit that genuinely started on Meta just now. That
+ * earns the honest label below rather than a guess in either direction. The way
+ * to remove the ambiguity is to tag the story links, not to infer harder here.
  */
 function buildTrafficSource(source: string, medium: string, referrer: string, fbc: string, ownHost: string): string {
   const s = (source || '').toLowerCase().trim();
@@ -104,6 +110,11 @@ function buildTrafficSource(source: string, medium: string, referrer: string, fb
     // two had no rule and fell through to a raw "an / paid".
     if (s === 'an')                                        return 'Audience Network Paid Ad';
     if (s === 'msg' || s === 'messenger')                  return 'Messenger Paid Ad';
+    // Tag the story link sticker with ?utm_source=ig&utm_medium=story and the
+    // swipe-ups separate themselves from the ads for good, instead of both
+    // arriving untagged and indistinguishable.
+    if ((s === 'ig' || s === 'instagram') && m === 'story') return 'Instagram Story';
+    if ((s === 'fb' || s === 'facebook')  && m === 'story') return 'Facebook Story';
     if ((s === 'ig' || s === 'instagram'))                 return 'Instagram Organic';
     if (s === 'linkedin' || s === 'lnkd.in')              return 'LinkedIn';
     if (s === 'google' && m === 'organic')                 return 'Google Search';
@@ -120,18 +131,22 @@ function buildTrafficSource(source: string, medium: string, referrer: string, fb
   // source and buried whichever ad actually brought them.
   if (host && ownHost && host === ownHost.replace('www.', '')) host = '';
 
+  // "Untagged" rather than "Organic": the visit came from that platform without
+  // campaign parameters, which happens to a story swipe-up and to a click from an
+  // ad's comments alike. Naming it organic is what hid 21 Meta visits as reach we
+  // never had; naming it paid would hide the stories instead.
   if (host) {
-    if (host.includes('instagram.com'))                           return clickedAnAd ? 'Instagram Paid Ad' : 'Instagram Organic';
-    if (host.includes('facebook.com'))                            return clickedAnAd ? 'Facebook Paid Ad'  : 'Facebook Organic';
+    if (host.includes('instagram.com'))                           return 'Instagram (untagged)';
+    if (host.includes('facebook.com'))                            return 'Facebook (untagged)';
     if (host.includes('linkedin.com') || host.includes('lnkd.in')) return 'LinkedIn';
     if (host.includes('google.com'))                              return 'Google Search';
     if (host.includes('youtube.com'))                             return 'YouTube';
     return host;
   }
 
-  // No parameters and no outside referrer, but they have clicked an ad before:
-  // a return visit that paid for itself, not someone who appeared from nowhere.
-  if (clickedAnAd) return 'Meta Paid Ad';
+  // No parameters, no outside referrer, but a Meta click behind it: the referrer
+  // was stripped, as in-app browsers routinely do, not a visit from nowhere.
+  if (clickedAnAd) return 'Meta (untagged)';
 
   return 'Direct Visit';
 }
