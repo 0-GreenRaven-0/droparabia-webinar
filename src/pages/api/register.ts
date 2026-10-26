@@ -98,7 +98,7 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
  * earns the honest label below rather than a guess in either direction. The way
  * to remove the ambiguity is to tag the story links, not to infer harder here.
  */
-function buildTrafficSource(source: string, medium: string, referrer: string, fbc: string, ownHost: string): string {
+function buildTrafficSource(source: string, medium: string, referrer: string, fbc: string, ownHost: string, userAgent: string): string {
   const s = (source || '').toLowerCase().trim();
   const m = (medium || '').toLowerCase().trim();
   const clickedAnAd = Boolean((fbc || '').trim());
@@ -144,9 +144,11 @@ function buildTrafficSource(source: string, medium: string, referrer: string, fb
     return host;
   }
 
-  // No tags and no outside referrer, but a Meta click behind it. In-app browsers
-  // strip the referrer routinely, so this is a Meta visit whose surface we cannot
-  // name — not someone who typed the address.
+  // No tags and no referrer, which is what an in-app browser usually sends. The
+  // app is still named in the user agent, so the platform need not be guessed:
+  // every such visit in this campaign turned out to be the Facebook app.
+  if (/Instagram/i.test(userAgent)) return 'Instagram Organic';
+  if (/FBAN|FBAV|FB_IAB/i.test(userAgent)) return 'Facebook Organic';
   if (clickedAnAd) return 'Meta Organic';
 
   return 'Direct Visit';
@@ -331,6 +333,7 @@ export const POST: APIRoute = async ({ request }) => {
         buildTrafficSource(
           utm_source || '', utm_medium || '', referrer || '', fbc || '',
           (() => { try { return new URL(sourceUrl || request.url).hostname; } catch { return ''; } })(),
+          userAgent,
         ),
         String(vslSeconds ?? 0),
         eventId || '', leadEventId || '', vslEventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
