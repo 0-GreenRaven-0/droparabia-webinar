@@ -554,19 +554,42 @@ import { META_PIXEL_ID } from '../config/meta';
       // leftover 03751043 is eight digits, so it passes and stores +96103751043.
       // Tolerate the country code being typed into the number field as well.
       var bare = cc.replace('+', '');
+      if (digits.indexOf('00') === 0) digits = digits.slice(2);
       if (digits.indexOf(bare) === 0 && digits.length > bare.length) digits = digits.slice(bare.length);
       if (digits.charAt(0) === '0') digits = digits.slice(1);
 
-      var expected = DIGITS[cc];
-      var lengths = expected == null ? null : (Array.isArray(expected) ? expected : [expected]);
-      var valid = lengths
-        ? lengths.indexOf(digits.length) !== -1
-        : (digits.length >= 6 && digits.length <= 15);
-      if (!valid) {
+      var phoneError = null;
+      if (cc === '+961') {
+        // Mirrors validateLebanese() in src/lib/phone.ts, which is the real gate
+        // in /api/register. Kept here as plain inline code because these scripts
+        // are is:inline and cannot import — and because shipping libphonenumber
+        // to every visitor would cost more than this table is worth. Lebanon is
+        // the one country we can state exactly: prefix decides the length, and a
+        // landline is refused outright since it cannot receive the WhatsApp
+        // confirmation the form promises.
+        var LB = { '70': 8, '71': 8, '76': 8, '78': 8, '79': 8, '81': 8, '3': 7 };
+        var order = ['70', '71', '76', '78', '79', '81', '3'];
+        var good = false;
+        for (var li = 0; li < order.length; li++) {
+          if (digits.indexOf(order[li]) === 0 && digits.length === LB[order[li]]) { good = true; break; }
+        }
+        // One message, never naming a prefix: a wrong number's apparent prefix
+        // misleads. 33979789 looks like a 3 number, an 07 landline looks like 71.
+        if (!good) {
+          phoneError = 'Please enter a valid Lebanese mobile number — 03, 70, 71, 76, 78, 79 or 81 ' +
+            'followed by 6 digits. You entered ' + digits.length + ' digits.';
+        }
+      } else {
+        var expected = DIGITS[cc];
+        var lengths = expected == null ? null : (Array.isArray(expected) ? expected : [expected]);
+        var ok = lengths
+          ? lengths.indexOf(digits.length) !== -1
+          : (digits.length >= 6 && digits.length <= 15);
+        if (!ok) phoneError = 'Please enter a valid phone number for ' + cc + '.';
+      }
+      if (phoneError) {
         document.getElementById('da-ph').focus();
-        alert(lengths
-          ? 'Please enter a valid ' + lengths.join(' or ') + '-digit number for ' + cc + '.'
-          : 'Please enter a valid phone number.');
+        alert(phoneError);
         return;
       }
 

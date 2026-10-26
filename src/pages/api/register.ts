@@ -5,6 +5,7 @@ import { getRuntimeEnv } from '../../lib/env';
 import { brevoAddContact, brevoSendTemplate } from '../../lib/brevo';
 import { webinarDayIndex } from '../../config/webinar';
 import { planOnSignup, ALL_TEMPLATES } from '../../lib/sequence';
+import { normalizePhone } from '../../lib/phone';
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;
@@ -227,6 +228,17 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ success: false, error: 'Missing required fields' }, 400);
     }
 
+    // The real gate, in front of every write. The browser checks this too, but the
+    // browser can be bypassed and the consequence lands downstream: Interakt reads
+    // the Phone column to send the WhatsApp confirmation and refuses a malformed
+    // number, so a bad one saved here is a lead who hears nothing. Nothing reaches
+    // the sheet, Brevo or the pixel unless the number is one we can actually message.
+    const checked = normalizePhone(phone);
+    if (!checked.ok) {
+      return json({ success: false, error: checked.error }, 400);
+    }
+    const phoneE164 = checked.e164;
+
     // Cloudflare dashboard variables and secrets only exist at RUNTIME, while
     // import.meta.env is inlined at BUILD time from .env — a file that is not in CI.
     // So in production both were undefined, the write below was skipped, and the
@@ -253,7 +265,7 @@ export const POST: APIRoute = async ({ request }) => {
       // hashes that match nobody.
       const [emHash, phHash, fnHash, lnHash] = await Promise.all([
         sha256Hex(normEmail(email)),
-        sha256Hex(normPhone(phone)),
+        sha256Hex(normPhone(phoneE164)),
         sha256Hex(normName(firstName)),
         sha256Hex(normName(lastName || '')),
       ]);
@@ -267,7 +279,7 @@ export const POST: APIRoute = async ({ request }) => {
       const eventTime = Math.floor(Date.now() / 1000);
 
       rowNumber = await appendToSheet(sheetId, [
-        firstName, lastName || '', email, phone,
+        firstName, lastName || '', email, phoneE164,
         buildTrafficSource(utm_source || '', utm_medium || '', referrer || ''),
         String(vslSeconds ?? 0),
         eventId || '', leadEventId || '', vslEventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
@@ -284,7 +296,7 @@ export const POST: APIRoute = async ({ request }) => {
       email,
       firstName,
       lastName: lastName || '',
-      phoneE164: phone,
+      phoneE164,
       webinarDay: webinarDayIndex(),
     });
 
