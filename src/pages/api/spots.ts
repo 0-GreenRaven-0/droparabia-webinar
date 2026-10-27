@@ -3,7 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
 
-const TOTAL_SPOTS = 386;
+const TOTAL_SPOTS = 500;
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;

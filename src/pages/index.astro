@@ -466,10 +466,10 @@ import { META_PIXEL_ID } from '../config/meta';
 
     fetch('/api/spots')
       .then(function (r) { return r.json(); })
-      .then(function (d) { show(d.remaining != null ? d.remaining : 386); })
+      .then(function (d) { show(d.remaining != null ? d.remaining : 500); })
       // The dots must not spin forever if the sheet is unreachable; fall back to
       // the full count, which is what /api/spots itself returns on failure.
-      .catch(function () { show(386); });
+      .catch(function () { show(500); });
   })();
 </script>
 
