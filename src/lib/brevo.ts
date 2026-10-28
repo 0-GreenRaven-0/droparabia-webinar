@@ -46,12 +46,31 @@ export async function brevoAddContact(contact: BrevoContact): Promise<BrevoResul
     updateEnabled: true,
   };
 
-  const post = (payload: Record<string, unknown>) =>
-    fetch('https://api.brevo.com/v3/contacts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'api-key': apiKey },
-      body: JSON.stringify(payload),
-    });
+  // Retried, because a contact that fails to be created costs the registrant
+  // their whole sequence: no confirmation, no day-of email, and every later one
+  // arrives with a blank greeting, since Brevo resolves {{ contact.FIRSTNAME }}
+  // from the stored contact at send time. It happened to 12 of 96 registrants in
+  // one afternoon — intermittently, with valid addresses and valid numbers — and
+  // left no trace beyond an empty cell. A rate limit or a passing 5xx is worth
+  // three seconds of patience; a 4xx is our fault and retrying would not help.
+  const post = async (payload: Record<string, unknown>) => {
+    let last: Response | undefined;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (attempt) await new Promise((r) => setTimeout(r, attempt * 1000));
+      try {
+        last = await fetch('https://api.brevo.com/v3/contacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'api-key': apiKey },
+          body: JSON.stringify(payload),
+        });
+      } catch {
+        continue; // Network fault: no response at all, so try again.
+      }
+      if (last.status !== 429 && last.status < 500) return last;
+    }
+    if (last) return last;
+    throw new Error('Brevo unreachable after 3 attempts');
+  };
 
   let res = await post(body);
 
