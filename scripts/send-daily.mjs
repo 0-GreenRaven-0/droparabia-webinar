@@ -133,6 +133,7 @@ let sentNow = 0;
 let skipped = 0;
 let duplicates = 0;
 const failures = [];
+const invalid = [];
 
 // The same address can appear on more than one row — someone registering twice,
 // or a re-submit. Brevo would happily send them the same email once per row, so
@@ -224,7 +225,20 @@ for (let r = 1; r < rows.length; r++) {
     });
 
     if (send.status !== 201 && send.status !== 202) {
-      failures.push(`${item.template} -> ${email}: ${send.status} ${(await send.text()).slice(0, 120)}`);
+      const detail = (await send.text()).slice(0, 200);
+
+      // A mistyped address will never accept mail, so retrying it tomorrow only
+      // turns the run red again — amanidejene1@gmail.com6 failed every run of a
+      // day in which all 374 other sends were fine. Mark the row dormant and
+      // carry on. Anything else is a real fault and still fails the job loudly.
+      if (send.status === 400 && /invalid|not valid|email/i.test(detail)) {
+        updates.push({ range: `${colLetter(col)}${r + 1}`, values: [['SKIPPED invalid address']] });
+        updates.push({ range: `${colLetter(COL.STATUS)}${r + 1}`, values: [['invalid']] });
+        invalid.push(`${email}: ${detail.slice(0, 80)}`);
+        continue;
+      }
+
+      failures.push(`${item.template} -> ${email}: ${send.status} ${detail.slice(0, 120)}`);
       continue;
     }
     const body = await send.json().catch(() => ({}));
@@ -258,7 +272,12 @@ if (updates.length) {
 console.log(
   `\nscheduled: ${scheduled}` +
   (sentNow ? `   (of which sent immediately because the slot had passed: ${sentNow})` : '') +
-  `   duplicates stamped: ${duplicates}   skipped: ${skipped}   failed: ${failures.length}`,
+  `   duplicates stamped: ${duplicates}   skipped: ${skipped}` +
+  (invalid.length ? `   invalid addresses retired: ${invalid.length}` : '') +
+  `   failed: ${failures.length}`,
 );
+// Worth reading, not worth failing over: these rows are now dormant and will not
+// be tried again.
+for (const i of invalid) console.log('  RETIRED ' + i);
 for (const f of failures) console.error('  FAILED ' + f);
 process.exit(failures.length ? 1 : 0);
