@@ -16,28 +16,27 @@ export const WEBINAR_WHEN = 'Thursday, October 29 at 8:00 PM';
  *
  * Registrations are never turned away — the row is still written, so the lead is
  * still ours — but once this many have been taken we stop creating the Brevo
- * contact and stop scheduling their emails. Every contact past the limit spends
- * WhatsApp CRM credits on someone who has no seat.
+ * contact, which means no confirmation email and no sequence past the limit.
+ * Every contact past it spends credits on someone who has no seat.
  *
  * Lived in api/spots.ts alone while api/register.ts had no idea what the limit
  * was. It has been changed three times mid-campaign, which is exactly the kind of
  * number that must not exist in two places.
  */
-export const TOTAL_SEATS = 501;
+export const TOTAL_SEATS = 500;
 
 /**
  * Whether a new registration still reaches Brevo.
  *
- * Switched off: new registrants are confirmed on WhatsApp from the sheet
- * instead, so nothing new is pushed to Brevo at all — no contact, no
- * confirmation, no scheduled sequence.
+ * On: registrants inside the seat limit get their contact, the confirmation
+ * email and their sequence, exactly as the campaign has run all along.
  *
- * This only governs people registering from now on. Everyone already in Brevo
- * keeps their contact and every email already scheduled against it, and the
- * daily job keeps running their sequence untouched. Flip this back to true to
- * put new registrations back on email.
+ * Off: nothing new is pushed to Brevo at all and registrants are confirmed on
+ * WhatsApp from the sheet instead. Either way nobody already in Brevo is
+ * affected — existing contacts keep every email already scheduled against them
+ * and the daily job keeps running their sequence untouched.
  */
-export const BREVO_ENABLED = false;
+export const BREVO_ENABLED = true;
 
 /** 90-minute slot, in the UTC basic format Google Calendar expects. */
 export const WEBINAR_GCAL_DATES = '20261029T180000Z/20261029T193000Z';
