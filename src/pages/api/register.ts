@@ -3,7 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
 import { brevoAddContact, brevoSendTemplate } from '../../lib/brevo';
-import { webinarDayIndex } from '../../config/webinar';
+import { webinarDayIndex, TOTAL_SEATS } from '../../config/webinar';
 import { planOnSignup, ALL_TEMPLATES } from '../../lib/sequence';
 import { normalizePhone } from '../../lib/phone';
 
@@ -248,14 +248,20 @@ function columnLetter(index: number): string {
  *
  * A filled cell is what stops the daily job sending the same template again, so
  * this is the thing that makes the whole sequence idempotent.
+ *
+ * The status in AC is the other half: the daily job reads it, treats a blank as
+ * 'active', and skips the row on anything else. So a registrant who is not meant
+ * to be emailed has to be stamped with a status explicitly — leaving the cell
+ * empty is what hands them to tomorrow's job.
  */
 async function stampSends(
   sheetId: string,
   rowNumber: number,
   token: string,
   sends: { template: number; at: Date }[],
+  status: 'active' | 'waitlist' = 'active',
 ): Promise<void> {
-  if (!rowNumber || !sends.length) return;
+  if (!rowNumber) return;
   const firstSentColumn = 19; // T
   const data = sends
     .map((s) => {
@@ -268,7 +274,7 @@ async function stampSends(
     })
     .filter(Boolean);
 
-  data.push({ range: `${columnLetter(28)}${rowNumber}`, values: [['active']] }); // AC
+  data.push({ range: `${columnLetter(28)}${rowNumber}`, values: [[status]] }); // AC
 
   await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchUpdate`, {
     method: 'POST',
@@ -351,6 +357,36 @@ export const POST: APIRoute = async ({ request }) => {
         eventId || '', leadEventId || '', vslEventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
         emHash, phHash, fnHash, lnHash,
       ], token);
+    }
+
+    // ── The seat limit ──
+    // Past the limit the lead is still kept — the row above is already written, so
+    // nothing is lost and the list keeps growing — but they get no Brevo contact
+    // and no emails, because every contact past the cap spends WhatsApp CRM
+    // credits on someone with no seat.
+    //
+    // The seat number comes free: Sheets reports the row it appended to, row 1 is
+    // the header, so seat = row - 1. No second count, and no race with another
+    // registration landing between the two calls.
+    //
+    // rowNumber 0 means that range could not be parsed, so the seat is unknown. We
+    // let those through: a handful of extra contacts cost credits, while wrongly
+    // withholding the sequence from someone inside the limit costs the seat they
+    // were promised.
+    const seat = rowNumber ? rowNumber - 1 : 0;
+    const overCapacity = seat > TOTAL_SEATS;
+
+    if (overCapacity) {
+      // Stamped 'waitlist' rather than left blank. The daily job reads AC, takes a
+      // blank cell as 'active', and would otherwise pick this row up tomorrow and
+      // mail someone who has no contact behind them — which renders every
+      // {{ contact.FIRSTNAME }} as an empty greeting.
+      const stamped = await stampSends(sheetId, rowNumber, token, [], 'waitlist')
+        .then(() => true)
+        .catch(() => false);
+      // Reported rather than swallowed: an unstamped row reads as 'active', which
+      // is the one way a waitlisted lead could still be mailed tomorrow.
+      return json({ success: true, waitlisted: true, seat, ...(stamped ? {} : { stampFailed: true }) }, 200);
     }
 
     // ── Brevo (after the sheet, never fatal) ──

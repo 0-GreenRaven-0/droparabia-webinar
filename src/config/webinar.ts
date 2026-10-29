@@ -10,6 +10,21 @@ export const WEBINAR_START_ISO = '2026-10-29T20:00:00+02:00';
 /** Human-readable, for body copy. */
 export const WEBINAR_WHEN = 'Thursday, October 29 at 8:00 PM';
 
+/**
+ * How many seats the page sells, and the point past which a registration stops
+ * costing us anything.
+ *
+ * Registrations are never turned away — the row is still written, so the lead is
+ * still ours — but once this many have been taken we stop creating the Brevo
+ * contact and stop scheduling their emails. Every contact past the limit spends
+ * WhatsApp CRM credits on someone who has no seat.
+ *
+ * Lived in api/spots.ts alone while api/register.ts had no idea what the limit
+ * was. It has been changed three times mid-campaign, which is exactly the kind of
+ * number that must not exist in two places.
+ */
+export const TOTAL_SEATS = 491;
+
 /** 90-minute slot, in the UTC basic format Google Calendar expects. */
 export const WEBINAR_GCAL_DATES = '20261029T180000Z/20261029T193000Z';
 

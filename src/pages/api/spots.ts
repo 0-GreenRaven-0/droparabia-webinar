@@ -2,8 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
-
-const TOTAL_SPOTS = 491;
+import { TOTAL_SEATS as TOTAL_SPOTS } from '../../config/webinar';
 
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;
