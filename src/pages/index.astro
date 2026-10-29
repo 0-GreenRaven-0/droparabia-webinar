@@ -134,6 +134,7 @@ import { META_PIXEL_ID } from '../config/meta';
 <div class="da-card" style="background: #FFFFFF; color: #0D0D2B; border-radius: 18px; padding: 26px 24px; border: 2px solid #001EFF; box-shadow: 0 20px 50px rgba(0,30,255,0.16)">
 <div id="da-form-wrap">
 <h2 class="da-title" style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.2; margin: 0 0 8px">Reserve Your Free Seat</h2>
+<p class="da-seats is-loading"><span class="spots-count" aria-live="polite"><span class="da-seats-dots" aria-label="Checking seats"><i></i><i></i><i></i></span></span> seats remaining</p>
 <form id="da-form" class="da-form" style="display: flex; flex-direction: column; gap: 14px">
 <div><label for="da-fn" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">First Name</label><input id="da-fn" class="da-input" type="text" placeholder="Enter your first name" required="required"></div>
 <div class="da-lname"><label for="da-ln" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Last Name</label><input id="da-ln" class="da-input" type="text" placeholder="Enter your last name"></div>
@@ -443,6 +444,32 @@ import { META_PIXEL_ID } from '../config/meta';
     } catch (_) {
       // Private mode or blocked storage: the submit handler still reads the URL.
     }
+  })();
+</script>
+
+<script is:inline>
+  // Live seat count from the same sheet registrations are written to. Until it
+  // answers, the line shows three pulsing dots rather than a placeholder number:
+  // a hardcoded figure that then jumps to the real one reads as a fake counter.
+  (function () {
+    var line = document.querySelector('.da-seats');
+
+    function show(n) {
+      document.querySelectorAll('.spots-count').forEach(function (el) {
+        el.textContent = String(n);
+      });
+      if (line) {
+        line.classList.remove('is-loading');
+        line.classList.add('is-ready');
+      }
+    }
+
+    fetch('/api/spots')
+      .then(function (r) { return r.json(); })
+      .then(function (d) { show(d.remaining != null ? d.remaining : 501); })
+      // The dots must not spin forever if the sheet is unreachable; fall back to
+      // the full count, which is what /api/spots itself returns on failure.
+      .catch(function () { show(501); });
   })();
 </script>
 
