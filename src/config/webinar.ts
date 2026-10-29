@@ -23,7 +23,7 @@ export const WEBINAR_WHEN = 'Thursday, October 29 at 8:00 PM';
  * was. It has been changed three times mid-campaign, which is exactly the kind of
  * number that must not exist in two places.
  */
-export const TOTAL_SEATS = 491;
+export const TOTAL_SEATS = 501;
 
 /** 90-minute slot, in the UTC basic format Google Calendar expects. */
 export const WEBINAR_GCAL_DATES = '20261029T180000Z/20261029T193000Z';
