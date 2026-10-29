@@ -3,7 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
 import { brevoAddContact, brevoSendTemplate } from '../../lib/brevo';
-import { webinarDayIndex, TOTAL_SEATS } from '../../config/webinar';
+import { webinarDayIndex, TOTAL_SEATS, BREVO_ENABLED } from '../../config/webinar';
 import { planOnSignup, ALL_TEMPLATES } from '../../lib/sequence';
 import { normalizePhone } from '../../lib/phone';
 
@@ -259,7 +259,7 @@ async function stampSends(
   rowNumber: number,
   token: string,
   sends: { template: number; at: Date }[],
-  status: 'active' | 'waitlist' = 'active',
+  status: 'active' | 'waitlist' | 'whatsapp-only' = 'active',
 ): Promise<void> {
   if (!rowNumber) return;
   const firstSentColumn = 19; // T
@@ -376,17 +376,34 @@ export const POST: APIRoute = async ({ request }) => {
     const seat = rowNumber ? rowNumber - 1 : 0;
     const overCapacity = seat > TOTAL_SEATS;
 
-    if (overCapacity) {
-      // Stamped 'waitlist' rather than left blank. The daily job reads AC, takes a
-      // blank cell as 'active', and would otherwise pick this row up tomorrow and
-      // mail someone who has no contact behind them — which renders every
-      // {{ contact.FIRSTNAME }} as an empty greeting.
-      const stamped = await stampSends(sheetId, rowNumber, token, [], 'waitlist')
+    // Two separate reasons to leave Brevo alone, with the same handling.
+    //
+    // BREVO_ENABLED off: nothing new goes to Brevo at all. The row is written and
+    // the registrant is confirmed on WhatsApp from the sheet instead. Nobody
+    // already in Brevo is affected — their contact and every email scheduled
+    // against it stay exactly as they are, and the daily job keeps running their
+    // sequence.
+    //
+    // Over the seat cap: a contact past the limit spends WhatsApp CRM credits on
+    // someone with no seat.
+    const skipBrevo = !BREVO_ENABLED || overCapacity;
+
+    if (skipBrevo) {
+      // The status has to be written, not left blank. The daily job reads AC and
+      // takes a blank cell as 'active', so an unstamped row is exactly how one of
+      // these registrants would still be pushed to Brevo tomorrow — and mailed
+      // with no contact behind them, rendering {{ contact.FIRSTNAME }} empty.
+      const status = overCapacity ? 'waitlist' : 'whatsapp-only';
+      const stamped = await stampSends(sheetId, rowNumber, token, [], status)
         .then(() => true)
         .catch(() => false);
-      // Reported rather than swallowed: an unstamped row reads as 'active', which
-      // is the one way a waitlisted lead could still be mailed tomorrow.
-      return json({ success: true, waitlisted: true, seat, ...(stamped ? {} : { stampFailed: true }) }, 200);
+      return json({
+        success: true,
+        status,
+        seat,
+        ...(overCapacity ? { waitlisted: true } : { brevoDisabled: true }),
+        ...(stamped ? {} : { stampFailed: true }),
+      }, 200);
     }
 
     // ── Brevo (after the sheet, never fatal) ──

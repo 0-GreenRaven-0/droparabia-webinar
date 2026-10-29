@@ -25,6 +25,20 @@ export const WEBINAR_WHEN = 'Thursday, October 29 at 8:00 PM';
  */
 export const TOTAL_SEATS = 501;
 
+/**
+ * Whether a new registration still reaches Brevo.
+ *
+ * Switched off: new registrants are confirmed on WhatsApp from the sheet
+ * instead, so nothing new is pushed to Brevo at all — no contact, no
+ * confirmation, no scheduled sequence.
+ *
+ * This only governs people registering from now on. Everyone already in Brevo
+ * keeps their contact and every email already scheduled against it, and the
+ * daily job keeps running their sequence untouched. Flip this back to true to
+ * put new registrations back on email.
+ */
+export const BREVO_ENABLED = false;
+
 /** 90-minute slot, in the UTC basic format Google Calendar expects. */
 export const WEBINAR_GCAL_DATES = '20261029T180000Z/20261029T193000Z';
 
