@@ -561,13 +561,25 @@ Save your free seat
       d.textContent = 'Oh you think yourself funny?';
       document.body.appendChild(d);
     }
-    // Script tags and the other usual markup-injection vectors — <iframe>,
-    // <svg onload=...>, javascript: URIs, bare on*= handlers. Checked on the raw
+    // Markup injection (<script>, <iframe>, <svg onload=...>, javascript:
+    // URIs, bare on*= handlers), template injection ({{ }}, ${ }), shell
+    // metacharacters (backticks, $(...), &&, ||), and SQL-style payloads
+    // (UNION SELECT, DROP TABLE, OR 1=1, trailing --). Checked on the raw
     // field values before any of the normal parsing below touches them, so a
-    // payload that the phone field's own digit-stripping would otherwise just
-    // quietly erase is still caught as the attempt it was.
-    function daLooksLikeInjection(v) {
-      return /<\s*\/?\s*(script|iframe|img|svg|object|embed|link|style)\b|javascript\s*:|on\w+\s*=/i.test(v || '');
+    // payload the phone field's own digit-stripping would otherwise quietly
+    // erase is still caught as the attempt it was.
+    var DA_INJECTION = /<\s*\/?\s*(script|iframe|img|svg|object|embed|link|style|form|meta)\b|javascript\s*:|data\s*:\s*text\/html|vbscript\s*:|on\w+\s*=|\{\{|\}\}|\$\{|`|\$\(|&&|\|\||\bunion\b\s+\bselect\b|\bdrop\s+table\b|\bor\b\s+1\s*=\s*1\b|'\s*--|;\s*--/i;
+    // Spreadsheet formula injection: this form writes straight into a Google
+    // Sheet, and a cell whose content starts with = + - or @ can run as a
+    // formula if that sheet is later reopened or exported. Not checked on the
+    // phone field, which legitimately starts with "+" when someone pastes the
+    // country code straight into the number box.
+    var DA_FORMULA_LEAD = /^\s*[=+\-@]/;
+    function daLooksLikeInjection(v, allowLeadingPlus) {
+      v = v || '';
+      if (DA_INJECTION.test(v)) return true;
+      if (!allowLeadingPlus && DA_FORMULA_LEAD.test(v)) return true;
+      return false;
     }
 
     form.addEventListener('submit', function (e) {
@@ -576,7 +588,7 @@ Save your free seat
       var injectionFields = ['da-fn', 'da-ln', 'da-em', 'da-ph'];
       for (var ii = 0; ii < injectionFields.length; ii++) {
         var fEl = document.getElementById(injectionFields[ii]);
-        if (fEl && daLooksLikeInjection(fEl.value)) {
+        if (fEl && daLooksLikeInjection(fEl.value, injectionFields[ii] === 'da-ph')) {
           daShowTroll();
           return;
         }

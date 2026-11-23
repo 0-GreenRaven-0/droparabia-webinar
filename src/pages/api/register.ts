@@ -283,10 +283,22 @@ export const POST: APIRoute = async ({ request }) => {
 
     // The form itself already refuses this client-side with a red full-page
     // reply, but that check runs in the browser and a direct POST skips it
-    // entirely. Nothing with a script tag, an on*= handler, or a javascript:
-    // URI in any of these four fields reaches the sheet, Brevo, or the pixel.
-    const INJECTION_PATTERN = /<\s*\/?\s*(script|iframe|img|svg|object|embed|link|style)\b|javascript\s*:|on\w+\s*=/i;
-    if ([firstName, lastName, email, phone].some((v) => INJECTION_PATTERN.test(String(v || '')))) {
+    // entirely. Markup injection, template injection, shell metacharacters
+    // and SQL-style payloads — none of it reaches the sheet, Brevo, or the
+    // pixel from any of these four fields.
+    const INJECTION_PATTERN =
+      /<\s*\/?\s*(script|iframe|img|svg|object|embed|link|style|form|meta)\b|javascript\s*:|data\s*:\s*text\/html|vbscript\s*:|on\w+\s*=|\{\{|\}\}|\$\{|`|\$\(|&&|\|\||\bunion\b\s+\bselect\b|\bdrop\s+table\b|\bor\b\s+1\s*=\s*1\b|'\s*--|;\s*--/i;
+    // This form writes straight into a Google Sheet, and a cell whose content
+    // starts with = + - or @ can run as a formula if that sheet is later
+    // reopened or exported — classic CSV/spreadsheet formula injection. Not
+    // checked on phone, which legitimately starts with "+" when the country
+    // code is pasted straight into the number field.
+    const FORMULA_LEAD = /^\s*[=+\-@]/;
+    const injectable = { firstName, lastName, email } as Record<string, unknown>;
+    const hasInjection =
+      Object.values(injectable).some((v) => FORMULA_LEAD.test(String(v || '')) || INJECTION_PATTERN.test(String(v || ''))) ||
+      INJECTION_PATTERN.test(String(phone || ''));
+    if (hasInjection) {
       return json({ success: false, error: 'Invalid characters in submission' }, 400);
     }
 
