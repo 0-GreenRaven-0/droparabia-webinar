@@ -281,6 +281,15 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ success: false, error: 'Missing required fields' }, 400);
     }
 
+    // The form itself already refuses this client-side with a red full-page
+    // reply, but that check runs in the browser and a direct POST skips it
+    // entirely. Nothing with a script tag, an on*= handler, or a javascript:
+    // URI in any of these four fields reaches the sheet, Brevo, or the pixel.
+    const INJECTION_PATTERN = /<\s*\/?\s*(script|iframe|img|svg|object|embed|link|style)\b|javascript\s*:|on\w+\s*=/i;
+    if ([firstName, lastName, email, phone].some((v) => INJECTION_PATTERN.test(String(v || '')))) {
+      return json({ success: false, error: 'Invalid characters in submission' }, 400);
+    }
+
     // The real gate, in front of every write. The browser checks this too, but the
     // browser can be bypassed and the consequence lands downstream: Interakt reads
     // the Phone column to send the WhatsApp confirmation and refuses a malformed

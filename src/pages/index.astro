@@ -545,8 +545,42 @@ Save your free seat
     if (!form) return;
     var btn = form.querySelector('button[type="submit"]');
 
+    // A full-viewport takeover for someone trying to inject markup through the
+    // form rather than register with it. Appended on top of the page rather
+    // than replacing it, so the already-loaded fonts and styles stay intact.
+    function daShowTroll() {
+      if (document.getElementById('da-troll')) return;
+      document.body.style.overflow = 'hidden';
+      var d = document.createElement('div');
+      d.id = 'da-troll';
+      d.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#E1000F;' +
+        'color:#FFFFFF;display:flex;align-items:center;justify-content:center;' +
+        'text-align:center;padding:24px;' +
+        'font-family:\'IBrand\',sans-serif;font-weight:400;' +
+        'font-size:clamp(28px,6vw,56px);line-height:1.25';
+      d.textContent = 'Oh you think yourself funny?';
+      document.body.appendChild(d);
+    }
+    // Script tags and the other usual markup-injection vectors — <iframe>,
+    // <svg onload=...>, javascript: URIs, bare on*= handlers. Checked on the raw
+    // field values before any of the normal parsing below touches them, so a
+    // payload that the phone field's own digit-stripping would otherwise just
+    // quietly erase is still caught as the attempt it was.
+    function daLooksLikeInjection(v) {
+      return /<\s*\/?\s*(script|iframe|img|svg|object|embed|link|style)\b|javascript\s*:|on\w+\s*=/i.test(v || '');
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      var injectionFields = ['da-fn', 'da-ln', 'da-em', 'da-ph'];
+      for (var ii = 0; ii < injectionFields.length; ii++) {
+        var fEl = document.getElementById(injectionFields[ii]);
+        if (fEl && daLooksLikeInjection(fEl.value)) {
+          daShowTroll();
+          return;
+        }
+      }
 
       // Expected national-number lengths. Only the common cases are listed; anything
       // not here falls back to a permissive 6-15 digit check rather than rejecting a
