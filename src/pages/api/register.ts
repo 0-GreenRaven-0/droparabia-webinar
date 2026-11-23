@@ -3,7 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
 import { brevoAddContact } from '../../lib/brevo';
-import { TOTAL_SEATS, BREVO_ENABLED, CURRENT_DAY_LIST_ID } from '../../config/webinar';
+import { TOTAL_SEATS, BREVO_ENABLED, currentDayListId } from '../../config/webinar';
 import { normalizePhone } from '../../lib/phone';
 
 function base64url(data: string | ArrayBuffer): string {
@@ -418,15 +418,16 @@ export const POST: APIRoute = async ({ request }) => {
     // failure is reported alongside success instead of replacing it.
     //
     // This is the entire "which emails, when" mechanism now: a contact joins one
-    // list — CURRENT_DAY_LIST_ID, the list for whichever day of the campaign this
-    // is — and whatever automation is built on that list in Brevo itself carries
+    // list — currentDayListId(), chosen by today's actual calendar date in
+    // Beirut rather than a constant someone has to remember to flip at midnight
+    // — and whatever automation is built on that list in Brevo itself carries
     // them from there. No scheduledAt, no per-template loop, no daily job.
     const brevo = await brevoAddContact({
       email,
       firstName,
       lastName: lastName || '',
       phoneE164,
-      listId: CURRENT_DAY_LIST_ID,
+      listId: currentDayListId(),
     });
 
     const stamped = await stampStatus(sheetId, rowNumber, token, 'active')

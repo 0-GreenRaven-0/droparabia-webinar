@@ -47,11 +47,41 @@ export const BREVO_ENABLED = true;
  * there. There is no more scheduledAt, no sequence.ts, and no daily job — the
  * old code decided what to send and when; Brevo's own automation does now.
  *
- * Updated by hand as each new day of the campaign starts. "Day 1" here is not
- * webinarDayIndex's old 0–5 scale — it is simply day 1 of this list-based
- * design, starting the day this was introduced (23 Nov 2026).
+ * "Day 1" here is not webinarDayIndex's old 0–5 scale — it is simply day 1 of
+ * this list-based design, starting 23 Nov 2026.
+ *
+ * Chosen automatically by the calendar date in Asia/Beirut, not by hand — a
+ * constant flipped manually at midnight is exactly the kind of thing that
+ * gets forgotten. Extend DAY_LIST_IDS as each new day's list is created; a
+ * day with no entry of its own keeps using the most recent one that does,
+ * rather than leaving that day's registrants with no list at all.
  */
-export const CURRENT_DAY_LIST_ID = 29; // Day 1 — 23 Nov 2026
+const CAMPAIGN_START_DATE = '2026-11-23'; // Day 1
+const DAY_LIST_IDS: Record<number, number> = {
+  1: 29, // 23 Nov
+  2: 30, // 24 Nov
+};
+
+export function currentDayListId(now: Date = new Date()): number {
+  const inBeirut = (d: Date) =>
+    new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Beirut',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(d);
+
+  const today = Date.parse(inBeirut(now));
+  const start = Date.parse(CAMPAIGN_START_DATE);
+  const dayIndex = Math.max(1, Math.round((today - start) / 86_400_000) + 1);
+
+  // The latest configured day at or before today's index — never a day in
+  // the future, and never undefined once at least one day is configured.
+  const known = Object.keys(DAY_LIST_IDS).map(Number).sort((a, b) => a - b);
+  let pick = known[0];
+  for (const k of known) if (k <= dayIndex) pick = k;
+  return DAY_LIST_IDS[pick];
+}
 
 /** 90-minute slot, in the UTC basic format Google Calendar expects. */
 export const WEBINAR_GCAL_DATES = '20261126T170000Z/20261126T183000Z';
@@ -75,4 +105,4 @@ export const SOCIAL_YOUTUBE = 'https://www.youtube.com/@MJ.biznes';
 
 // webinarDayIndex() — the old 0–5 scale counted back from WEBINAR_START, and
 // the WEBINAR_DAY contact attribute it fed — is gone along with sequence.ts.
-// CURRENT_DAY_LIST_ID above is what carries the "which day" signal now.
+// currentDayListId() above is what carries the "which day" signal now.
