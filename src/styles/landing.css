@@ -18,8 +18,8 @@ a{color:#001EFF}a:hover{color:#0016C4}
 .da-form{gap:9px !important}
 .da-form label:not(.da-consent){position:absolute !important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .da-top{padding:12px 16px !important}
-.da-logo{width:40px !important;height:40px !important}
-.da-brand{font-size:18px !important}
+.da-logo{width:48px !important;height:48px !important}
+.da-brand{font-size:22px !important}
 .da-pill{font-size:11px !important;padding:7px 12px !important}
 .da-wrap{padding-top:16px !important}
 .da-layout{gap:24px}
