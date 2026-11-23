@@ -10,7 +10,7 @@ import GtmNoscript from '../components/GtmNoscript.astro';
 import MetaPixel from '../components/MetaPixel.astro';
 import MetaPixelNoscript from '../components/MetaPixelNoscript.astro';
 import MetaEvents from '../components/MetaEvents.astro';
-import { WEBINAR_START_ISO, SOCIAL_INSTAGRAM, SOCIAL_THREADS, SOCIAL_YOUTUBE } from '../config/webinar';
+import { WEBINAR_START_ISO, WEBINAR_WHEN, SOCIAL_INSTAGRAM, SOCIAL_THREADS, SOCIAL_YOUTUBE } from '../config/webinar';
 import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 import { META_PIXEL_ID } from '../config/meta';
 ---
@@ -44,7 +44,7 @@ import { META_PIXEL_ID } from '../config/meta';
 <div class="da-hero">
 
 <h1 class="da-h1" style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: clamp(32px, 4.4vw, 52px); line-height: 1.06; letter-spacing: -0.025em; margin: 0 0 18px; color: #0D0D2B">The No-Stock Blueprint: How Smart Lebanese Are Selling Online Without Ever Owning a Single Product</h1>
-<div style="color: #001EFF; font-weight: 700; font-size: 17px; margin-bottom: 14px">Thursday, October 29 · 8:00 PM Beirut time · Live on Zoom</div>
+<div style="color: #001EFF; font-weight: 700; font-size: 17px; margin-bottom: 14px">{WEBINAR_WHEN} Beirut time · Live on Zoom</div>
 <p class="da-lede" style="font-size: 18px; line-height: 1.6; color: #44506A; margin: 0 0 28px">Join Majd LIVE for a free training where he breaks down the exact system 800+ Droparabia users are running right now: which products to sell, how they reach the customer, and how you get paid. All without putting your money into stock.</p>
 
 <div id="video" style="position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 3px solid #001EFF; background: #0D0D2B; display: flex; align-items: center; justify-content: center; margin-bottom: 20px">
@@ -60,7 +60,7 @@ import { META_PIXEL_ID } from '../config/meta';
 <div class="da-cd" style="background: #001EFF; border-radius: 16px; padding: 20px 24px; margin-bottom: 14px; color: #FFFFFF">
 <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 500; margin-bottom: 12px">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
-<span>The training has ended</span>
+<span>Training starts in:</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; text-align: center">
 <div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-d">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">DAYS</div></div>

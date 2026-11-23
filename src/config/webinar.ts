@@ -2,13 +2,13 @@
 // The date used to live in RegisterSection.astro in two places, which is how a
 // stale date silently closed registration twice. Everything reads it from here now.
 //
-// Taken from the pasted mock-ups: "Thursday, October 29 at 8:00 PM".
-// Lebanon is UTC+2 after the clocks change on Oct 25.
-export const WEBINAR_START = '2026-10-29 20:00:00';
-export const WEBINAR_START_ISO = '2026-10-29T20:00:00+02:00';
+// Third Webinar: Thursday, November 26 at 7:00 PM. Lebanon is UTC+2 in
+// November — the clocks already changed back on Oct 25, well before this date.
+export const WEBINAR_START = '2026-11-26 19:00:00';
+export const WEBINAR_START_ISO = '2026-11-26T19:00:00+02:00';
 
 /** Human-readable, for body copy. */
-export const WEBINAR_WHEN = 'Thursday, October 29 at 8:00 PM';
+export const WEBINAR_WHEN = 'Thursday, November 26 at 7:00 PM';
 
 /**
  * How many seats the page sells, and the point past which a registration stops
@@ -38,8 +38,23 @@ export const TOTAL_SEATS = 500;
  */
 export const BREVO_ENABLED = true;
 
+/**
+ * Which Brevo list a new registration joins.
+ *
+ * Replaces the old per-template scheduling entirely: a contact is added to
+ * exactly one list, the one for the calendar day they registered on, and
+ * whatever automation is built on that list in Brevo itself carries them from
+ * there. There is no more scheduledAt, no sequence.ts, and no daily job — the
+ * old code decided what to send and when; Brevo's own automation does now.
+ *
+ * Updated by hand as each new day of the campaign starts. "Day 1" here is not
+ * webinarDayIndex's old 0–5 scale — it is simply day 1 of this list-based
+ * design, starting the day this was introduced (23 Nov 2026).
+ */
+export const CURRENT_DAY_LIST_ID = 29; // Day 1 — 23 Nov 2026
+
 /** 90-minute slot, in the UTC basic format Google Calendar expects. */
-export const WEBINAR_GCAL_DATES = '20261029T180000Z/20261029T193000Z';
+export const WEBINAR_GCAL_DATES = '20261126T170000Z/20261126T183000Z';
 
 export const WEBINAR_GCAL_URL =
   'https://calendar.google.com/calendar/render?action=TEMPLATE' +
@@ -58,32 +73,6 @@ export const SOCIAL_INSTAGRAM = 'https://www.instagram.com/mjbusinessofficial';
 export const SOCIAL_THREADS = 'https://www.threads.com/@mjbusinessofficial';
 export const SOCIAL_YOUTUBE = 'https://www.youtube.com/@MJ.biznes';
 
-/**
- * The registration day as the 0–5 index Brevo automations key off (WEBINAR_DAY):
- *
- *   Sat 24 Oct = 0   Sun = 1   Mon = 2   Tue = 3   Wed = 4   Thu 29 Oct = 5
- *
- * Counted backwards from the webinar rather than forwards from a hardcoded start,
- * so moving WEBINAR_START moves the whole scale with it instead of silently
- * mislabelling everyone.
- *
- * Dates are resolved in Asia/Beirut, not the server's zone: a Cloudflare worker
- * answering from UTC would roll the day over two or three hours early and put
- * late-evening registrants a day ahead of where the automation expects them.
- */
-export function webinarDayIndex(now: Date = new Date()): number {
-  const inBeirut = (d: Date) =>
-    new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'Asia/Beirut',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }).format(d);
-
-  const today = Date.parse(inBeirut(now));
-  const webinarDay = Date.parse(WEBINAR_START.slice(0, 10));
-  const daysUntil = Math.round((webinarDay - today) / 86_400_000);
-
-  // Clamped: an early or late signup still lands on a step the automation knows.
-  return Math.min(5, Math.max(0, 5 - daysUntil));
-}
+// webinarDayIndex() — the old 0–5 scale counted back from WEBINAR_START, and
+// the WEBINAR_DAY contact attribute it fed — is gone along with sequence.ts.
+// CURRENT_DAY_LIST_ID above is what carries the "which day" signal now.

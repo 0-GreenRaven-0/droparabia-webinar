@@ -2,9 +2,8 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getRuntimeEnv } from '../../lib/env';
-import { brevoAddContact, brevoSendTemplate } from '../../lib/brevo';
-import { webinarDayIndex, TOTAL_SEATS, BREVO_ENABLED } from '../../config/webinar';
-import { planOnSignup, ALL_TEMPLATES } from '../../lib/sequence';
+import { brevoAddContact } from '../../lib/brevo';
+import { TOTAL_SEATS, BREVO_ENABLED, CURRENT_DAY_LIST_ID } from '../../config/webinar';
 import { normalizePhone } from '../../lib/phone';
 
 function base64url(data: string | ArrayBuffer): string {
@@ -244,42 +243,28 @@ function columnLetter(index: number): string {
 }
 
 /**
- * Records which templates were scheduled, in that registrant's own row.
+ * Records this registrant's status in their own row (column AC).
  *
- * A filled cell is what stops the daily job sending the same template again, so
- * this is the thing that makes the whole sequence idempotent.
- *
- * The status in AC is the other half: the daily job reads it, treats a blank as
- * 'active', and skips the row on anything else. So a registrant who is not meant
- * to be emailed has to be stamped with a status explicitly — leaving the cell
- * empty is what hands them to tomorrow's job.
+ * There is no more daily job reading this to decide who to email — Brevo's own
+ * list automation handles that now — so this is bookkeeping, not a gate. It
+ * stays because 'waitlist' and 'whatsapp-only' are worth being able to see at a
+ * glance, and because leaving a visible trail of what happened to each row costs
+ * nothing.
  */
-async function stampSends(
+async function stampStatus(
   sheetId: string,
   rowNumber: number,
   token: string,
-  sends: { template: number; at: Date }[],
-  status: 'active' | 'waitlist' | 'whatsapp-only' = 'active',
+  status: 'active' | 'waitlist' | 'whatsapp-only',
 ): Promise<void> {
   if (!rowNumber) return;
-  const firstSentColumn = 19; // T
-  const data = sends
-    .map((s) => {
-      const i = ALL_TEMPLATES.indexOf(s.template as never);
-      if (i === -1) return null;
-      return {
-        range: `${columnLetter(firstSentColumn + i)}${rowNumber}`,
-        values: [[s.at.toISOString()]],
-      };
-    })
-    .filter(Boolean);
-
-  data.push({ range: `${columnLetter(28)}${rowNumber}`, values: [[status]] }); // AC
-
   await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchUpdate`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ valueInputOption: 'RAW', data }),
+    body: JSON.stringify({
+      valueInputOption: 'RAW',
+      data: [{ range: `${columnLetter(28)}${rowNumber}`, values: [[status]] }], // AC
+    }),
   });
 }
 
@@ -325,7 +310,6 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const token = await getGoogleAccessToken(credsJson);
-    const now = new Date();
     let rowNumber = 0;
     {
       // Hashed from the values this request carries, normalised first. Done here
@@ -394,7 +378,7 @@ export const POST: APIRoute = async ({ request }) => {
       // these registrants would still be pushed to Brevo tomorrow — and mailed
       // with no contact behind them, rendering {{ contact.FIRSTNAME }} empty.
       const status = overCapacity ? 'waitlist' : 'whatsapp-only';
-      const stamped = await stampSends(sheetId, rowNumber, token, [], status)
+      const stamped = await stampStatus(sheetId, rowNumber, token, status)
         .then(() => true)
         .catch(() => false);
       return json({
@@ -411,46 +395,22 @@ export const POST: APIRoute = async ({ request }) => {
     // was revoked a 401 surfaced as "Could not subscribe" and lost leads whose sheet
     // row had already been written. The row is the source of truth here: a Brevo
     // failure is reported alongside success instead of replacing it.
+    //
+    // This is the entire "which emails, when" mechanism now: a contact joins one
+    // list — CURRENT_DAY_LIST_ID, the list for whichever day of the campaign this
+    // is — and whatever automation is built on that list in Brevo itself carries
+    // them from there. No scheduledAt, no per-template loop, no daily job.
     const brevo = await brevoAddContact({
       email,
       firstName,
       lastName: lastName || '',
       phoneE164,
-      webinarDay: webinarDayIndex(),
+      listId: CURRENT_DAY_LIST_ID,
     });
 
-    // The sequence, owned by this codebase rather than by a Brevo automation.
-    //
-    // planOnSignup gives the confirmation plus whatever else this registrant is
-    // owed today: the day's email at signup+1h, and on Thursday the reminders
-    // that are still ahead of them. Anything in the future is handed to Brevo
-    // with scheduledAt, which is exact — far better than us trying to wake up at
-    // the right minute.
-    //
-    // It runs after the contact exists so the templates' {{ contact.FIRSTNAME }}
-    // has something to render, and only when the contact actually landed:
-    // emailing someone Brevo rejected would promise a seat no list knows about.
-    const sendable = brevo.ok && !brevo.skipped;
-    const plan = sendable ? planOnSignup(webinarDayIndex(now), now) : [];
-    const scheduled: { template: number; at: Date }[] = [];
-    const mailErrors: string[] = [];
-
-    for (const item of plan) {
-      // A few seconds of slack: "now" from the plan is already a moment ago, and
-      // Brevo rejects a scheduledAt in the past.
-      const future = item.at.getTime() > Date.now() + 5_000;
-      const res = await brevoSendTemplate(email, item.template, future ? item.at : undefined);
-      if (res.ok) scheduled.push({ template: item.template, at: item.at });
-      else mailErrors.push(`${item.template}: ${res.error}`);
-    }
-
-    // Stamped last, and only for what Brevo accepted, so the daily job never
-    // sees a template marked sent that never went out.
-    if (scheduled.length) {
-      await stampSends(sheetId, rowNumber, token, scheduled).catch(() => {
-        mailErrors.push('sheet stamp failed');
-      });
-    }
+    const stamped = await stampStatus(sheetId, rowNumber, token, 'active')
+      .then(() => true)
+      .catch(() => false);
 
     // brevoSkipped is reported explicitly: a missing API key used to return a plain
     // success:true, which is indistinguishable from Brevo having accepted the contact.
@@ -460,8 +420,7 @@ export const POST: APIRoute = async ({ request }) => {
         ...(brevo.ok
           ? (brevo.skipped ? { brevoSkipped: brevo.skipped } : {})
           : { brevoError: brevo.error }),
-        ...(mailErrors.length ? { mailErrors } : {}),
-        ...(scheduled.length ? { scheduled: scheduled.map((s) => s.template) } : {}),
+        ...(stamped ? {} : { stampFailed: true }),
       },
       200,
     );
