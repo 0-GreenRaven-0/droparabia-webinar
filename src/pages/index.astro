@@ -10,7 +10,7 @@ import GtmNoscript from '../components/GtmNoscript.astro';
 import MetaPixel from '../components/MetaPixel.astro';
 import MetaPixelNoscript from '../components/MetaPixelNoscript.astro';
 import MetaEvents from '../components/MetaEvents.astro';
-import { WEBINAR_START_ISO, WEBINAR_WHEN, SOCIAL_INSTAGRAM, SOCIAL_THREADS, SOCIAL_YOUTUBE } from '../config/webinar';
+import { WEBINAR_START_ISO, SOCIAL_INSTAGRAM, SOCIAL_THREADS, SOCIAL_YOUTUBE } from '../config/webinar';
 import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 import { META_PIXEL_ID } from '../config/meta';
 ---
@@ -30,14 +30,13 @@ import { META_PIXEL_ID } from '../config/meta';
   <body>
     <GtmNoscript />
     <MetaPixelNoscript />
-<div style="font-family: 'Helvetica', Arial, sans-serif; color: #0D0D2B; background: #FFFFFF; min-height: 100vh">
+<div class="da-page-bg" style="font-family: 'Helvetica', Arial, sans-serif; color: #0D0D2B; min-height: 100vh">
 <!-- No tint and no rule: the header sits on the same surface as the page. -->
 <div class="da-top" style="max-width: 1240px; margin: 0 auto; padding: 18px 24px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap">
 <div style="display: flex; align-items: center; gap: 10px">
 <img class="da-logo" src="/Droparabia.webp" alt="" style="width: 40px; height: 40px; object-fit: contain; display: block">
 <div class="da-brand" style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em; color: #0D0D2B">Droparabia</div>
 </div>
-<div style="background: #001EFF; color: #FFFFFF; font-weight: 700; font-size: 13px; letter-spacing: 0.08em; padding: 9px 16px; border-radius: 999px" class="da-pill">FREE LIVE TRAINING</div>
 </div>
 
 <div class="da-wrap" style="max-width: 1240px; margin: 0 auto; padding: 40px 24px 0; box-sizing: border-box">
@@ -48,9 +47,8 @@ import { META_PIXEL_ID } from '../config/meta';
 
 <h1 class="da-h1" style="font-family: 'IBrand', sans-serif; font-weight: 400; line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 18px; color: #0D0D2B; text-align: center">
 <span style="display: block; white-space: nowrap; font-size: clamp(24px, 8.6vw, 68px)">The No-Stock Blueprint</span>
-<span style="display: block; font-family: 'Inter', sans-serif; font-weight: 600; font-size: clamp(22px, 3.3vw, 38px); margin-top: 10px">How Lebanese Are Selling Online Without Ever Owning a Single Product</span>
+<span style="display: block; font-family: 'Inter', sans-serif; font-weight: 600; font-size: clamp(22px, 3.3vw, 38px); margin-top: 10px">How Smart Lebanese Are Selling Online Without Ever Owning a Single Product</span>
 </h1>
-<div class="da-sched" style="color: #001EFF; font-weight: 700; font-size: 17px; margin-bottom: 14px">{WEBINAR_WHEN} Beirut time · Live on Zoom</div>
 <p class="da-lede" style="font-size: 18px; line-height: 1.6; color: #44506A; margin: 0 0 28px">Join Majd LIVE for a free training where he breaks down the exact system 800+ Droparabia users are running right now: which products to sell, how they reach the customer, and how you get paid. All without putting your money into stock.</p>
 
 <div id="video" style="position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 3px solid #001EFF; background: #0D0D2B; display: flex; align-items: center; justify-content: center; margin-bottom: 20px">
@@ -65,12 +63,13 @@ import { META_PIXEL_ID } from '../config/meta';
 
 <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; color: #0D0D2B; margin-bottom: 20px">
 <span style="font-size: 14px; font-weight: 700">Training starts in:</span>
-<div style="display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 14px">
-<span style="display: inline-flex; align-items: baseline; gap: 3px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 26px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-d">00</b><i style="font-style: normal; font-size: 13px; font-weight: 700; opacity: 0.85">d</i></span>
-<span style="display: inline-flex; align-items: baseline; gap: 3px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 26px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-h">00</b><i style="font-style: normal; font-size: 13px; font-weight: 700; opacity: 0.85">h</i></span>
-<span style="display: inline-flex; align-items: baseline; gap: 3px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 26px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-m">00</b><i style="font-style: normal; font-size: 13px; font-weight: 700; opacity: 0.85">m</i></span>
-<span style="display: inline-flex; align-items: baseline; gap: 3px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 26px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-s">00</b><i style="font-style: normal; font-size: 13px; font-weight: 700; opacity: 0.85">s</i></span>
+<div style="display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 16px">
+<span style="display: inline-flex; align-items: baseline; gap: 4px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 38px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-d">00</b><i style="font-style: normal; font-size: 15px; font-weight: 700; opacity: 0.85">d</i></span>
+<span style="display: inline-flex; align-items: baseline; gap: 4px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 38px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-h">00</b><i style="font-style: normal; font-size: 15px; font-weight: 700; opacity: 0.85">h</i></span>
+<span style="display: inline-flex; align-items: baseline; gap: 4px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 38px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-m">00</b><i style="font-style: normal; font-size: 15px; font-weight: 700; opacity: 0.85">m</i></span>
+<span style="display: inline-flex; align-items: baseline; gap: 4px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 38px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-s">00</b><i style="font-style: normal; font-size: 15px; font-weight: 700; opacity: 0.85">s</i></span>
 </div>
+<span style="color: #001EFF; font-weight: 700; font-size: 15px; margin-top: 4px">Thursday 26 Nov 7 PM Beirut Time</span>
 </div>
 </div>
 <div class="da-rest">
