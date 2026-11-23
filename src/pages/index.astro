@@ -57,16 +57,13 @@ import { META_PIXEL_ID } from '../config/meta';
 </button>
 </div>
 
-<div class="da-cd" style="background: #001EFF; border-radius: 16px; padding: 20px 24px; margin-bottom: 14px; color: #FFFFFF">
-<div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 500; margin-bottom: 12px">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
-<span>Training starts in:</span>
-</div>
-<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; text-align: center">
-<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-d">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">DAYS</div></div>
-<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-h">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">HOURS</div></div>
-<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-m">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">MINS</div></div>
-<div><div style="font-family: 'IBrand', sans-serif; font-size: 40px; font-weight: 800"><span id="cd-s">00</span></div><div style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.85">SECS</div></div>
+<div style="display: flex; flex-direction: column; gap: 6px; color: #0D0D2B; margin-bottom: 20px">
+<span style="font-size: 14px; font-weight: 700">Training starts in:</span>
+<div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 14px">
+<span style="display: inline-flex; align-items: baseline; gap: 3px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 26px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-d">00</b><i style="font-style: normal; font-size: 13px; font-weight: 700; opacity: 0.85">d</i></span>
+<span style="display: inline-flex; align-items: baseline; gap: 3px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 26px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-h">00</b><i style="font-style: normal; font-size: 13px; font-weight: 700; opacity: 0.85">h</i></span>
+<span style="display: inline-flex; align-items: baseline; gap: 3px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 26px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-m">00</b><i style="font-style: normal; font-size: 13px; font-weight: 700; opacity: 0.85">m</i></span>
+<span style="display: inline-flex; align-items: baseline; gap: 3px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 26px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-s">00</b><i style="font-style: normal; font-size: 13px; font-weight: 700; opacity: 0.85">s</i></span>
 </div>
 </div>
 </div>
@@ -85,7 +82,7 @@ import { META_PIXEL_ID } from '../config/meta';
 <p style="font-size: 17px; line-height: 1.65; color: #0D0D2B; font-weight: 700; margin: 0">This isn't a "you" problem. It's an infrastructure problem. And it's already solved.</p>
 </div>
 
-<span class="da-mcta" style="opacity: 0.55; cursor: default">WEBINAR HAS ENDED</span>
+<a href="#register" class="da-mcta">Save My Free Seat <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg></a>
 <h2 style="font-family: 'IBrand', sans-serif; font-weight: 700; font-size: 30px; margin: 0 0 12px; color: #0D0D2B">What You'll Learn:</h2>
 <p style="font-size: 17px; line-height: 1.6; color: #44506A; margin: 0 0 22px">In this free live training, Majd breaks down the Droparabia E-Commerce Infrastructure System, the same setup 800+ users are running right now.</p>
 <div class="da-lessons">
@@ -116,7 +113,7 @@ import { META_PIXEL_ID } from '../config/meta';
 </div>
 </div>
 
-<span class="da-mcta" style="opacity: 0.55; cursor: default">WEBINAR HAS ENDED</span>
+<a href="#register" class="da-mcta">Save My Free Seat <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg></a>
 <div style="background: #FFFFFF; border: 1px solid #DDE3F5; border-radius: 18px; padding: 30px 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,30,255,0.06)">
 <h2 style="font-family: 'IBrand', sans-serif; font-weight: 700; font-size: 26px; margin: 0 0 18px; color: #0D0D2B">Who This Is For</h2>
 <div style="display: flex; flex-direction: column; gap: 14px">
@@ -133,8 +130,12 @@ import { META_PIXEL_ID } from '../config/meta';
 <div class="da-side" id="register">
 <div class="da-card" style="background: #FFFFFF; color: #0D0D2B; border-radius: 18px; padding: 26px 24px; border: 2px solid #001EFF; box-shadow: 0 20px 50px rgba(0,30,255,0.16)">
 <div id="da-form-wrap">
-<h2 class="da-title" style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.2; margin: 0 0 14px; text-align: center">Thanks To Everyone Who Joined</h2>
-<form id="da-form" class="da-form" style="display: none" aria-hidden="true">
+<a href="#da-form" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #001EFF; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 15px; border-radius: 10px; padding: 12px 16px; margin: 0 0 16px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+Save your free seat
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+</a>
+<form id="da-form" class="da-form" style="display: flex; flex-direction: column; gap: 14px">
 <div><label for="da-fn" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">First Name</label><input id="da-fn" class="da-input" type="text" placeholder="Enter your first name" required="required"></div>
 <div class="da-lname"><label for="da-ln" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Last Name</label><input id="da-ln" class="da-input" type="text" placeholder="Enter your last name"></div>
 <div><label for="da-em" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Email Address</label><input id="da-em" class="da-input" type="email" placeholder="you@email.com" required="required"></div>
@@ -362,8 +363,9 @@ import { META_PIXEL_ID } from '../config/meta';
 <option value="+260">🇿🇲 +260</option>
 <option value="+263">🇿🇼 +263</option>
 </select><input id="da-ph" class="da-input" type="tel" placeholder="70 123 456" required="required"></div></div>
+<button type="submit" class="da-btn da-submit" style="height: 56px; border: none; border-radius: 12px; background: #001EFF; color: #FFFFFF; font: inherit; font-weight: 800; font-size: 17px; cursor: pointer">Save My Free Seat →</button>
+<p class="da-replay-note">Make sure to attend because there won't be replays</p>
 </form>
-<div class="da-btn da-submit" style="height: 56px; border: none; border-radius: 12px; background: #8A91A8; color: #FFFFFF; font: inherit; font-weight: 800; font-size: 17px; cursor: default; display: flex; align-items: center; justify-content: center; text-align: center">WEBINAR HAS ENDED</div>
 </div>
 <div id="da-done" style="display:none">
 <div style="text-align: center; padding: 20px 4px">

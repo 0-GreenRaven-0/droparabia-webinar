@@ -1,3 +1,4 @@
+html{scroll-behavior:smooth}
 body{margin:0;background:#FFFFFF}
 a{color:#001EFF}a:hover{color:#0016C4}
 .da-layout{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start}
