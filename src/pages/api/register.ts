@@ -263,7 +263,7 @@ async function stampStatus(
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       valueInputOption: 'RAW',
-      data: [{ range: `${columnLetter(28)}${rowNumber}`, values: [[status]] }], // AC
+      data: [{ range: `${columnLetter(19)}${rowNumber}`, values: [[status]] }], // T — shifted here once the retired per-template columns (old T..AB) were deleted from the sheet
     }),
   });
 }
