@@ -88,6 +88,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 @media (max-width: 1000px) {
+  .da-sched { font-size: 14px !important; }
   .da-lessons { grid-template-columns: 1fr; gap: 14px; margin-bottom: 40px; }
   .da-lessons .da-lesson:nth-child(-n + 3),
   .da-lessons .da-lesson:nth-child(4),
