@@ -185,31 +185,25 @@ const normEmail = (v: string) => (v || '').trim().toLowerCase();
 const normPhone = (v: string) => (v || '').replace(/[^0-9]/g, '').replace(/^0+/, '');
 const normName  = (v: string) => (v || '').trim().toLowerCase().replace(/\s+/g, ' ');
 
+// Columns A-J: who they are, where they came from, raw UTM. Kept as one
+// contiguous append because this is the one block every registration always
+// has in full, unlike the status/meta columns past it that fill in later or
+// come from elsewhere (Interakt's Apps Script, the Brevo snapshot).
 const SHEET_HEADERS = [
-  // Who registered
-  'First Name', 'Last Name', 'Email', 'Phone',
-  // Where they came from
-  'Traffic Source',
-  // How much of the VSL they actually watched
-  'VSL Watch (s)',
-  // Everything Meta's Conversions API needs to send this as a server-side event.
-  // Each event carries its own id so each de-duplicates on its own; Event Time is
-  // the unix seconds the event happened; fbp/fbc/IP/UA are sent verbatim; the
-  // four hashes are SHA-256 of the normalised values.
-  'Registered Event ID', 'Lead Event ID', 'VSLView Event ID', 'Event Time', 'fbp', 'fbc', 'Client IP', 'User Agent', 'Event Source URL',
-  'em (SHA-256)', 'ph (SHA-256)', 'fn (SHA-256)', 'ln (SHA-256)',
+  'First Name', 'Last Name', 'Email', 'Phone', 'Traffic Source',
+  'UTM Source', 'UTM Medium', 'UTM Campaign', 'UTM Content', 'UTM Term',
 ];
 
-/** Returns the 1-based row the registration landed on, so its send columns can be stamped. */
+/** Returns the 1-based row the registration landed on, so its later columns can be stamped. */
 async function appendToSheet(sheetId: string, row: string[], token: string): Promise<number> {
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
-  const check = await fetch(`${base}/A1:S1`, { headers: auth });
+  const check = await fetch(`${base}/A1:J1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
   const existingHeaders = checkData.values?.[0] ?? [];
   if (existingHeaders[0] !== 'First Name' || existingHeaders.length < SHEET_HEADERS.length) {
-    await fetch(`${base}/A1:S1?valueInputOption=USER_ENTERED`, {
+    await fetch(`${base}/A1:J1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
@@ -218,7 +212,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 
   // Sheets errors used to be ignored here, so a 403 (sheet not shared with the
   // service account) or 404 (wrong id) still reported success and the row vanished.
-  const appended = await fetch(`${base}/A:S:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
+  const appended = await fetch(`${base}/A:J:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -243,7 +237,7 @@ function columnLetter(index: number): string {
 }
 
 /**
- * Records this registrant's status in their own row (column AC).
+ * Records this registrant's status in their own row (column K).
  *
  * There is no more daily job reading this to decide who to email — Brevo's own
  * list automation handles that now — so this is bookkeeping, not a gate. It
@@ -263,18 +257,19 @@ async function stampStatus(
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       valueInputOption: 'RAW',
-      data: [{ range: `${columnLetter(19)}${rowNumber}`, values: [[status]] }], // T — shifted here once the retired per-template columns (old T..AB) were deleted from the sheet
+      data: [{ range: `${columnLetter(10)}${rowNumber}`, values: [[status]] }], // K — moved here when the Meta/event columns were pushed to the end so WhatsApp Sent (L onward) could sit next to the contact columns
     }),
   });
 }
 
 /**
- * Records the raw UTM parameters and the derived Traffic Source in their own
- * row, at the end of the sheet (columns AH-AM) — added after Traffic Source
- * itself (column E) had already been in place and hidden for a while, so this
- * does not touch or move anything that came before it.
+ * Records everything Meta's Conversions API needs for this registration
+ * (columns Q-AD) — pushed to the end of the sheet, past Email Status and the
+ * WhatsApp columns, so a human reading the sheet hits the fields that matter
+ * first and never has to scroll through event ids and SHA-256 hashes to find
+ * them.
  */
-async function writeUtmColumns(
+async function writeMetaColumns(
   sheetId: string,
   rowNumber: number,
   token: string,
@@ -286,7 +281,7 @@ async function writeUtmColumns(
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       valueInputOption: 'RAW',
-      data: [{ range: `AH${rowNumber}:AM${rowNumber}`, values: [values] }],
+      data: [{ range: `Q${rowNumber}:AD${rowNumber}`, values: [values] }],
     }),
   });
 }
@@ -383,15 +378,15 @@ export const POST: APIRoute = async ({ request }) => {
       rowNumber = await appendToSheet(sheetId, [
         firstName, lastName || '', email, phoneE164,
         trafficSource,
-        String(vslSeconds ?? 0),
-        eventId || '', leadEventId || '', vslEventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
-        emHash, phHash, fnHash, lnHash,
+        utm_source || '', utm_medium || '', utm_campaign || '', utm_content || '', utm_term || '',
       ], token);
 
       // Fire-and-forget: the row above is already the source of truth, so a
       // failure here should never fail the registration.
-      writeUtmColumns(sheetId, rowNumber, token, [
-        utm_source || '', utm_medium || '', utm_campaign || '', utm_content || '', utm_term || '', trafficSource,
+      writeMetaColumns(sheetId, rowNumber, token, [
+        String(vslSeconds ?? 0),
+        eventId || '', leadEventId || '', vslEventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
+        emHash, phHash, fnHash, lnHash,
       ]).catch(() => {});
     }
 
