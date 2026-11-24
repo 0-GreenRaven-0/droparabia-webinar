@@ -268,12 +268,36 @@ async function stampStatus(
   });
 }
 
+/**
+ * Records the raw UTM parameters and the derived Traffic Source in their own
+ * row, at the end of the sheet (columns AH-AM) — added after Traffic Source
+ * itself (column E) had already been in place and hidden for a while, so this
+ * does not touch or move anything that came before it.
+ */
+async function writeUtmColumns(
+  sheetId: string,
+  rowNumber: number,
+  token: string,
+  values: string[],
+): Promise<void> {
+  if (!rowNumber) return;
+  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchUpdate`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      valueInputOption: 'RAW',
+      data: [{ range: `AH${rowNumber}:AM${rowNumber}`, values: [values] }],
+    }),
+  });
+}
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     // utm_campaign/content/term and headline are still sent by the form but not
     // stored; Traffic Source is derived from utm_source/utm_medium/referrer.
-    const { firstName, lastName, email, phone, utm_source, utm_medium, referrer,
+    const { firstName, lastName, email, phone, utm_source, utm_medium, utm_campaign,
+            utm_content, utm_term, referrer,
             vslSeconds, eventId, leadEventId, vslEventId, fbp, fbc, sourceUrl } = body;
 
     // Last name is optional: the landing form marks it optional and hides it on mobile.
@@ -350,18 +374,25 @@ export const POST: APIRoute = async ({ request }) => {
         || '';
       const userAgent = request.headers.get('User-Agent') || '';
       const eventTime = Math.floor(Date.now() / 1000);
+      const trafficSource = buildTrafficSource(
+        utm_source || '', utm_medium || '', referrer || '', fbc || '',
+        (() => { try { return new URL(sourceUrl || request.url).hostname; } catch { return ''; } })(),
+        userAgent,
+      );
 
       rowNumber = await appendToSheet(sheetId, [
         firstName, lastName || '', email, phoneE164,
-        buildTrafficSource(
-          utm_source || '', utm_medium || '', referrer || '', fbc || '',
-          (() => { try { return new URL(sourceUrl || request.url).hostname; } catch { return ''; } })(),
-          userAgent,
-        ),
+        trafficSource,
         String(vslSeconds ?? 0),
         eventId || '', leadEventId || '', vslEventId || '', String(eventTime), fbp || '', fbc || '', clientIp, userAgent, sourceUrl || '',
         emHash, phHash, fnHash, lnHash,
       ], token);
+
+      // Fire-and-forget: the row above is already the source of truth, so a
+      // failure here should never fail the registration.
+      writeUtmColumns(sheetId, rowNumber, token, [
+        utm_source || '', utm_medium || '', utm_campaign || '', utm_content || '', utm_term || '', trafficSource,
+      ]).catch(() => {});
     }
 
     // ── The seat limit ──
