@@ -60,6 +60,7 @@ const CAMPAIGN_START_DATE = '2026-11-23'; // Day 1
 const DAY_LIST_IDS: Record<number, number> = {
   1: 29, // 23 Nov
   2: 30, // 24 Nov
+  3: 31, // 25 Nov
 };
 
 export function currentDayListId(now: Date = new Date()): number {
