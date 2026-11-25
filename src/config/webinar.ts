@@ -61,6 +61,7 @@ const DAY_LIST_IDS: Record<number, number> = {
   1: 29, // 23 Nov
   2: 30, // 24 Nov
   3: 31, // 25 Nov
+  4: 32, // 26 Nov
 };
 
 export function currentDayListId(now: Date = new Date()): number {
