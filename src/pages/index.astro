@@ -10,9 +10,14 @@ import GtmNoscript from '../components/GtmNoscript.astro';
 import MetaPixel from '../components/MetaPixel.astro';
 import MetaPixelNoscript from '../components/MetaPixelNoscript.astro';
 import MetaEvents from '../components/MetaEvents.astro';
-import { WEBINAR_START_ISO, SOCIAL_INSTAGRAM, SOCIAL_THREADS, SOCIAL_YOUTUBE } from '../config/webinar';
+import { SOCIAL_INSTAGRAM, SOCIAL_THREADS, SOCIAL_YOUTUBE } from '../config/webinar';
 import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 import { META_PIXEL_ID } from '../config/meta';
+
+// The training is live right now — registration is replaced by a direct Zoom
+// link everywhere a CTA used to point at the form. No new signups are useful
+// once the room is already running.
+const ZOOM_URL = 'https://us06web.zoom.us/j/88495848878?pwd=jvTWQcCa735frPbTOrRkqsNDU2RjMp.1';
 ---
 
 <html lang="en">
@@ -69,15 +74,12 @@ The No-Stock Blueprint
 </button>
 </div>
 
-<div style="display: flex; flex-direction: column; align-items: center; gap: 6px; color: #0D0D2B; margin-bottom: 20px">
-<span style="font-size: 14px; font-weight: 700">Training starts in:</span>
-<div style="display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 16px">
-<span style="display: inline-flex; align-items: baseline; gap: 4px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 38px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-d">00</b><i style="font-style: normal; font-size: 15px; font-weight: 700; opacity: 0.85">d</i></span>
-<span style="display: inline-flex; align-items: baseline; gap: 4px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 38px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-h">00</b><i style="font-style: normal; font-size: 15px; font-weight: 700; opacity: 0.85">h</i></span>
-<span style="display: inline-flex; align-items: baseline; gap: 4px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 38px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-m">00</b><i style="font-style: normal; font-size: 15px; font-weight: 700; opacity: 0.85">m</i></span>
-<span style="display: inline-flex; align-items: baseline; gap: 4px"><b style="font-family: 'IBrand', sans-serif; font-weight: 400; font-size: 38px; line-height: 1; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums" id="cd-s">00</b><i style="font-style: normal; font-size: 15px; font-weight: 700; opacity: 0.85">s</i></span>
-</div>
-<span style="color: #001EFF; font-weight: 700; font-size: 15px; margin-top: 4px">Thursday 26 Nov 7 PM Beirut Time</span>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; color: #0D0D2B; margin-bottom: 20px">
+<a href={ZOOM_URL} target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 10px; background: #E1000F; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 16px; letter-spacing: 0.02em; border-radius: 999px; padding: 12px 22px">
+<span style="width: 10px; height: 10px; border-radius: 999px; background: #FFFFFF"></span>
+THE TRAINING HAS STARTED — JOIN NOW
+</a>
+<span style="color: #001EFF; font-weight: 700; font-size: 15px">Tap above to join the Zoom immediately</span>
 </div>
 </div>
 <div class="da-rest">
@@ -95,7 +97,7 @@ The No-Stock Blueprint
 <p style="font-size: 17px; line-height: 1.65; color: #0D0D2B; font-weight: 700; margin: 0">This isn't a "you" problem. It's an infrastructure problem. And it's already solved.</p>
 </div>
 
-<a href="#register" class="da-mcta">Save My Free Seat <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg></a>
+<a href={ZOOM_URL} target="_blank" rel="noopener" class="da-mcta">Join Now — It's Started <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></a>
 <h2 style="font-family: 'IBrand', sans-serif; font-weight: 700; font-size: 30px; margin: 0 0 12px; color: #0D0D2B">What You'll Learn:</h2>
 <p style="font-size: 17px; line-height: 1.6; color: #44506A; margin: 0 0 22px">In this free live training, Majd breaks down the Droparabia E-Commerce Infrastructure System, the same setup 800+ users are running right now.</p>
 <div class="da-lessons">
@@ -126,7 +128,7 @@ The No-Stock Blueprint
 </div>
 </div>
 
-<a href="#register" class="da-mcta">Save My Free Seat <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg></a>
+<a href={ZOOM_URL} target="_blank" rel="noopener" class="da-mcta">Join Now — It's Started <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></a>
 <div style="background: #FFFFFF; border: 1px solid #DDE3F5; border-radius: 18px; padding: 30px 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,30,255,0.06)">
 <h2 style="font-family: 'IBrand', sans-serif; font-weight: 700; font-size: 26px; margin: 0 0 18px; color: #0D0D2B">Who This Is For</h2>
 <div style="display: flex; flex-direction: column; gap: 14px">
@@ -141,14 +143,17 @@ The No-Stock Blueprint
 </div>
 
 <div class="da-side" id="register">
-<a href="#da-form" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #001EFF; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 15px; border-radius: 10px; padding: 12px 16px; margin: 0 0 14px">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
-Save your free seat
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+<a href={ZOOM_URL} target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #E1000F; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 15px; border-radius: 10px; padding: 12px 16px; margin: 0 0 14px">
+Join the Zoom now
 </a>
 <div class="da-card" style="background: #FFFFFF; color: #0D0D2B; border-radius: 18px; padding: 26px 24px; border: 2px solid #001EFF; box-shadow: 0 20px 50px rgba(0,30,255,0.16)">
 <div id="da-form-wrap">
-<form id="da-form" class="da-form" style="display: flex; flex-direction: column; gap: 14px">
+<div style="text-align: center; padding: 8px 0 22px">
+<h2 style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.2; margin: 0 0 10px; color: #0D0D2B">The Training Has Started</h2>
+<p style="font-size: 16px; line-height: 1.55; color: #44506A; margin: 0 0 20px">Registration is closed for today — join the live Zoom right now instead.</p>
+<a href={ZOOM_URL} target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 12px; background: #E1000F; color: #FFFFFF; font-weight: 800; font-size: 17px; text-decoration: none">Join Now →</a>
+</div>
+<form id="da-form" class="da-form" style="display: none" aria-hidden="true">
 <div><label for="da-fn" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">First Name</label><input id="da-fn" class="da-input" type="text" placeholder="Enter your first name" required="required"></div>
 <div class="da-lname"><label for="da-ln" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Last Name</label><input id="da-ln" class="da-input" type="text" placeholder="Enter your last name"></div>
 <div><label for="da-em" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Email Address</label><input id="da-em" class="da-input" type="email" placeholder="you@email.com" required="required"></div>
@@ -457,24 +462,6 @@ Save your free seat
     } catch (_) {
       // Private mode or blocked storage: the submit handler still reads the URL.
     }
-  })();
-</script>
-
-<script is:inline define:vars={{ EVENT_DATE: WEBINAR_START_ISO }}>
-  (function () {
-    var t = new Date(EVENT_DATE).getTime();
-    function p(n) { return String(n).padStart(2, '0'); }
-    function tick() {
-      var x = Math.max(0, Math.floor((t - Date.now()) / 1000));
-      var d = Math.floor(x / 86400); x -= d * 86400;
-      var h = Math.floor(x / 3600);  x -= h * 3600;
-      var m = Math.floor(x / 60);
-      document.getElementById('cd-d').textContent = p(d);
-      document.getElementById('cd-h').textContent = p(h);
-      document.getElementById('cd-m').textContent = p(m);
-      document.getElementById('cd-s').textContent = p(x - m * 60);
-    }
-    tick(); setInterval(tick, 1000);
   })();
 </script>
 
