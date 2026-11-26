@@ -13,11 +13,6 @@ import MetaEvents from '../components/MetaEvents.astro';
 import { SOCIAL_INSTAGRAM, SOCIAL_THREADS, SOCIAL_YOUTUBE } from '../config/webinar';
 import { SI_INSTAGRAM, SI_THREADS, SI_YOUTUBE } from '../config/icons';
 import { META_PIXEL_ID } from '../config/meta';
-
-// The training is live right now — registration is replaced by a direct Zoom
-// link everywhere a CTA used to point at the form. No new signups are useful
-// once the room is already running.
-const ZOOM_URL = 'https://us06web.zoom.us/j/88495848878?pwd=jvTWQcCa735frPbTOrRkqsNDU2RjMp.1';
 ---
 
 <html lang="en">
@@ -75,11 +70,9 @@ The No-Stock Blueprint
 </div>
 
 <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; color: #0D0D2B; margin-bottom: 20px">
-<a href={ZOOM_URL} target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 10px; background: #E1000F; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 16px; letter-spacing: 0.02em; border-radius: 999px; padding: 12px 22px">
-<span style="width: 10px; height: 10px; border-radius: 999px; background: #FFFFFF"></span>
-THE TRAINING HAS STARTED — JOIN NOW
-</a>
-<span style="color: #001EFF; font-weight: 700; font-size: 15px">Tap above to join the Zoom immediately</span>
+<span style="display: flex; align-items: center; gap: 10px; background: #8A91A8; color: #FFFFFF; font-weight: 800; font-size: 16px; letter-spacing: 0.02em; border-radius: 999px; padding: 12px 22px">
+THE TRAINING HAS ENDED
+</span>
 </div>
 </div>
 <div class="da-rest">
@@ -97,7 +90,7 @@ THE TRAINING HAS STARTED — JOIN NOW
 <p style="font-size: 17px; line-height: 1.65; color: #0D0D2B; font-weight: 700; margin: 0">This isn't a "you" problem. It's an infrastructure problem. And it's already solved.</p>
 </div>
 
-<a href={ZOOM_URL} target="_blank" rel="noopener" class="da-mcta">Join Now — It's Started <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></a>
+<span class="da-mcta" style="opacity: 0.55; cursor: default">REGISTRATION IS CLOSED</span>
 <h2 style="font-family: 'IBrand', sans-serif; font-weight: 700; font-size: 30px; margin: 0 0 12px; color: #0D0D2B">What You'll Learn:</h2>
 <p style="font-size: 17px; line-height: 1.6; color: #44506A; margin: 0 0 22px">In this free live training, Majd breaks down the Droparabia E-Commerce Infrastructure System, the same setup 800+ users are running right now.</p>
 <div class="da-lessons">
@@ -128,7 +121,7 @@ THE TRAINING HAS STARTED — JOIN NOW
 </div>
 </div>
 
-<a href={ZOOM_URL} target="_blank" rel="noopener" class="da-mcta">Join Now — It's Started <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></a>
+<span class="da-mcta" style="opacity: 0.55; cursor: default">REGISTRATION IS CLOSED</span>
 <div style="background: #FFFFFF; border: 1px solid #DDE3F5; border-radius: 18px; padding: 30px 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,30,255,0.06)">
 <h2 style="font-family: 'IBrand', sans-serif; font-weight: 700; font-size: 26px; margin: 0 0 18px; color: #0D0D2B">Who This Is For</h2>
 <div style="display: flex; flex-direction: column; gap: 14px">
@@ -143,15 +136,11 @@ THE TRAINING HAS STARTED — JOIN NOW
 </div>
 
 <div class="da-side" id="register">
-<a href={ZOOM_URL} target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #E1000F; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 15px; border-radius: 10px; padding: 12px 16px; margin: 0 0 14px">
-Join the Zoom now
-</a>
 <div class="da-card" style="background: #FFFFFF; color: #0D0D2B; border-radius: 18px; padding: 26px 24px; border: 2px solid #001EFF; box-shadow: 0 20px 50px rgba(0,30,255,0.16)">
 <div id="da-form-wrap">
 <div style="text-align: center; padding: 8px 0 22px">
-<h2 style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.2; margin: 0 0 10px; color: #0D0D2B">The Training Has Started</h2>
-<p style="font-size: 16px; line-height: 1.55; color: #44506A; margin: 0 0 20px">Registration is closed for today — join the live Zoom right now instead.</p>
-<a href={ZOOM_URL} target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 12px; background: #E1000F; color: #FFFFFF; font-weight: 800; font-size: 17px; text-decoration: none">Join Now →</a>
+<h2 style="font-family: 'IBrand', sans-serif; font-weight: 800; font-size: 24px; line-height: 1.2; margin: 0 0 10px; color: #0D0D2B">Registration Is Closed</h2>
+<p style="font-size: 16px; line-height: 1.55; color: #44506A; margin: 0">The training has ended for today.</p>
 </div>
 <form id="da-form" class="da-form" style="display: none" aria-hidden="true">
 <div><label for="da-fn" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">First Name</label><input id="da-fn" class="da-input" type="text" placeholder="Enter your first name" required="required"></div>
